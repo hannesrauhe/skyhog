@@ -92,25 +92,25 @@ img{
 	width: 70%;	margin:0 auto;
 }
 
-.header{
+header{
 	height: 23%;	margin: 0 auto;	text-align: center;
 }
 
-.header img{
+header img{
 	height: 100%;
 }
 
 /******************Navigation********************/
-.menue{
+nav {
 	overflow: hidden;
 	padding-right: 10px;
 }
 
-.menue ul, li{
+nav ul, li{
 	margin: 0px;	padding: 0px;	list-style: none;	color: #fff;
 }
 
-.menue li{
+nav li{
 	background: #00b1e0;	background: rgba(0,177,224,0.6);	font-family: goodtime;	float: right;
 	-webkit-border-radius: 5px 5px 0px 0px;
 	-moz-border-radius: 5px 5px 0px 0px;
