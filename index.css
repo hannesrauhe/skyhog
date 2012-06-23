@@ -130,7 +130,7 @@ nav  li{
 }
 
 .article{
-	display: inline-block;	margin: 40px 0px 0px 0px;
+	overflow: hidden;	margin: 40px 0px 0px 0px;
 }
 
 .teaser{
@@ -144,6 +144,10 @@ nav  li{
 #filter li{
 	color: black;	background: #eee;	float: left;	padding: 5px;	margin: 0px 10px; cursor: pointer;
 	-webkit-border-radius: 5px;	-moz-border-radius: 5px;	border-radius: 5px;
+}
+
+#filter li:active{
+	color: white;	background: #333;
 }
 
 .work img{

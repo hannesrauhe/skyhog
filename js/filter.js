@@ -4,6 +4,11 @@ $('#filter > li').click(function(){
 	$(this).toggleClass();
 });
 
+$('#filter > li').toggle(
+		function(){$(this).css('color', '#999');},
+		function(){$(this).css('color', '#000');}
+);
+
 $('#o-toggle').click(function(){
 	$('img.orange').parent().toggle();
 });
