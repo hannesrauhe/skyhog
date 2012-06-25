@@ -162,7 +162,7 @@ nav  li{
 }
 
 .portrait{
-	text-align: center;
+	text-align: center;	padding-top: 20px;
 }
 
 .portrait img{
