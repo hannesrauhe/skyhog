@@ -1,7 +1,12 @@
 <?php
 $directory="../";
+$msg = "";
 if(array_key_exists("file",$_GET)) {
 	$file = basename($_GET['file']);
+	if(!is_file($director.$file)) {
+		$msg = "File $file does not exist";
+		$file = "_indexx.html";
+	}
 } else {
 	$file = "_indexx.html";
 }
@@ -22,14 +27,18 @@ tinyMCE.init({
 </script>
 </head>
 <body>
-	<p>
-	Content of <?php $file ?>
+	<p id="msg"> 
+		<?php echo $msg; ?>
 	</p>
-	<form method="post" action="show.php">
+	<p>
+	Content of <?php echo $file; ?>
+	</p>
+	<form method="post" action="save.php">
 	        <p>     
 	                <textarea name="content" cols="50" rows="15">
 	                <?php	echo file_get_contents ($directory.$file); ?>
 					</textarea>
+					<input type="hidden" value="<?php echo $file; ?>" />
 	                <input type="submit" value="Save" />
 	        </p>
 	</form>
