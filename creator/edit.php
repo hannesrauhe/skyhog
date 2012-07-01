@@ -38,7 +38,7 @@ tinyMCE.init({
 	                <textarea name="content" cols="50" rows="15">
 	                <?php	echo file_get_contents ($directory.$file); ?>
 					</textarea>
-					<input type="hidden" value="<?php echo $file; ?>" />
+					<input type="hidden" name="file" value="<?php echo $file; ?>" />
 	                <input type="submit" value="Save" />
 	        </p>
 	</form>
