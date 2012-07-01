@@ -22,14 +22,17 @@ tinyMCE.init({
 </script>
 </head>
 <body>
-<form method="post" action="show.php">
-        <p>     
-                <textarea name="content" cols="50" rows="15">
-                <?php	file_get_contents ($directory.$file); ?>
-				</textarea>
-                <input type="submit" value="Save" />
-        </p>
-</form>
+	<p>
+	Content of <?php $file ?>
+	</p>
+	<form method="post" action="show.php">
+	        <p>     
+	                <textarea name="content" cols="50" rows="15">
+	                <?php	echo file_get_contents ($directory.$file); ?>
+					</textarea>
+	                <input type="submit" value="Save" />
+	        </p>
+	</form>
 
 </body>
 </html>
