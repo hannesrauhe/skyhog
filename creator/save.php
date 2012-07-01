@@ -11,21 +11,21 @@ if(!is_file($directory.$file)) {
 }
 
 if(array_key_exists("content",$_POST) && !empty($_POST['content'])) {
-	file_put_contents ($directory.$file,$_POST['file']);
+	file_put_contents ($directory.$file,$_POST['content']);
 } else {
 	echo "ERROR: no content for $file submitted!";
 	exit();
 }
 
 $gitarg = escapeshellarg($directory.$file);
-if(!system("git add $gitarg")) {
-	echo "ERROR: adding $file with git wasn't possible";
-	exit();
+if(system("git add $gitarg") === FALSE) {
+        echo "ERROR: adding $file with git wasn't possible";
+        exit();
 }
 $gitarg = escapeshellarg("Commit from webinterface, IP:".$_SERVER["REMOTE_ADDR"]);
-if(!system("git commit -m $gitarg")) {
-	echo "ERROR: commiting staged $file with git wasn't possible, commit-msg was ".$gitarg;
-	exit();
+if(system("git commit -m $gitarg") === FALSE) {
+        echo "ERROR: commiting staged $file with git wasn't possible, commit-msg was ".$gitarg;
+        exit();
 }
 
 header ("Location: edit.php?file=$file"); 
