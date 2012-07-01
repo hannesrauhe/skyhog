@@ -3,7 +3,7 @@ $directory="../";
 $msg = "";
 if(array_key_exists("file",$_GET)) {
 	$file = basename($_GET['file']);
-	if(!is_file($director.$file)) {
+	if(!is_file($directory.$file)) {
 		$msg = "File $file does not exist";
 		$file = "_indexx.html";
 	}

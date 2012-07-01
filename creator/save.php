@@ -5,7 +5,7 @@ if(!array_key_exists("file",$_POST)) {
 	exit(); 
 }
 $file = basename($_POST['file']);
-if(!is_file($director.$file)) {
+if(!is_file($directory.$file)) {
 	header ("Location: edit.php?file=$file"); 
 	exit(); 	
 }
