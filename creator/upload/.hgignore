@@ -1,0 +1,7 @@
+syntax: regexp
+
+
+syntax: glob
+config.json
+*~
+.htaccess
