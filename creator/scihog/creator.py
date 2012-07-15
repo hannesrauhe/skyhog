@@ -1,4 +1,7 @@
 import os
+import shutil
+import time
+
 '''
 Created on 26.06.2012
 
@@ -17,12 +20,12 @@ class creator(object):
     input_dir = ''
     page_dir = ''
     
-    def __init__(self,page_dirctory,preview_directory):
+    def __init__(self,t,page_directory):
         '''
         Constructor
         '''
-        self.page_dir = os.path.dirname(page_dirctory)+'/'
-        self.output_dir = os.path.dirname(preview_directory)+'/'
+        self.page_dir = page_directory+'/'
+        self.output_dir = os.path.dirname(t)+'/'
         self.input_dir = self.output_dir
 
         template_file = open(t, 'r')
@@ -85,3 +88,8 @@ class creator(object):
             self.write_to_file(new_file)
             self.clear()
             print "generated",f[1:]
+            
+    def move_to_page_dir(self):
+        if os.path.isdir(self.page_dir):
+            shutil.move(self.page_dir, self.page_dir[:-1]+"."+str(time.time()))
+        shutil.copytree(self.output_dir, self.page_dir, True, shutil.ignore_patterns('_*.html'))
