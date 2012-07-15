@@ -1,10 +1,12 @@
 <?php
+require_once("../base.inc.php");
+
 header("Content-type", "text/json");
 $filename = $_GET["filename"];
 $id = intval($_GET["id"]);
 $startByte = intval($_GET["startByte"]);
 $endByte = intval($_GET["endByte"]);
-$fp = fopen("$UPLOAD_DIR/$filename", "cb");
+$fp = fopen(UPLOAD_DIR."$filename", "cb");
 $postdata = file_get_contents("php://input");
 fseek($fp, $startByte);
 fwrite($fp, $postdata);

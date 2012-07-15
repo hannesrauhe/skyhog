@@ -1,5 +1,5 @@
 <?php
-require_once("config.php");
+require_once("../base.inc.php");
 header("Content-type", "text/json");
 $mappings = array();
 $nFiles = count($_FILES["files"]["name"]);
@@ -8,7 +8,7 @@ for ($i = 0; $i < $nFiles; ++$i)
      $_FILES["files"]["tmp_name"][$i];
 $result_codes = array();
 foreach ($mappings as $filename => $tmp_name) {
-  $rc = move_uploaded_file($tmp_name, "$UPLOAD_DIR/$filename");
+  $rc = move_uploaded_file($tmp_name, UPLOAD_DIR.$filename);
   array_push($result_codes, $rc);
 }
 echo json_encode(

@@ -1,10 +1,10 @@
 <?php
-require_once("config.php");
+require_once("../base.inc.php");
 
 header("Content-type", "text/json");
 $filename = $_GET["filename"];
 $id = intval($_GET["id"]);
-$filename = "$UPLOAD_DIR/$filename";
+$filename = UPLOAD_DIR.$filename;
 $rc = unlink($filename);
 echo json_encode(
   array(

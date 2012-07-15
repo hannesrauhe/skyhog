@@ -15,12 +15,14 @@ class creator(object):
     template_files = []
     output_dir = ''
     input_dir = ''
-    def __init__(self,t):
+    page_dir = ''
+    
+    def __init__(self,page_dirctory,preview_directory):
         '''
         Constructor
         '''
-        
-        self.output_dir = os.path.dirname(t)+'/'
+        self.page_dir = os.path.dirname(page_dirctory)+'/'
+        self.output_dir = os.path.dirname(preview_directory)+'/'
         self.input_dir = self.output_dir
 
         template_file = open(t, 'r')
