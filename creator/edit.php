@@ -132,7 +132,7 @@ $(document).ready(function() {
 				<!-- Gets replaced with TinyMCE, remember HTML in a textarea should be encoded -->
 				<div>
 					<textarea id="elm1" name="elm1" rows="15" cols="80" style="width: 80%">
-			                <?php	echo file_get_contents ($directory.$file); ?>
+			                <?php	echo file_get_contents (UPLOAD_DIR.$file); ?>
 					</textarea>
 				</div>
 		
