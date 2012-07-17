@@ -6,7 +6,7 @@
 
 var Uploader = (function() {
     var defaults = {
-        upload_dir: "/creator/uploaded",
+        upload_dir: "/creator/preview",
         file_upload_url: "/creator/upload/upload.php",
         form_upload_url: "/creator/upload/form-upload.php",
         drop_area: "#filedrop",
