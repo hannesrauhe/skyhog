@@ -1,9 +1,10 @@
 <?php
-$directory="../";
+require_once("base.inc.php");
+
 $msg = "";
 if(array_key_exists("file",$_GET)) {
 	$file = basename($_GET['file']);
-	if(!is_file($directory.$file)) {
+	if(!is_file(UPLOAD_DIR.$file)) {
 		$msg = "File $file does not exist";
 		$file = "_indexx.html";
 	}
@@ -75,7 +76,7 @@ $(document).ready(function() {
 <link rel="stylesheet" media="screen" type="text/css" href="upload/upload.css" />
 
 </head>
-<body role="application">
+<body role="application" class="starting">
 	<p id="msg"> 
 		<?php echo $msg; ?>
 	</p>
