@@ -6,10 +6,10 @@ if(array_key_exists("file",$_GET)) {
 	$file = basename($_GET['file']);
 	if(!is_file(UPLOAD_DIR.$file)) {
 		$msg = "File $file does not exist";
-		$file = "_indexx.html";
+		$file = "_index.html";
 	}
 } else {
-	$file = "_indexx.html";
+	$file = "_index.html";
 }
 
 ?>
@@ -18,16 +18,32 @@ if(array_key_exists("file",$_GET)) {
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>Edit Page</title>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
+<script src="http://malsup.github.com/jquery.form.js"></script> 
+ 
+    <script> 
+    $(document).ready(function() { 
+        $('#content_form').ajaxForm({ 
+            target: '#msg' 
+        }); 
+        $('#b_generate_prev').click(function() {
+        	$.post('generate.target.php', function(data) {
+        		$("#msg").html(data);
+        	});
+        });
+        $('#b_generate').click(function() {
+        	$.post('generate.target.php', 
+	        	{finalize:"1"},
+	        	function(data) {
+	        		$("#msg").html(data);
+	        	});
+        });
+    }); 
+</script> 
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<script src="upload/jquery.min.js"></script>
+<!--
 <script type="text/javascript" src="tiny_mce/tiny_mce.js"></script>
-<script charset="utf-8" type="text/javascript" src="upload/upload.js"></script>
-<script type="text/javascript">
-$(document).ready(function() {
-	Uploader.init({
-	    smart_mode: true
-	});
-	
+<script type="text/javascript">	
 	tinyMCE.init({
 		// General options
 		mode : "textareas",
@@ -70,68 +86,43 @@ $(document).ready(function() {
 			staffid : "991234"
 		}
 	});
-	
-});
-</script>
-<link rel="stylesheet" media="screen" type="text/css" href="upload/upload.css" />
 
+</script>
+-->
 </head>
 <body role="application" class="starting">
 	<p id="msg"> 
 		<?php echo $msg; ?>
 	</p>
-	<aside id="upload_container" style="float:left">
-		<div id="filedrop">
-		  <div id="filedrop-inner-box">
-		    <div id="filedrop-chooser">
-		      <svg id="upload-icon" xmlns="http://www.w3.org/2000/svg" version="1.1" width="100" height="70">
-		        <linearGradient id="grd" x1="0%" y1="0%" x2="0%" y2="100%">
-		          <stop offset="10%" style="stop-color: rgb(27, 132, 224);" />
-		          <stop offset="90%" style="stop-color: rgb(27, 62, 94);" />
-		        </linearGradient>
-		        <path transform="translate(10, 10) scale(1.5, 1.5)" fill="url(#grd)" d="M 0 10 Q 0 0 10 0 L 110 0 Q 120 0 120 10 L 120 60 Q 120 70 110 70 L 85 70 L 85 45 L 110 45 L 60 10 L 10 45 L 35 45 L 35 70 L 10 70 Q 0 70 0 60 L 0 10 Z" />
-		      </svg>
-		      <br />
-		      <button class="huge" id="fileinput-button">Dateien ausw&auml;hlen</button>
-		    </div><!-- filedrop-chooser -->
-		    <div id="filedrop-hint"></div><!-- filedrop-hint -->
-		    <form id="upload-form">
-		      <input type="file" id="fileinput" multiple />
-		    </form>
-		  </div><!-- filedrop-inner-box -->
-		</div><!-- filedrop -->
-		<h2><a href="#">Uploads ^^</a></h2>
-		<div id="filelist-container">
-		  <ul id="filelist"></ul>
-		  <button id="filelist-clear-button" style="display: none">Liste leeren</button>
-		</div><!-- filelist-container -->
-		<div style="display: none" id="secret-elements">
-		  <svg class="mini-button" title="Abbrechen" id="stop-button" xmlns="http://www.w3.org/2000/svg" version="1.1" width="12" height="12">
-		    <rect x="0" y="0" width="12" height="12" fill="#fff" />
-		    <rect x="1" y="1" width="10" height="10" fill="#c00" />
-		  </svg>
-		  <svg class="mini-button" title="Pausieren" id="pause-button" xmlns="http://www.w3.org/2000/svg" version="1.1" width="12" height="12">
-		    <rect x="0" y="0" width="12" height="12" fill="#fff" />
-		    <rect x="2" y="1" width="3" height="10" fill="#00c" />
-		    <rect x="7" y="1" width="3" height="10" fill="#00c" />
-		  </svg>
-		  <svg class="mini-button" title="Fortsetzen" id="play-button" xmlns="http://www.w3.org/2000/svg" version="1.1" width="12" height="12">
-		    <rect x="0" y="0" width="12" height="12" fill="#fff" />
-		    <path d="M 1 1 L 11 5.5 L 1 11 Z" fill="#0c0" />
-		  </svg>
-		</div>
-		<div id="iframe-container"></div>
+	<aside id="filelist" style="float:right; border-style: solid;padding:10px">
+		<h2>Pages</h2>
+		<ul>
+			<?php
+			if ($handle = opendir(UPLOAD_DIR)) {			
+			    /* Das ist der korrekte Weg, ein Verzeichnis zu durchlaufen. */
+			    while (false !== ($f = readdir($handle))) {
+			    	if(substr($f,0,1)=='_') {
+			        	echo "<li><a href='edit.php?file=$f'>$f</a></li>";
+					}
+			    }
+			} else {
+				echo "Error: preview-directory cannot be opened!";
+			}
+			?>
+				
+		</ul>
+		<button id="b_generate_prev">Generate Preview</button>
+		<button id="b_generate">Generate!</button>
 	</aside>
-	
-	<section id="main_container">
-		<p>
+	<section id="main_container" style="padding:10px">
+		<h2>
 		Content of <?php echo $file; ?>
-		</p>
-		<form method="post" action="save.php">
+		</h2>
+		<form method="post" action="save.target.php" id="content_form">
 			<div>	
 				<!-- Gets replaced with TinyMCE, remember HTML in a textarea should be encoded -->
 				<div>
-					<textarea id="elm1" name="elm1" rows="15" cols="80" style="width: 80%">
+					<textarea id="elm1" name="elm1" rows="40" cols="180" style="width: 80%">
 			                <?php	echo file_get_contents (UPLOAD_DIR.$file); ?>
 					</textarea>
 				</div>
@@ -146,7 +137,7 @@ $(document).ready(function() {
 				<a href="javascript:;" onclick="alert(tinyMCE.get('elm1').selection.getNode().nodeName);return false;">[Get selected element]</a>
 				<a href="javascript:;" onclick="tinyMCE.execCommand('mceInsertContent',false,'<b>Hello world!!</b>');return false;">[Insert HTML]</a>
 				<a href="javascript:;" onclick="tinyMCE.execCommand('mceReplaceContent',false,'<b>{$selection}</b>');return false;">[Replace selection]</a>
-		
+				
 				<br />
 				<input type="hidden" name="file" value="<?php echo $file; ?>" />
 				<input type="submit" name="save" value="Submit" />
@@ -154,5 +145,6 @@ $(document).ready(function() {
 			</div>
 		</form>
 	</section>
+	<div  style="clear: both"></div>
 </body>
 </html>
