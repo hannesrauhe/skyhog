@@ -2,5 +2,4 @@ testsites
 *.class
 *.pyc
 *.pyo
-/creator/preview/*.html
-!/creator/preview/_*.html
+/creator/preview/*
