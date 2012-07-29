@@ -19,11 +19,10 @@ if(array_key_exists('elm1',$_POST) && !empty($_POST['elm1'])) {
 	exit();
 }
 
-$gitarg1 = escapeshellarg(UPLOAD_DIR);
+$gitarg1 = escapeshellarg(UPLOAD_DIR.".git");
 $gitarg2 = escapeshellarg(UPLOAD_DIR.$file);
 $retvar = 0;
 $ret = system(GIT_CMD." --git-dir=$gitarg1 add $gitarg2",$retvar);
-echo GIT_CMD." --git-dir=$gitarg1 add $gitarg2";
 if($ret === FALSE || $retvar!=0) {
     echo "ERROR: adding $file with git wasn't possible\n";
 	echo $ret;
