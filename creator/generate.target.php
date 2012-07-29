@@ -4,7 +4,7 @@ require_once('./base.inc.php');
 $arg1 = escapeshellarg(dirname(__FILE__)."/generate.py");
 $arg2 = "";
 if(array_key_exists("finalize", $_POST)) {
-	$arg2 = "--final";
+	$arg2 = "--final True";
 }
 $retvar = 0;
 $ret = system(PYTHON_CMD." $arg1 $arg2",$retvar);
