@@ -47,6 +47,7 @@ if(array_key_exists("file",$_GET)) {
 	tinyMCE.init({
 		// General options
 		mode : "textareas",
+		document_base_url : "<?php echo UPLOAD_PATH; ?>",
 		theme : "advanced",
 		plugins : "autolink,lists,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,wordcount,advlist,autosave,visualblocks",
 
@@ -61,13 +62,7 @@ if(array_key_exists("file",$_GET)) {
 		theme_advanced_resizing : true,
 
 		// Example content CSS (should be your site CSS)
-		content_css : "preview/index.css",
-
-		// Drop lists for link/image/media/template dialogs
-		template_external_list_url : "lists/template_list.js",
-		external_link_list_url : "lists/link_list.js",
-		external_image_list_url : "lists/image_list.js",
-		media_external_list_url : "lists/media_list.js",
+		content_css : "index.css",
 
 		// Style formats
 		style_formats : [
@@ -78,13 +73,7 @@ if(array_key_exists("file",$_GET)) {
 			{title : 'Example 2', inline : 'span', classes : 'example2'},
 			{title : 'Table styles'},
 			{title : 'Table row 1', selector : 'tr', classes : 'tablerow1'}
-		],
-
-		// Replace values for the template plugin
-		template_replace_values : {
-			username : "Some User",
-			staffid : "991234"
-		}
+		]
 	});
 
 </script>
@@ -112,7 +101,9 @@ if(array_key_exists("file",$_GET)) {
 				
 		</ul>
 		<button id="b_generate_prev">Generate Preview</button>
-		<button id="b_generate">Generate!</button>
+		<button id="b_generate">Generate!</button><br />
+		<a href="<?php echo UPLOAD_PATH ?>" target="new" >Show Preview</a>
+		<a href="<?php echo PAGE_PATH ?>" target="new" >Show Homepage</a>
 	</aside>
 	<section id="main_container" style="padding:10px">
 		<h2>
