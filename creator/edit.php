@@ -41,7 +41,7 @@ if(array_key_exists("file",$_GET)) {
     }); 
 </script> 
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<!--
+
 <script type="text/javascript" src="tiny_mce/tiny_mce.js"></script>
 <script type="text/javascript">	
 	tinyMCE.init({
@@ -88,7 +88,7 @@ if(array_key_exists("file",$_GET)) {
 	});
 
 </script>
--->
+
 </head>
 <body role="application" class="starting">
 	<p id="msg"> 
