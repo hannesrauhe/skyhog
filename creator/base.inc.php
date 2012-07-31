@@ -112,7 +112,11 @@ class auth {
 		return isset($_SESSION['user']) && $_SESSION['user']['active'];
 	}
 	
-	public function auth(&$d,$oid) {		
+	public function auth(&$d,$oid) {
+		if($this->isAuth()) {
+			return true;
+		}
+		
     	if(!$this->openid->mode) {
     		$this->openid->identity = $oid;
 			$this->openid->required = array('namePerson/friendly', 'contact/email','namePerson/first');
@@ -195,6 +199,7 @@ session_start();
 
 $d = new sqlite_db();
 $a = new auth();
+
 if(!$a->auth($d,'https://www.google.com/accounts/o8/id')) {
 	echo "you have to register with google";
 	exit(0);
