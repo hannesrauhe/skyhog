@@ -4,36 +4,34 @@ require_once("./openid.inc.php");
 
 class sqlite_db extends SQLite3 {
 	public function __construct() {
-		$this->open(UPLOAD_DIR."scihog.db");
+		$this->open(UPLOAD_DIR."/scihog.db");
 	}
 	
 	public function insertUser($openid,$name,$email) {
-		/*$stmt = $this->prepare("INSERT INTO `users` (`name`,`openid`,`email`) VALUES (?,?,?)");
+		$stmt = $this->prepare("INSERT INTO `users` (`name`,`openid`,`email`) VALUES (:name,:id,:mail)");
 		if($stmt) {
-			$stmt->bind_param('sss',$name,$openid,$email);
+			$stmt->bindValue(':name',$name,SQLITE3_TEXT);
+			$stmt->bindValue(':id',$openid,SQLITE3_TEXT);
+			$stmt->bindValue(':mail',$email,SQLITE3_TEXT);
 			$stmt->execute();
 			$stmt->close();
-			return $this->conn->insert_id;
+			return $this->lastInsertRowID();
 		} else {
 			throw new Exception("Error Processing Request", 1);			
-		}*/		
+		}		
 		return 0;
 	}
 	public function getUserByOpenID($openid) {
-		$user=array("name" => "NULL","openid" => "NULL","email" => "NULL","active" => 1);
-		/*$stmt = $this->conn->stmt_init();
-		if($stmt->prepare("SELECT * FROM `users` WHERE `openid` = ?")) {
-			$stmt->bind_param('s',$openid);
-			$stmt->execute();
-			$this->bind_array($stmt, $user);
-			if(!$stmt->fetch()) {
-				$stmt->close();
-				return 0;
-			}
+		$user=array();
+		$stmt = $this->prepare("SELECT * FROM `users` WHERE `openid` = :id");
+		if($stmt) {
+			$stmt->bindValue(':id',$openid,SQLITE3_TEXT);
+			$r = $stmt->execute();
+			$user = $r->fetchArray();
 			$stmt->close();
 		} else {
 			throw new Exception("Error Processing Request", 1);			
-		}*/
+		}
 		return $user;		
 	}
 	public function getUserByID($user_id) {
@@ -80,15 +78,15 @@ class sqlite_db extends SQLite3 {
 		}	*/
 	}
 	public function activateUser($user_id) {
-		/*$elements=array();
-		$stmt = $this->conn->stmt_init();
-		if($stmt->prepare("UPDATE `users` SET active=1 WHERE user_id = ?")) {
-			$stmt->bind_param('i',$user_id);
+		$stmt = $this->prepare("UPDATE `users` SET active=1 WHERE user_id = :uid");
+		if($stmt) {
+			$stmt->bind_param(':uid',$user_id,SQLITE3_INTEGER);
 			$stmt->execute();
 			$stmt->close();
 		} else {
-			throw new Exception("Error Processing Request", 1);			
-		}	*/
+			throw new Exception("Error Processing Request", 1);	
+		}		
+		
 	}	
 	public function deleteUser($id) {
 		/*$stmt = $this->conn->stmt_init();
@@ -207,5 +205,5 @@ if(!$a->auth($d,'https://www.google.com/accounts/o8/id')) {
 
 if($a->isInactiveUser()) {
 	echo "your account needs to be activated by the administrator";
-	var_dump($_SESSION);
+	exit(0);
 }

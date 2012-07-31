@@ -1,5 +1,9 @@
 <?php
-require_once("./base.inc.php");
+require_once("./config.inc.php");
+//reinit Session
+session_start();
+$_SESSION = array();
+session_destroy();
 
 //preview/upload directory
 if(is_dir(UPLOAD_DIR)) {
@@ -15,6 +19,47 @@ if(is_dir(UPLOAD_DIR)) {
 		echo "Preview dir created\n";
 	}
 }
+
+//db
+$db = new SQLite3(UPLOAD_DIR."scihog.db");
+$query_result = $db->querySingle('SELECT * FROM users', true);
+if($query_result===FALSE) {
+	$r = $db->exec("CREATE TABLE users(user_id INTEGER PRIMARY KEY, name VARCHAR(100), openid VARCHAR(255) UNIQUE, email VARCHAR(100), active BOOL, admin BOOL);");
+	if(!$r) {
+		echo "User table cannot be created, because: \n";
+		echo $db->lastErrorMsg();
+		exit(1);
+	}
+} else if(!empty($query_result)) {
+	$query_result = $db->querySingle('SELECT * FROM users WHERE user_id=1', true);
+	if(empty($query_result)) {
+		echo "User table exists and has entries, but User 1 isn't there... repair manually!\n";
+	}
+	if($query_result['active']!=1) {
+		if(!$db->exec("UPDATE users SET active=1 WHERE user_id=1")) {
+			echo "User 1 seems to be inactive and could not be activated, because: \n";
+			echo $db->lastErrorMsg();
+			exit(1);
+		}
+	}
+}
+
+$query_result = $db->querySingle('SELECT * FROM nav', true);
+if($query_result===FALSE) {
+	$r = $db->exec("CREATE TABLE nav (link TEXT, id TEXT, name_de TEXT, menu_order INTEGER PRIMARY KEY);");
+	if(!$r) {
+		echo "Nav table cannot be created, because: \n";
+		echo $db->lastErrorMsg();
+		exit(1);
+	}
+} 
+
+$db->close();
+
+
+// basic tests are done - now do the authentication
+require_once("./base.inc.php");
+
 
 //live directory
 if(is_dir(PAGE_DIR)) {
@@ -48,4 +93,5 @@ if(!is_file(".gitignore")) {
 	}
 	echo ".gitignore created\n";
 }
+
 
