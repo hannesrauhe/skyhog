@@ -20,7 +20,7 @@ class sqlite_db extends SQLite3 {
 		return 0;
 	}
 	public function getUserByOpenID($openid) {
-		$user=array();
+		$user=array("name" => "NULL","openid" => "NULL","email" => "NULL","active" => 1);
 		/*$stmt = $this->conn->stmt_init();
 		if($stmt->prepare("SELECT * FROM `users` WHERE `openid` = ?")) {
 			$stmt->bind_param('s',$openid);
@@ -201,6 +201,6 @@ if(!$a->auth($d,'https://www.google.com/accounts/o8/id')) {
 }
 
 if($a->isInactiveUser()) {
-	echo "your accoutn needs to be activated by the administrator";
-	exit(0);
+	echo "your account needs to be activated by the administrator";
+	var_dump($_SESSION);
 }
