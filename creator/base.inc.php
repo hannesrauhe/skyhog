@@ -2,6 +2,107 @@
 require_once("./config.inc.php");
 require_once("./openid.inc.php");
 
+class sqlite_db extends SQLite3 {
+	public function __construct() {
+		$this->open(UPLOAD_DIR."scihog.db");
+	}
+	
+	public function insertUser($openid,$name,$email) {
+		/*$stmt = $this->prepare("INSERT INTO `users` (`name`,`openid`,`email`) VALUES (?,?,?)");
+		if($stmt) {
+			$stmt->bind_param('sss',$name,$openid,$email);
+			$stmt->execute();
+			$stmt->close();
+			return $this->conn->insert_id;
+		} else {
+			throw new Exception("Error Processing Request", 1);			
+		}*/		
+		return 0;
+	}
+	public function getUserByOpenID($openid) {
+		$user=array();
+		/*$stmt = $this->conn->stmt_init();
+		if($stmt->prepare("SELECT * FROM `users` WHERE `openid` = ?")) {
+			$stmt->bind_param('s',$openid);
+			$stmt->execute();
+			$this->bind_array($stmt, $user);
+			if(!$stmt->fetch()) {
+				$stmt->close();
+				return 0;
+			}
+			$stmt->close();
+		} else {
+			throw new Exception("Error Processing Request", 1);			
+		}*/
+		return $user;		
+	}
+	public function getUserByID($user_id) {
+		$user=array();
+		/*$stmt = $this->conn->stmt_init();
+		if($stmt->prepare("SELECT * FROM `users` WHERE `user_id` = ?")) {
+			$stmt->bind_param('i',$user_id);
+			$stmt->execute();
+			$this->bind_array($stmt, $user);
+			if(!$stmt->fetch()) {
+				$stmt->close();
+				return 0;
+			}
+			$stmt->close();
+		} else {
+			throw new Exception("Error Processing Request", 1);			
+		}*/
+		return $user;		
+	}
+	
+	public function getUsers() {
+		$elements=array();
+		/*$stmt = $this->conn->stmt_init();
+		if($stmt->prepare("SELECT * FROM `users`")) {
+			//$stmt->bind_param('s',$openid);
+			$stmt->execute();
+			$elements = $this->fetch_all($stmt);//row->fetch_all(MYSQLI_ASSOC);
+			$stmt->close();
+		} else {
+			throw new Exception("Error Processing Request", 1);			
+		}*/
+		return $elements;		
+	}
+	
+	public function changeUserName($user_id,$name) {
+		/*$elements=array();
+		$stmt = $this->conn->stmt_init();
+		if($stmt->prepare("UPDATE `users` SET name=? WHERE user_id = ?")) {
+			$stmt->bind_param('si',$name,$user_id);
+			$stmt->execute();
+			$stmt->close();
+		} else {
+			throw new Exception("Error Processing Request", 1);			
+		}	*/
+	}
+	public function activateUser($user_id) {
+		/*$elements=array();
+		$stmt = $this->conn->stmt_init();
+		if($stmt->prepare("UPDATE `users` SET active=1 WHERE user_id = ?")) {
+			$stmt->bind_param('i',$user_id);
+			$stmt->execute();
+			$stmt->close();
+		} else {
+			throw new Exception("Error Processing Request", 1);			
+		}	*/
+	}	
+	public function deleteUser($id) {
+		/*$stmt = $this->conn->stmt_init();
+		if($stmt->prepare("DELETE FROM `users` WHERE `user_id` = ?")) {
+			$stmt->bind_param('i',$id);
+			$stmt->execute();
+			$stmt->close();
+		} else {
+			throw new Exception("Error Processing Request", 1);			
+		}*/
+		return 0;
+	}
+}
+
 class auth {
 	var $openid = NULL;
 	public function __construct() {
@@ -91,3 +192,15 @@ class auth {
 }
 
 session_start();
+
+$d = new sqlite_db();
+$a = new auth();
+if(!$a->auth($d,'https://www.google.com/accounts/o8/id')) {
+	echo "you have to register with google";
+	exit(0);
+}
+
+if($a->isInactiveUser()) {
+	echo "your accoutn needs to be activated by the administrator";
+	exit(0);
+}

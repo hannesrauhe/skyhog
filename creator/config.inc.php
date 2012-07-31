@@ -7,3 +7,4 @@ define("UPLOAD_PATH", "/creator/preview/");
 define("UPLOAD_DIR", dirname(__FILE__) . "/preview/");
 define("GIT_CMD","git");
 define("PYTHON_CMD","python");
+define("DOMAIN","scitivity.net");
