@@ -1,12 +1,12 @@
 <?php
 if((include_once("./config.inc.php")) === FALSE) {
 //config does not exist yet - use template
-	if(array_key_exists('DOMAIN', $_POST)) {
+	if(!array_key_exists('DOMAIN', $_POST)) {
 		echo "TODO: Print form!\n"; //TODO
 		exit(1);
 	} else {
 		//relevant data has been POSTED - replace in config-template
-		$file_c = file_get_contents("./config.inc.php");
+		$file_c = file_get_contents("./config.inc.php.template");
 		if($file_c) {
 		    $file = str_replace(array_keys($_POST), array_values($_POST), $file);
 		    if(file_put_contents("./config.inc.php", $file_c) === FALSE) {
