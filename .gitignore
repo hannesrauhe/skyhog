@@ -3,3 +3,4 @@ testsites
 *.pyc
 *.pyo
 /creator/preview/*
+/creator/config.inc.php
