@@ -44,6 +44,23 @@ if(array_key_exists("file",$_GET)) {
 
 <script type="text/javascript" src="tiny_mce/tiny_mce.js"></script>
 <script type="text/javascript">	
+	function openKCFinder(field_name, url, type, win) {
+	    tinyMCE.activeEditor.windowManager.open({
+	        file: 'kcfinder-2.51/browse.php?opener=tinymce&type=' + type,
+	        title: 'KCFinder',
+	        width: 700,
+	        height: 500,
+	        resizable: "yes",
+	        inline: true,
+	        close_previous: "no",
+	        popup_css: false
+	    }, {
+	        window: win,
+	        input: field_name
+	    });
+	    return false;
+	}
+	
 	tinyMCE.init({
 		// General options
 		mode : "textareas",
@@ -63,6 +80,7 @@ if(array_key_exists("file",$_GET)) {
 
 		// Example content CSS (should be your site CSS)
 		content_css : "index.css",
+		file_browser_callback: 'openKCFinder',
 
 		// Style formats
 		style_formats : [

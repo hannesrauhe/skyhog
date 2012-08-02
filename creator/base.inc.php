@@ -104,7 +104,11 @@ class sqlite_db extends SQLite3 {
 class auth {
 	var $openid = NULL;
 	public function __construct() {
-    	$this->openid = new LightOpenID(DOMAIN);		
+		if(DOMAIN!=="NONE") {
+    		$this->openid = new LightOpenID(DOMAIN);	
+		} else {
+			$_SESSION['user']=array("name"=>"unauthorized", "user_id" => -1, "active" => 1, "admin" => 0);
+		}		
 	}
 	public function isAuth() {
 		return isset($_SESSION['user']) && $_SESSION['user']['active'];
@@ -207,3 +211,6 @@ if($a->isInactiveUser()) {
 	echo "your account needs to be activated by the administrator";
 	exit(0);
 }
+
+$_SESSION['KCFINDER'] = array();
+$_SESSION['KCFINDER']['disabled'] = false;

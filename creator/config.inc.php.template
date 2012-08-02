@@ -1,5 +1,5 @@
 <?php
-define("DOMAIN","scitivity.net");
+define("DOMAIN","__DOMAIN__");
 
 define("PAGE_DIR","../");
 define("PAGE_PATH","../");
