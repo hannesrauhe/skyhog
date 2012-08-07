@@ -201,11 +201,10 @@ session_start();
 
 $d = new sqlite_db();
 $a = new auth();
+$oid = 'https://www.google.com/accounts/o8/id';
 
 if(array_key_exists("openid_identifier", $_POST)) {
 	$oid = $_POST['openid_identifier'];
-} else {
-	$oid = 'https://www.google.com/accounts/o8/id';
 }
 
 if(!$a->auth($d,$oid)) {
