@@ -56,8 +56,12 @@ $(document).ready(function() {
     });
 });
 </script>
+		<link rel="stylesheet" type="text/css" href="style.css" media="all">
 </head>
 <body>
+<?php
+include_once("nav.inc.php");
+?>
 <form>
 	<div id="uploader">
 		<p>You browser doesn't have HTML5, Gears or Flash support.</p>

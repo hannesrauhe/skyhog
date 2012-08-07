@@ -202,13 +202,21 @@ session_start();
 $d = new sqlite_db();
 $a = new auth();
 
-if(!$a->auth($d,'https://www.google.com/accounts/o8/id')) {
-	echo "you have to register with google";
+if(array_key_exists("openid_identifier", $_POST)) {
+	$oid = $_POST['openid_identifier'];
+} else {
+	$oid = 'https://www.google.com/accounts/o8/id';
+}
+
+if(!$a->auth($d,$oid)) {
+	$msg = "you have to register with google";	
+	Header("Location: index.php?msg=".urlencode($msg));
 	exit(0);
 }
 
 if($a->isInactiveUser()) {
-	echo "your account needs to be activated by the administrator";
+	$msg = "your account needs to be activated by the administrator";
+	Header("Location: index.php?msg=".urlencode($msg));
 	exit(0);
 }
 

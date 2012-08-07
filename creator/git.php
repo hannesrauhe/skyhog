@@ -28,7 +28,13 @@ exec ( GIT_CMD." branch", $branches);
 ?>
 
 <html>
+	<head>		
+		<link rel="stylesheet" type="text/css" href="style.css" media="all">
+	</head>
 	<body>
+<?php
+include_once("nav.inc.php");
+?>
 		
 		<p>
 			Output of git <?php echo $cmd ?>:<br />

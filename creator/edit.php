@@ -96,8 +96,12 @@ if(array_key_exists("file",$_GET)) {
 
 </script>
 
+		<link rel="stylesheet" type="text/css" href="style.css" media="all">
 </head>
 <body role="application" class="starting">
+<?php
+include_once("nav.inc.php");
+?>
 	<p id="msg"> 
 		<?php echo $msg; ?>
 	</p>

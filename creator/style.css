@@ -1,0 +1,15 @@
+nav {
+	width: 80%;
+	margin: 0 auto;
+	display: block;
+	height: 60px;
+}
+
+nav ul {
+	list-style: none;	
+}
+
+nav li {
+	float: left;
+	padding: 20px 15px 0px;
+}
