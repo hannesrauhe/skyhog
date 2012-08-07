@@ -124,6 +124,7 @@ class auth {
 			$this->openid->required = array('namePerson/friendly', 'contact/email','namePerson/first');
 			setcookie('oid',$oid);
 	        header('Location: ' . $this->openid->authUrl());
+			exit(0);
 		} elseif($this->openid->mode!= 'cancel') {
 			if($this->openid->validate()) {
 				$oid = $this->openid->identity;
