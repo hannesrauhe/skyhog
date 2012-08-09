@@ -50,7 +50,7 @@ $databases = array
 (
 	array
 	(
-		"path"=> "preview/scihog.db",
+		"path"=> "../preview/scihog.db",
 		"name"=> "SciHoG"
 	)
 );
