@@ -52,18 +52,17 @@ class sqlite_db extends SQLite3 {
 		return $user;		
 	}
 	
-	public function getUsers() {
-		$elements=array();
-		/*$stmt = $this->conn->stmt_init();
-		if($stmt->prepare("SELECT * FROM `users`")) {
-			//$stmt->bind_param('s',$openid);
-			$stmt->execute();
-			$elements = $this->fetch_all($stmt);//row->fetch_all(MYSQLI_ASSOC);
+	public function getUsers() {		
+		$users=array();
+		$stmt = $this->prepare("SELECT * FROM `users`;");
+		if($stmt) {
+			$r = $stmt->execute();
+			$users = $r->fetchArray(SQLITE3_ASSOC);
 			$stmt->close();
 		} else {
 			throw new Exception("Error Processing Request", 1);			
-		}*/
-		return $elements;		
+		}
+		return $users;	
 	}
 	
 	public function changeUserName($user_id,$name) {
@@ -204,7 +203,11 @@ $d = new sqlite_db();
 $a = new auth();
 $oid = 'https://www.google.com/accounts/o8/id';
 
-if(array_key_exists("openid_identifier", $_POST)) {
+if(array_key_exists("oid", $_COOKIE) && !empty($_COOKIE['oid'])) {
+	$oid = $_COOKIE['oid'];
+}
+
+if(array_key_exists("openid_identifier", $_POST) && !empty($_POST["openid_identifier"])) {
 	$oid = $_POST['openid_identifier'];
 }
 

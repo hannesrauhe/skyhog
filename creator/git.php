@@ -1,6 +1,11 @@
 <?php
 require_once('./base.inc.php');
-chdir(UPLOAD_DIR);
+$CMS_update = TRUE;
+if(!$a->isAdmin() || !array_key_exists("CMS_update", $_GET)) {
+	chdir(UPLOAD_DIR);	
+	$CMS_update = FALSE;
+}
+
 $cmd = '';
 $arr = array();
 $remotes = array();
@@ -34,8 +39,12 @@ exec ( GIT_CMD." branch", $branches);
 	<body>
 <?php
 include_once("nav.inc.php");
+if($CMS_update):
 ?>
-		
+		<p id="update_warning">
+			Attention: The Skyhog Update will just update the system files. Your user files may not be compatible anymore.
+		</p>
+<?php endif; ?>
 		<p>
 			Output of git <?php echo $cmd ?>:<br />
 			<textarea rows="10" cols="80"><?php

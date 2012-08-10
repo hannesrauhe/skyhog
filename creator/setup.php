@@ -54,7 +54,7 @@ if($query_result===FALSE) {
 		echo "User table exists and has entries, but User 1 isn't there... repair manually!\n";
 	}
 	if($query_result['active']!=1) {
-		if(!$db->exec("UPDATE users SET active=1 WHERE user_id=1")) {
+		if(!$db->exec("UPDATE users SET active=1,admin=1 WHERE user_id=1")) {
 			echo "User 1 seems to be inactive and could not be activated, because: \n";
 			echo $db->lastErrorMsg();
 			exit(1);
