@@ -89,15 +89,15 @@ class sqlite_db extends SQLite3 {
 		}		
 		
 	}	
-	public function deleteUser($id) {
-		/*$stmt = $this->conn->stmt_init();
-		if($stmt->prepare("DELETE FROM `users` WHERE `user_id` = ?")) {
-			$stmt->bind_param('i',$id);
+	public function deleteUser($user_id) {		
+		$stmt = $this->prepare("DELETE FROM `users` WHERE user_id = :uid");
+		if($stmt) {
+			$stmt->bindValue(':uid',$user_id,SQLITE3_INTEGER);
 			$stmt->execute();
 			$stmt->close();
 		} else {
-			throw new Exception("Error Processing Request", 1);			
-		}*/
+			throw new Exception("Error Processing Request", 1);	
+		}	
 		return 0;
 	}
 }
@@ -123,12 +123,12 @@ class auth {
     	if(!$this->openid->mode) {
     		$this->openid->identity = $oid;
 			$this->openid->required = array('namePerson/friendly', 'contact/email','namePerson/first');
-			setcookie('oid',$oid);
 	        header('Location: ' . $this->openid->authUrl());
 			exit(0);
 		} elseif($this->openid->mode!= 'cancel') {
 			if($this->openid->validate()) {
 				$oid = $this->openid->identity;
+				setcookie('oid',$oid);
 				$user=$d->getUserByOpenID($oid);
 				if(!empty($user)) {
 					$_SESSION['user']=$user;

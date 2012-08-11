@@ -6,6 +6,8 @@ if($a->isAdmin()) {
 		if(!empty($_POST['user_id'])) {
 			switch($_POST['action']) {
 				case 'Delete':
+					$d->deleteUser($_POST['user_id']);
+					$msg = 'User with ID '.$_POST['user_id'].' deleted!';
 					break;
 				case 'Activate':
 					$d->activateUser($_POST['user_id']);
