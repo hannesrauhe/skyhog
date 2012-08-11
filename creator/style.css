@@ -1,15 +1,15 @@
-nav {
+#skyhog_nav {
 	width: 80%;
 	margin: 0 auto;
 	display: block;
 	height: 60px;
 }
 
-nav ul {
+#skyhog_nav ul {
 	list-style: none;	
 }
 
-nav li {
+#skyhog_nav li {
 	float: left;
-	padding: 20px 15px 0px;
+	padding: 10px 15px 0px;
 }

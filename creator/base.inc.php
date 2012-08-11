@@ -81,7 +81,7 @@ class sqlite_db extends SQLite3 {
 	public function activateUser($user_id) {
 		$stmt = $this->prepare("UPDATE `users` SET active=1 WHERE user_id = :uid");
 		if($stmt) {
-			$stmt->bind_param(':uid',$user_id,SQLITE3_INTEGER);
+			$stmt->bindValue(':uid',$user_id,SQLITE3_INTEGER);
 			$stmt->execute();
 			$stmt->close();
 		} else {
@@ -227,3 +227,5 @@ if($a->isInactiveUser()) {
 
 $_SESSION['KCFINDER'] = array();
 $_SESSION['KCFINDER']['disabled'] = false;
+
+$msg = '';

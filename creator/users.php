@@ -1,25 +1,21 @@
 <?php
 require_once('./base.inc.php');
 
-$cmd = '';
-$arr = array();
-$remotes = array();
-$branches = array();
-$remote = '';
-
-if(array_key_exists("push", $_POST)) {
-	$cmd = "push ".escapeshellarg($_POST['remote'])." ".escapeshellarg($_POST['branch']);
-} else if(array_key_exists("pull", $_POST)) {
-	$cmd = "pull ".escapeshellarg($_POST['remote'])." ".escapeshellarg($_POST['branch']);
-} else if(array_key_exists("log", $_POST)) {
-	$cmd = "log";
-} else if(array_key_exists("remote_add", $_POST)) {
-	$cmd = "remote add ".escapeshellarg($_POST['remote_name'])." ".escapeshellarg($_POST['remote_url']);
-} else if(array_key_exists("remote_rm", $_POST)) {
-	$remote = $_POST['remote_name'];
-	$cmd = "remote rm ".escapeshellarg($_POST['remote_name']);
+if($a->isAdmin()) {
+	if(array_key_exists("action", $_POST)) {
+		if(!empty($_POST['user_id'])) {
+			switch($_POST['action']) {
+				case 'Delete':
+					break;
+				case 'Activate':
+					$d->activateUser($_POST['user_id']);
+					$msg = 'User with ID '.$_POST['user_id'].' activated!';
+					break;
+			}
+		}
+	}
 } else {
-	$cmd = "status";
+	$msg = "You don't have admin permissions!";
 }
 ?>
 
@@ -30,6 +26,9 @@ if(array_key_exists("push", $_POST)) {
 	<body>
 <?php
 include_once("nav.inc.php");
+if(!empty($msg)) {
+	echo "<p id=\"msg\">$msg</p>";
+}
 ?>
 		<table>
 			<?php
@@ -41,15 +40,16 @@ include_once("nav.inc.php");
 				}
 				echo "<th>Functions</th></tr>";
 				foreach ($users as $user) {
-					echo "<tr>";
+					echo "<form action=\"users.php\" method=\"POST\"><tr>";
 					foreach ($user as $key => $value) {
 						echo "<td>$value</td>";
 					}
 					echo "<td>
-					<button name='delete' value='".$user['user_id']."' >Delete</button>
-					<button name='activate' value='".$user['user_id']."' >Activate</button>
-					<button name='admin' value='".$user['user_id']."' >Promote</button>
-					</td></tr>";
+					<input type='hidden' name='user_id' value='".$user['user_id']."' />
+					<input type=\"submit\" name='action' value='Delete' />
+					<input type=\"submit\" name='action' value='Activate' />
+					<input type=\"submit\" name='action' value='Promote' />
+					</td></tr></form>";
 				}
 			} else {
 				echo "<tr><td>There are no registered users! Run in maintenance mode!</td></tr>";
