@@ -31,8 +31,30 @@ if(array_key_exists("push", $_POST)) {
 <?php
 include_once("nav.inc.php");
 ?>
-		<p>
-			var_dump($d->getUsers());
-		</p>		
+		<table>
+			<?php
+			$users = $d->getUsers();
+			if(!empty($users)) {
+				echo "<tr>";
+				foreach (array_keys($users[0]) as $key) {
+					echo "<th>$key</th>";
+				}
+				echo "<th>Functions</th></tr>";
+				foreach ($users as $user) {
+					echo "<tr>";
+					foreach ($user as $key => $value) {
+						echo "<td>$value</td>";
+					}
+					echo "<td>
+					<button name='delete' value='".$user['user_id']."' >Delete</button>
+					<button name='activate' value='".$user['user_id']."' >Activate</button>
+					<button name='admin' value='".$user['user_id']."' >Promote</button>
+					</td></tr>";
+				}
+			} else {
+				echo "<tr><td>There are no registered users! Run in maintenance mode!</td></tr>";
+			}
+			?>
+		</table>		
 	</body>
 </html>

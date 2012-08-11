@@ -57,7 +57,9 @@ class sqlite_db extends SQLite3 {
 		$stmt = $this->prepare("SELECT * FROM `users`;");
 		if($stmt) {
 			$r = $stmt->execute();
-			$users = $r->fetchArray(SQLITE3_ASSOC);
+			while($res = $r->fetchArray(SQLITE3_ASSOC)) {
+				$users[]=$res;
+			}
 			$stmt->close();
 		} else {
 			throw new Exception("Error Processing Request", 1);			

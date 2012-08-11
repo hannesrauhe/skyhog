@@ -9,7 +9,7 @@
 				<ul>
 					<li><a href="setup.php">Maintenance</a></li>
 					<li><a href="git.php?CMS_update=1">Update</a></li>
-					<li><a href="users.php">Update</a></li>
+					<li><a href="users.php">Users</a></li>
 				</ul></li>
 			</ul>
 		</nav>
