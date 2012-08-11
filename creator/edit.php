@@ -100,7 +100,7 @@ if(array_key_exists("file",$_GET)) {
 </head>
 <body role="application" class="starting">
 <?php
-include_once("nav.inc.php");
+include_once("nav.inc.phtml");
 ?>
 	<p id="msg"> 
 		<?php echo $msg; ?>
@@ -159,5 +159,8 @@ include_once("nav.inc.php");
 		</form>
 	</section>
 	<div  style="clear: both"></div>
+<?php
+include_once("footer.inc.phtml");
+?>
 </body>
 </html>

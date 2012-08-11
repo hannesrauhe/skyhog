@@ -27,7 +27,7 @@ if($a->isAdmin()) {
 	</head>
 	<body>
 <?php
-include_once("nav.inc.php");
+include_once("nav.inc.phtml");
 if(!empty($msg)) {
 	echo "<p id=\"msg\">$msg</p>";
 }
@@ -57,6 +57,9 @@ if(!empty($msg)) {
 				echo "<tr><td>There are no registered users! Run in maintenance mode!</td></tr>";
 			}
 			?>
-		</table>		
+		</table>	
+<?php
+include_once("footer.inc.phtml");
+?>	
 	</body>
 </html>

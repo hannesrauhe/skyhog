@@ -5,7 +5,7 @@
 	</head>
 	<body>
 <?php
-include_once("nav.inc.php");
+include_once("nav.inc.phtml");
 ?>
 		<section>
 			<h1>SkyHog</h1>
@@ -25,5 +25,8 @@ include_once("nav.inc.php");
 				</form>
 			</div>	
 		</section>
+<?php
+include_once("footer.inc.phtml");
+?>
 	</body>
 </html>

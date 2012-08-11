@@ -38,7 +38,7 @@ exec ( GIT_CMD." branch", $branches);
 	</head>
 	<body>
 <?php
-include_once("nav.inc.php");
+include_once("nav.inc.phtml");
 if($CMS_update):
 ?>
 		<p id="update_warning">
@@ -82,5 +82,8 @@ if($CMS_update):
 			</form>
 		</p>
 		
+<?php
+include_once("footer.inc.phtml");
+?>
 	</body>
 </html>
