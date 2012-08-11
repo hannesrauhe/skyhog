@@ -1,9 +1,9 @@
 <?php
 require_once('./base.inc.php');
-$CMS_update = TRUE;
-if(!$a->isAdmin() || !array_key_exists("CMS_update", $_GET)) {
+$CMS_update = 1;
+if(!$a->isAdmin() || !array_key_exists("CMS_update", $_REQUEST) || !$_REQUEST['CMS_update']) {
 	chdir(UPLOAD_DIR);	
-	$CMS_update = FALSE;
+	$CMS_update = 0;
 }
 
 $cmd = '';
@@ -52,7 +52,8 @@ if($CMS_update):
 					echo trim($a)."\n";
 				}
 			?></textarea>
-			<form action="git.php" method="POST">				
+			<form action="git.php" method="POST">			
+				<input type="hidden" name="CMS_update" value="<?php echo $CMS_update; ?>" />	
 				<input type="submit" name="log" value="log"/><br /><br />
 				<select name="remote" size="<?php echo count($remotes);?>">
 					<?php
