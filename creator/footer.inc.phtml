@@ -1,3 +1,9 @@
 <footer>
-	<p>Logged in as <?php echo $a->getAuthUserName(); ?></p>
+	<p><?php 
+	if($a->isAuth()) {
+		echo "Logged in as ".$a->getAuthUserName(); 
+	} else {
+		echo "You're not logged in.";		
+	}
+	?></p>
 </footer>

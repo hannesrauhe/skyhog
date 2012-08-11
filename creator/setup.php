@@ -48,10 +48,13 @@ if($query_result===FALSE) {
 		echo $db->lastErrorMsg();
 		exit(1);
 	}
+	echo "Created user table. Please reload!\n";
+	exit(0);
 } else if(!empty($query_result)) {
 	$query_result = $db->querySingle('SELECT * FROM users WHERE user_id=1', true);
 	if(empty($query_result)) {
 		echo "User table exists and has entries, but User 1 isn't there... repair manually!\n";
+		exit(1);
 	}
 	if($query_result['active']!=1) {
 		if(!$db->exec("UPDATE users SET active=1,admin=1 WHERE user_id=1")) {
@@ -59,6 +62,8 @@ if($query_result===FALSE) {
 			echo $db->lastErrorMsg();
 			exit(1);
 		}
+		echo "Activated User 1. Please reload!\n";
+		exit(0);
 	}
 }
 
