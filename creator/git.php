@@ -21,7 +21,7 @@ if(array_key_exists("push", $_POST)) {
 } else if(array_key_exists("commit", $_POST)) {
 	$gitarg1 = escapeshellarg($a->getAuthUserName());
 	$gitarg2 = escapeshellarg("Commit from webinterface, IP:".$_SERVER["REMOTE_ADDR"]);
-	$cmd = "commit --author $gitarg1 -m $gitarg2";
+	$cmd = "commit -a --author $gitarg1 -m $gitarg2";
 } else if(array_key_exists("remote_add", $_POST)) {
 	$cmd = "remote add ".escapeshellarg($_POST['remote_name'])." ".escapeshellarg($_POST['remote_url']);
 } else if(array_key_exists("remote_rm", $_POST)) {
