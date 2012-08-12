@@ -1,6 +1,6 @@
 <footer>
 	<p><?php 
-	if($a->isAuth()) {
+	if($a && $a->isAuth()) {
 		echo "Logged in as ".$a->getAuthUserName(); 
 	} else {
 		echo "You're not logged in.";		

@@ -42,16 +42,18 @@ if(!empty($msg)) {
 				}
 				echo "<th>Functions</th></tr>";
 				foreach ($users as $user) {
-					echo "<form action=\"users.php\" method=\"POST\"><tr>";
+					echo "<tr>";
 					foreach ($user as $key => $value) {
 						echo "<td>$value</td>";
 					}
 					echo "<td>
+					<form action=\"users.php\" method=\"POST\">
 					<input type='hidden' name='user_id' value='".$user['user_id']."' />
 					<input type=\"submit\" name='action' value='Delete' />
 					<input type=\"submit\" name='action' value='Activate' />
 					<input type=\"submit\" name='action' value='Promote' />
-					</td></tr></form>";
+					</form>
+					</td></tr>";
 				}
 			} else {
 				echo "<tr><td>There are no registered users! Run in maintenance mode!</td></tr>";

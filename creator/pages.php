@@ -112,8 +112,8 @@ include_once("nav.inc.phtml");
 			if ($handle = opendir(UPLOAD_DIR)) {			
 			    /* Das ist der korrekte Weg, ein Verzeichnis zu durchlaufen. */
 			    while (false !== ($f = readdir($handle))) {
-			    	if(substr($f,0,1)=='_' && substr($f, 1,1)!='_') {
-			        	echo "<li><a href='edit.php?file=$f'>$f</a></li>";
+			    	if(substr($f,0,1)=='_') {
+			        	echo "<li><a href='".$_SERVER['PHP_SELF']."?file=$f'>$f</a></li>";
 					}
 			    }
 			} else {

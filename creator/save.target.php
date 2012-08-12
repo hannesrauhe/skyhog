@@ -28,9 +28,10 @@ if($ret === FALSE || $retvar!=0) {
 	echo $ret;
     exit();
 }
+$gitarg1 = escapeshellarg($a->getAuthUserName());
 $gitarg2 = escapeshellarg("Commit from webinterface, IP:".$_SERVER["REMOTE_ADDR"]);
 $retvar = 0;
-$ret = system(GIT_CMD." commit -m $gitarg1",$retvar);
+$ret = system(GIT_CMD." commit --author $gitarg1 -m $gitarg2",$retvar);
 if($ret === FALSE || $retvar!=0) {
     echo "ERROR: commiting staged $file with git wasn't possible, commit-msg was $gitarg\n";
 	echo $ret;

@@ -6,6 +6,7 @@
 	<body>
 <?php
 include_once("nav.inc.phtml");
+$a = 0;
 ?>
 		<section>
 			<h1>SkyHog</h1>
@@ -15,12 +16,12 @@ include_once("nav.inc.phtml");
 			</p>
 			<?php endif; ?>
 			<div>
-				<form action="edit.php" method="post">
+				<form action="pages.php" method="post">
 				    <button>Login with Google</button>
 				</form>
 			</div>
 			<div>
-				<form action="edit.php" method="post">
+				<form action="pages.php" method="post">
 				    OpenID: <input type="text" name="openid_identifier" style="float:left;"/> <button>Submit</button>
 				</form>
 			</div>	
