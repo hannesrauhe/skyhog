@@ -2,5 +2,5 @@ testsites
 *.class
 *.pyc
 *.pyo
-/creator/preview/*
+/creator/preview
 /creator/config.inc.php
