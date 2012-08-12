@@ -59,7 +59,7 @@ if($CMS_update):
 			<form action="git.php" method="POST">			
 				<input type="hidden" name="CMS_update" value="<?php echo $CMS_update; ?>" />	
 				<input type="submit" name="log" value="log"/><br /><br />
-				<input type="submit" name="commit all" value="commit"/><br /><br />
+				<input type="submit" name="commit" value="commit all"/><br /><br />
 				<select name="remote" size="<?php echo count($remotes);?>">
 					<?php
 						foreach($remotes as &$r) {
