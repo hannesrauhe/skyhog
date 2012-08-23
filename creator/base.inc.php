@@ -34,23 +34,6 @@ class sqlite_db extends SQLite3 {
 		}
 		return $user;		
 	}
-	public function getUserByID($user_id) {
-		$user=array();
-		/*$stmt = $this->conn->stmt_init();
-		if($stmt->prepare("SELECT * FROM `users` WHERE `user_id` = ?")) {
-			$stmt->bind_param('i',$user_id);
-			$stmt->execute();
-			$this->bind_array($stmt, $user);
-			if(!$stmt->fetch()) {
-				$stmt->close();
-				return 0;
-			}
-			$stmt->close();
-		} else {
-			throw new Exception("Error Processing Request", 1);			
-		}*/
-		return $user;		
-	}
 	
 	public function getUsers() {		
 		$users=array();
@@ -66,18 +49,7 @@ class sqlite_db extends SQLite3 {
 		}
 		return $users;	
 	}
-	
-	public function changeUserName($user_id,$name) {
-		/*$elements=array();
-		$stmt = $this->conn->stmt_init();
-		if($stmt->prepare("UPDATE `users` SET name=? WHERE user_id = ?")) {
-			$stmt->bind_param('si',$name,$user_id);
-			$stmt->execute();
-			$stmt->close();
-		} else {
-			throw new Exception("Error Processing Request", 1);			
-		}	*/
-	}
+
 	public function activateUser($user_id) {
 		$stmt = $this->prepare("UPDATE `users` SET active=1 WHERE user_id = :uid");
 		if($stmt) {
@@ -99,6 +71,23 @@ class sqlite_db extends SQLite3 {
 			throw new Exception("Error Processing Request", 1);	
 		}	
 		return 0;
+	}
+	
+	/** nav table **/
+	
+	public function getNavEntries() {		
+		$nav=array();
+		$stmt = $this->prepare("SELECT * FROM `nav` ORDER BY menu_order;");
+		if($stmt) {
+			$r = $stmt->execute();
+			while($res = $r->fetchArray(SQLITE3_ASSOC)) {
+				$nav[]=$res;
+			}
+			$stmt->close();
+		} else {
+			throw new Exception("Error Processing Request", 1);			
+		}
+		return $nav;	
 	}
 }
 

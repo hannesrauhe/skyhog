@@ -12,6 +12,22 @@ if(array_key_exists("file",$_GET)) {
 	$file = "_index.html";
 }
 
+$ordered_pages = $d->getNavEntries();
+
+$pages = array();
+if ($handle = opendir(UPLOAD_DIR)) {
+    while (false !== ($f = readdir($handle))) {
+    	if(substr($f,0,1)=='_' && substr($f,1,1)!='_') {
+//    		foreach($ordered_pages as $o) {
+//    			
+//    		}
+        	$pages[] = $f;
+		}
+    }
+} else {
+	$msg .= "Error: preview-directory cannot be opened!";
+}
+			
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -109,18 +125,18 @@ include_once("nav.inc.phtml");
 		<h2>Pages</h2>
 		<ul>
 			<?php
-			if ($handle = opendir(UPLOAD_DIR)) {			
-			    /* Das ist der korrekte Weg, ein Verzeichnis zu durchlaufen. */
-			    while (false !== ($f = readdir($handle))) {
-			    	if(substr($f,0,1)=='_') {
-			        	echo "<li><a href='".$_SERVER['PHP_SELF']."?file=$f'>$f</a></li>";
-					}
-			    }
-			} else {
-				echo "Error: preview-directory cannot be opened!";
+		    foreach($ordered_pages as $f) {
+	        	echo "<li><a href='".$_SERVER['PHP_SELF']."?file=_".$f['link']."'>".$f['id']."</a></li>";
 			}
 			?>
 				
+		</ul>
+		<ul>
+			<?php
+		    foreach($pages as $f) {
+	        	echo "<li><a href='".$_SERVER['PHP_SELF']."?file=$f'>$f</a></li>";
+			}
+			?>				
 		</ul>
 		<button id="b_generate_prev">Generate Preview</button>
 		<button id="b_generate">Generate!</button><br />
