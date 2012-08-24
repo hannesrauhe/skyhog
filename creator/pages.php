@@ -18,9 +18,11 @@ $pages = array();
 if ($handle = opendir(UPLOAD_DIR)) {
     while (false !== ($f = readdir($handle))) {
     	if(substr($f,0,1)=='_' && substr($f,1,1)!='_') {
-//    		foreach($ordered_pages as $o) {
-//    			
-//    		}
+    		$f = substr($f,1);
+    		foreach($ordered_pages as $o) {
+    			if($o['link']==$f) 
+					continue(2);
+    		}
         	$pages[] = $f;
 		}
     }
@@ -34,10 +36,13 @@ if ($handle = opendir(UPLOAD_DIR)) {
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>Edit Page</title>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
+<script src="js/jquery-1.8.0.min.js"></script>
+<link rel="stylesheet" type="text/css" href="css/ui-lightness/jquery-ui-1.8.23.custom.css" media="all">
+<script src="js/jquery-ui-1.8.23.custom.min.js"></script>
+<!--<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>-->
 <script src="http://malsup.github.com/jquery.form.js"></script> 
  
-    <script> 
+<script> 
     $(document).ready(function() { 
         $('#content_form').ajaxForm({ 
             target: '#msg' 
@@ -54,6 +59,9 @@ if ($handle = opendir(UPLOAD_DIR)) {
 	        		$("#msg").html(data);
 	        	});
         });
+        $('#sorted_menu, #unsorted_menu').sortable({
+			connectWith: ".connectedSortable"
+		});
     }); 
 </script> 
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -95,7 +103,7 @@ if ($handle = opendir(UPLOAD_DIR)) {
 		theme_advanced_resizing : true,
 
 		// Example content CSS (should be your site CSS)
-		content_css : "index.css",
+		content_css : "<?php echo UPLOAD_PATH ?>index.css",
 		file_browser_callback: 'openKCFinder',
 
 		// Style formats
@@ -121,20 +129,22 @@ include_once("nav.inc.phtml");
 	<p id="msg"> 
 		<?php echo $msg; ?>
 	</p>
-	<aside id="filelist" style="float:right; border-style: solid;padding:10px">
+	<aside id="skyhog_pages" >
 		<h2>Pages</h2>
-		<ul>
+		<h3>In the Navigation</h3>
+		<ul id="sorted_menu" class="connectedSortable">
 			<?php
 		    foreach($ordered_pages as $f) {
-	        	echo "<li><a href='".$_SERVER['PHP_SELF']."?file=_".$f['link']."'>".$f['id']."</a></li>";
+	        	echo "<li class='ui-state-default'><span class='ui-icon ui-icon-arrowthick-2-n-s'></span><a href='".$_SERVER['PHP_SELF']."?file=_".$f['link']."'>".$f['id']."</a></li>";
 			}
 			?>
 				
 		</ul>
-		<ul>
+		<h3>Not</h3>
+		<ul id="unsorted_menu" class="connectedSortable">
 			<?php
 		    foreach($pages as $f) {
-	        	echo "<li><a href='".$_SERVER['PHP_SELF']."?file=$f'>$f</a></li>";
+	        	echo "<li class='ui-state-highlight'><span class='ui-icon ui-icon-arrowthick-2-n-s'></span><a href='".$_SERVER['PHP_SELF']."?file=$f'>$f</a></li>";
 			}
 			?>				
 		</ul>

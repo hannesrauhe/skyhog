@@ -13,3 +13,13 @@
 	float: left;
 	padding: 10px 15px 0px;
 }
+
+#skyhog_pages {
+	float:right; 
+	border-style: solid;
+	padding:10px
+}
+
+#skyhog_pages ul {
+	list-style: none;
+}
