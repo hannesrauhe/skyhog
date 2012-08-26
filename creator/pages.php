@@ -60,7 +60,10 @@ if ($handle = opendir(UPLOAD_DIR)) {
 	        	});
         });
         $('#sorted_menu, #unsorted_menu').sortable({
-			connectWith: ".connectedSortable"
+			connectWith: ".connectedSortable",
+			change: function(event, ui) { 
+				$('input[name="navigation_changed"]').attr('value','1');
+			 }
 		});
     }); 
 </script> 
@@ -135,7 +138,9 @@ include_once("nav.inc.phtml");
 		<ul id="sorted_menu" class="connectedSortable">
 			<?php
 		    foreach($ordered_pages as $f) {
-	        	echo "<li class='ui-state-default'><span class='ui-icon ui-icon-arrowthick-2-n-s'></span><a href='".$_SERVER['PHP_SELF']."?file=_".$f['link']."'>".$f['id']."</a></li>";
+	        	echo "<li class='ui-state-default'>
+		        	<span class='ui-icon ui-icon-arrowthick-2-n-s'></span><a href='".$_SERVER['PHP_SELF']."?file=_".$f['link']."'>".$f['id']."</a>
+		        	</li>";
 			}
 			?>
 				
@@ -144,7 +149,9 @@ include_once("nav.inc.phtml");
 		<ul id="unsorted_menu" class="connectedSortable">
 			<?php
 		    foreach($pages as $f) {
-	        	echo "<li class='ui-state-highlight'><span class='ui-icon ui-icon-arrowthick-2-n-s'></span><a href='".$_SERVER['PHP_SELF']."?file=$f'>$f</a></li>";
+	        	echo "<li class='ui-state-highlight'>
+	        		<span class='ui-icon ui-icon-arrowthick-2-n-s'></span><a href='".$_SERVER['PHP_SELF']."?file=_$f'>$f</a>
+	        		</li>";
 			}
 			?>				
 		</ul>
@@ -179,6 +186,7 @@ include_once("nav.inc.phtml");
 				
 				<br />
 				<input type="hidden" name="file" value="<?php echo $file; ?>" />
+				<input type="hidden" name="navigation_changed" value="0" />
 				<input type="submit" name="save" value="Submit" />
 				<input type="reset" name="reset" value="Reset" />
 			</div>

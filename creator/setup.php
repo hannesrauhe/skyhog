@@ -40,6 +40,8 @@ if(is_dir(UPLOAD_DIR)) {
 
 //db
 $db = new SQLite3(UPLOAD_DIR."scihog.db");
+
+/* Users table */
 $query_result = $db->querySingle('SELECT * FROM users', true);
 if($query_result===FALSE) {
 	$r = $db->exec("CREATE TABLE users(user_id INTEGER PRIMARY KEY, name VARCHAR(100), openid VARCHAR(255) UNIQUE, email VARCHAR(100), active BOOL, admin BOOL);");
@@ -67,9 +69,10 @@ if($query_result===FALSE) {
 	}
 }
 
+/* nav table */
 $query_result = $db->querySingle('SELECT * FROM nav', true);
 if($query_result===FALSE) {
-	$r = $db->exec("CREATE TABLE nav (link TEXT, id TEXT, name_de TEXT, menu_order INTEGER PRIMARY KEY);");
+	$r = $db->exec("CREATE TABLE nav (link TEXT, id TEXT PRIMARY KEY, name TEXT, menu_order INTEGER);");
 	if(!$r) {
 		echo "Nav table cannot be created, because: \n";
 		echo $db->lastErrorMsg();

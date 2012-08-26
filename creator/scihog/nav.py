@@ -2,7 +2,7 @@ def generate(generator_class,content_name):
     import sqlite3 
     connection = sqlite3.connect(generator_class.output_dir+"/scihog.db")
     cursor = connection.cursor()
-    cursor.execute("SELECT * FROM nav ORDER BY menu_order")
+    cursor.execute("SELECT * FROM nav WHERE menu_order>=0 ORDER BY menu_order")
     code = []
     code.append('<nav>\n')
     code.append('<ul>\n')
