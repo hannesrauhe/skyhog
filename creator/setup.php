@@ -118,6 +118,27 @@ if(!is_file(".gitignore")) {
 		echo ".gitignore could not be created\n";
 	}
 	echo ".gitignore created\n";
+} else {
+	echo ".gitignore is there\n";	
+}
+
+if(!is_file("__template.html")) {
+	if(!copy("setup/__template.html", "__template.html")) {
+		echo "__template.html could not be created\n";
+	}
+	echo "__template.html created\n";
+} else {
+	echo "__template.html is there\n";	
+}
+
+
+if(!is_file("_index.html")) {
+	if(!copy("setup/_index.html", "__template.html")) {
+		echo "_index.html could not be created\n";
+	}
+	echo "_index.html created\n";
+} else {
+	echo "_index.html is there\n";	
 }
 
 
