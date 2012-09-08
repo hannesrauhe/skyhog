@@ -48,21 +48,27 @@ if ($handle = opendir(UPLOAD_DIR)) {
             target: '#msg' 
         }); 
         $('#b_generate_prev').click(function() {
-        	$.post('generate.target.php', function(data) {
+        	$.post('generate.target.php', 
+        		{"navigation": $('input[name="navigation_changed"]').attr('value')} , function(data) {
         		$("#msg").html(data);
         	});
         });
         $('#b_generate').click(function() {
         	$.post('generate.target.php', 
-	        	{finalize:"1"},
+	        	{"finalize":"1",
+	        		"navigation": $('input[name="navigation_changed"]').attr('value')},
 	        	function(data) {
 	        		$("#msg").html(data);
 	        	});
         });
         $('#sorted_menu, #unsorted_menu').sortable({
 			connectWith: ".connectedSortable",
-			change: function(event, ui) { 
-				$('input[name="navigation_changed"]').attr('value','1');
+			stop: function(event, ui) { 
+				var menu_order = new Array();
+				$('#sorted_menu li').each(function(index) {
+					menu_order[index] = $(this).text();
+				});
+				$('input[name="navigation_changed"]').attr('value',JSON.stringify(menu_order));
 			 }
 		});
     }); 
@@ -149,12 +155,13 @@ include_once("nav.inc.phtml");
 		<ul id="unsorted_menu" class="connectedSortable">
 			<?php
 		    foreach($pages as $f) {
-	        	echo "<li class='ui-state-highlight'>
+	        	echo "<li class='ui-state-highlight new_menu_entry'>
 	        		<span class='ui-icon ui-icon-arrowthick-2-n-s'></span><a href='".$_SERVER['PHP_SELF']."?file=_$f'>$f</a>
 	        		</li>";
 			}
 			?>				
 		</ul>
+		<input type="hidden" name="navigation_changed" value="0" />
 		<button id="b_generate_prev">Generate Preview</button>
 		<button id="b_generate">Generate!</button><br />
 		<a href="<?php echo UPLOAD_PATH ?>" target="new" >Show Preview</a>
@@ -186,7 +193,6 @@ include_once("nav.inc.phtml");
 				
 				<br />
 				<input type="hidden" name="file" value="<?php echo $file; ?>" />
-				<input type="hidden" name="navigation_changed" value="0" />
 				<input type="submit" name="save" value="Submit" />
 				<input type="reset" name="reset" value="Reset" />
 			</div>
