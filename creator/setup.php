@@ -1,3 +1,7 @@
+<a href="index.php">Start (wait for SUCCESS message)</a>
+<br />
+<a href="setup.php">Reload</a>
+<br />
 <textarea readonly="readonly" rows="20" cols="80">
 <?php
 include_once("setup/00_check_config.inc.php");
@@ -101,6 +105,7 @@ if($ret!==0) {
 if(!is_file(".gitignore")) {
 	if(FALSE===file_put_contents(".gitignore", "*.html\n!_*.html")) {
 		echo ".gitignore could not be created\n";
+		exit(1);
 	}
 	echo ".gitignore created\n";
 } else {
@@ -110,6 +115,7 @@ if(!is_file(".gitignore")) {
 if(!is_file("__template.html")) {
 	if(!copy("setup/__template.html", "__template.html")) {
 		echo "__template.html could not be created\n";
+		exit(1);
 	}
 	echo "__template.html created\n";
 } else {
@@ -120,11 +126,14 @@ if(!is_file("__template.html")) {
 if(!is_file("_index.html")) {
 	if(!copy("setup/_index.html", "__template.html")) {
 		echo "_index.html could not be created\n";
+		exit(1);
 	}
 	echo "_index.html created\n";
 } else {
 	echo "_index.html is there\n";	
 }
+
+echo "SUCCESS";
 ?>
 </textarea>
 

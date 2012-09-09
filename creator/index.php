@@ -1,3 +1,9 @@
+<?php
+session_start();
+if(isset($_SESSION['user']) && $_SESSION['user']['active']) {
+	header("Location: pages.php");	
+}
+?>
 <html>
 	<head>
 		<title>SkyHog</title>
