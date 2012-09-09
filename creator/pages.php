@@ -27,7 +27,7 @@ if ($handle = opendir(UPLOAD_DIR)) {
 		}
     }
 } else {
-	$msg .= "Error: preview-directory cannot be opened!";
+	$msg .= "Error: preview-directory cannot be opened! Run the maintenance script for more information";
 }
 			
 ?>
@@ -35,12 +35,11 @@ if ($handle = opendir(UPLOAD_DIR)) {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Edit Page</title>
+<title>Edit Pages</title>
 <script src="js/jquery-1.8.0.min.js"></script>
 <link rel="stylesheet" type="text/css" href="css/ui-lightness/jquery-ui-1.8.23.custom.css" media="all">
 <script src="js/jquery-ui-1.8.23.custom.min.js"></script>
-<!--<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>-->
-<script src="http://malsup.github.com/jquery.form.js"></script> 
+<script src="js/jquery.form.js"></script> 
  
 <script> 
 var navigation_order = new Array();
@@ -65,7 +64,7 @@ $(document).ready(function() {
     		{"navigation_changed": navigation_changed ? navigation_order : navigation_changed } ,//$('input[name="navigation_changed"]').attr('value')} , 
     		generate_callback
     	).error(function() { 		   
-    		$("#msg").html("Somethign went wrong. See, if the maintenance script can give you a hint.");
+    		$("#msg").html("Something went wrong. See, if the maintenance script can give you a hint.");
 		});
     });
     $('#b_generate').click(function() {
@@ -74,7 +73,7 @@ $(document).ready(function() {
         		"navigation_changed": navigation_changed ? navigation_order : navigation_changed } ,//$('input[name="navigation_changed"]').attr('value')} ,
     		generate_callback
     	).error(function() { 		   
-    		$("#msg").html("Somethign went wrong. See, if the maintenance script can give you a hint.");
+    		$("#msg").html("Something went wrong. See, if the maintenance script can give you a hint.");
 		});
     });
     $('#sorted_menu, #unsorted_menu').sortable({

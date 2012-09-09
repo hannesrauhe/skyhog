@@ -4,7 +4,7 @@
 <br />
 <textarea readonly="readonly" rows="20" cols="80">
 <?php
-include_once("setup/00_check_config.inc.php");
+require_once("setup/00_check_config.inc.php");
 
 //reinit Session
 session_start();
@@ -57,24 +57,13 @@ if($query_result===FALSE) {
 	}
 }
 
-/* nav table */
-$query_result = $db->querySingle('SELECT * FROM nav', true);
-if($query_result===FALSE) {
-	$r = $db->exec("CREATE TABLE nav (link TEXT, id TEXT PRIMARY KEY, name TEXT, menu_order INTEGER);");
-	if(!$r) {
-		echo "Nav table cannot be created, because: \n";
-		echo $db->lastErrorMsg();
-		exit(1);
-	}
-	echo "Created nav table.\n";
-} 
-
 $db->close();
-
 
 // basic tests are done - now do the authentication
 require_once("./base.inc.php");
 
+//check the tables now
+require_once("./setup/01_check_tables.inc.php");
 
 //live directory
 if(is_dir(PAGE_DIR)) {
