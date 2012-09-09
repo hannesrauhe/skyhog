@@ -64,14 +64,18 @@ $(document).ready(function() {
     	$.post('generate.target.php', 
     		{"navigation_changed": navigation_changed ? navigation_order : navigation_changed } ,//$('input[name="navigation_changed"]').attr('value')} , 
     		generate_callback
-    	);
+    	).error(function() { 		   
+    		$("#msg").html("Somethign went wrong. See, if the maintenance script can give you a hint.");
+		});
     });
     $('#b_generate').click(function() {
     	$.post('generate.target.php', 
         	{"finalize":"1",
         		"navigation_changed": navigation_changed ? navigation_order : navigation_changed } ,//$('input[name="navigation_changed"]').attr('value')} ,
     		generate_callback
-    	);
+    	).error(function() { 		   
+    		$("#msg").html("Somethign went wrong. See, if the maintenance script can give you a hint.");
+		});
     });
     $('#sorted_menu, #unsorted_menu').sortable({
 		connectWith: ".connectedSortable",
