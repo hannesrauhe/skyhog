@@ -92,12 +92,12 @@ if($ret!==0) {
 }
 
 echo "Checking local git config:";
-system( GIT_CMD. 'config --get user.name',$ret);
+system( GIT_CMD. ' config --get user.name',$ret);
 echo $ret."\n";
 if($ret!=0) {
 	echo "No local user is set, setting the defaults for you\n";
-	system( GIT_CMD. 'config user.name "SkyHog CMS"');
-	system( GIT_CMD. 'config user.email info@scitivity.net');
+	system( GIT_CMD. ' config user.name "SkyHog CMS"');
+	system( GIT_CMD. ' config user.email info@scitivity.net');
 }
 
 if(!is_file(".gitignore")) {
