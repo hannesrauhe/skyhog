@@ -1,5 +1,4 @@
 <?php
-
 //
 //  Project: phpLiteAdmin (http://phpliteadmin.googlecode.com)
 //  Version: 1.9.2
@@ -35,6 +34,7 @@
 //BEGIN USER-DEFINED VARIABLES
 //////////////////////////////
 
+include_once("config.inc.php");
 //password to gain access
 $password = "scidbhog";
 
@@ -50,7 +50,7 @@ $databases = array
 (
 	array
 	(
-		"path"=> "../preview/scihog.db",
+		"path"=> UPLOAD_DIR.DB_NAME,
 		"name"=> "SciHoG"
 	)
 );

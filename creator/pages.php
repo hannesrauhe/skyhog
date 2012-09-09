@@ -43,35 +43,52 @@ if ($handle = opendir(UPLOAD_DIR)) {
 <script src="http://malsup.github.com/jquery.form.js"></script> 
  
 <script> 
-    $(document).ready(function() { 
-        $('#content_form').ajaxForm({ 
-            target: '#msg' 
-        }); 
-        $('#b_generate_prev').click(function() {
-        	$.post('generate.target.php', 
-        		{"navigation": $('input[name="navigation_changed"]').attr('value')} , function(data) {
-        		$("#msg").html(data);
-        	});
-        });
-        $('#b_generate').click(function() {
-        	$.post('generate.target.php', 
-	        	{"finalize":"1",
-	        		"navigation": $('input[name="navigation_changed"]').attr('value')},
-	        	function(data) {
-	        		$("#msg").html(data);
-	        	});
-        });
-        $('#sorted_menu, #unsorted_menu').sortable({
-			connectWith: ".connectedSortable",
-			stop: function(event, ui) { 
-				var menu_order = new Array();
-				$('#sorted_menu li').each(function(index) {
-					menu_order[index] = $(this).text();
-				});
-				$('input[name="navigation_changed"]').attr('value',JSON.stringify(menu_order));
-			 }
-		});
+var navigation_order = new Array();
+var navigation_changed = 0;
+
+var generate_callback=
+	function(data) {
+    		$("#msg").html(data);
+    		$('#sorted_menu li').removeClass("ui-state-highlight");
+    		$('#sorted_menu li').addClass("ui-state-default");
+    		$('#unsorted_menu li').addClass("ui-state-highlight");
+    		$('#unsorted_menu li').removeClass("ui-state-default");
+			$('#generate_buttons').css("border",'');
+    };
+	        
+$(document).ready(function() { 
+    $('#content_form').ajaxForm({ 
+        target: '#msg' 
     }); 
+    $('#b_generate_prev').click(function() {
+    	$.post('generate.target.php', 
+    		{"navigation_changed": navigation_changed ? navigation_order : navigation_changed } ,//$('input[name="navigation_changed"]').attr('value')} , 
+    		generate_callback
+    	);
+    });
+    $('#b_generate').click(function() {
+    	$.post('generate.target.php', 
+        	{"finalize":"1",
+        		"navigation_changed": navigation_changed ? navigation_order : navigation_changed } ,//$('input[name="navigation_changed"]').attr('value')} ,
+    		generate_callback
+    	);
+    });
+    $('#sorted_menu, #unsorted_menu').sortable({
+		connectWith: ".connectedSortable",
+		placeholder: "ui-state-highlight",
+		dropOnEmpty: true,
+		stop: function(event, ui) { 
+			navigation_changed=1;
+			$('#sorted_menu li').each(function(index) {
+				navigation_order[index] = $.trim($(this).text());
+			});
+			$('#generate_buttons').css("border","2px solid red");
+			//just debugging - and alternative later...
+			$('input[name="navigation_changed"]').attr('value',JSON.stringify(navigation_order));
+		 }
+	});
+	$('#sorted_menu, #unsorted_menu').disableSelection();
+}); 
 </script> 
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
@@ -140,7 +157,7 @@ include_once("nav.inc.phtml");
 	</p>
 	<aside id="skyhog_pages" >
 		<h2>Pages</h2>
-		<h3>In the Navigation</h3>
+		<h3>In Nav Menu</h3>
 		<ul id="sorted_menu" class="connectedSortable">
 			<?php
 		    foreach($ordered_pages as $f) {
@@ -151,7 +168,7 @@ include_once("nav.inc.phtml");
 			?>
 				
 		</ul>
-		<h3>Not</h3>
+		<h3>Not in Nav Menu</h3>
 		<ul id="unsorted_menu" class="connectedSortable">
 			<?php
 		    foreach($pages as $f) {
@@ -161,11 +178,15 @@ include_once("nav.inc.phtml");
 			}
 			?>				
 		</ul>
-		<input type="hidden" name="navigation_changed" value="0" />
-		<button id="b_generate_prev">Generate Preview</button>
-		<button id="b_generate">Generate!</button><br />
-		<a href="<?php echo UPLOAD_PATH ?>" target="new" >Show Preview</a>
-		<a href="<?php echo PAGE_PATH ?>" target="new" >Show Homepage</a>
+		<div id="generate_buttons">
+			<input type="hidden" name="navigation_changed" value="0" />
+			<button id="b_generate_prev">Generate Preview</button>
+			<button id="b_generate">Generate!</button><br />
+		</div>
+		<div id="preview_links">
+			<a href="<?php echo UPLOAD_PATH ?>" target="new" >Show Preview</a>
+			<a href="<?php echo PAGE_PATH ?>" target="new" >Show Homepage</a>
+		</div>
 	</aside>
 	<section id="main_container" style="padding:10px">
 		<h2>

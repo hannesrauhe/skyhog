@@ -20,23 +20,8 @@ if(array_key_exists('elm1',$_POST) && !empty($_POST['elm1'])) {
 }
 
 chdir(UPLOAD_DIR);
-$gitarg1 = escapeshellarg($file);
-$retvar = 0;
-$ret = system(GIT_CMD." add $gitarg1",$retvar);
-if($ret === FALSE || $retvar!=0) {
-    echo "ERROR: adding $file with git wasn't possible\n";
-	echo $ret;
-    exit();
-}
-$gitarg1 = escapeshellarg($a->getAuthUserName());
-$gitarg2 = escapeshellarg("Commit from webinterface, IP:".$_SERVER["REMOTE_ADDR"]);
-$retvar = 0;
-$ret = system(GIT_CMD." commit --author $gitarg1 -m $gitarg2",$retvar);
-if($ret === FALSE || $retvar!=0) {
-    echo "ERROR: commiting staged $file with git wasn't possible, commit-msg was $gitarg\n";
-	echo $ret;
-    exit();
-}
+git::add($file);
+git::commit($a->getAuthUserName(), "Commit from webinterface");
 echo "\n";
 echo "SUCCESS";
 ?>

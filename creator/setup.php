@@ -1,22 +1,5 @@
 <?php
-if((include_once("./config.inc.php")) === FALSE) {
-//config does not exist yet - use template
-	if(!array_key_exists('DOMAIN', $_POST)) {
-		echo "TODO: Print form!\n"; //TODO
-		exit(1);
-	} else {
-		//relevant data has been POSTED - replace in config-template
-		$file_c = file_get_contents("./config.inc.php.template");
-		if($file_c) {
-		    $file = str_replace(array_keys($_POST), array_values($_POST), $file);
-		    if(file_put_contents("./config.inc.php", $file_c) === FALSE) {
-		    	echo "The config file hasn't been written, make the scyhog directory writable for the webserver and reload or copy this content to config.inc.php:\n";
-				echo $file;
-				exit(1);
-		    }
-		}
-	}
-}
+include_once("setup/00_check_config.inc.php");
 
 //reinit Session
 session_start();
@@ -39,7 +22,7 @@ if(is_dir(UPLOAD_DIR)) {
 }
 
 //db
-$db = new SQLite3(UPLOAD_DIR."scihog.db");
+$db = new SQLite3(UPLOAD_DIR.DB_NAME);
 
 /* Users table */
 $query_result = $db->querySingle('SELECT * FROM users', true);
@@ -78,6 +61,7 @@ if($query_result===FALSE) {
 		echo $db->lastErrorMsg();
 		exit(1);
 	}
+	echo "Created nav table.\n";
 } 
 
 $db->close();

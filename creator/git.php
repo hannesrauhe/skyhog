@@ -46,7 +46,8 @@ include_once("nav.inc.phtml");
 if($CMS_update):
 ?>
 		<p id="update_warning">
-			Attention: The Skyhog Update will just update the system files. Your user files may not be compatible anymore.
+			Attention: The Skyhog Update will just update the system files. Your user files may not be compatible anymore.<br />
+			<a href="setup.php">Click here after updating to check, if your installation is fine.</a>
 		</p>
 <?php endif; ?>
 		<p>
