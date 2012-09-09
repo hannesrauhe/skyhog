@@ -1,3 +1,4 @@
+<textarea readonly="readonly" rows="20" cols="80">
 <?php
 include_once("setup/00_check_config.inc.php");
 
@@ -124,5 +125,6 @@ if(!is_file("_index.html")) {
 } else {
 	echo "_index.html is there\n";	
 }
-
+?>
+</textarea>
 
