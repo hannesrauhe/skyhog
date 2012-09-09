@@ -53,8 +53,8 @@ if($CMS_update):
 		<p>
 			Output of git <?php echo $cmd ?>:<br />
 			<textarea rows="10" cols="80"><?php
-				foreach($arr as &$a) {
-					echo trim($a)."\n";
+				foreach($arr as &$a1) {
+					echo trim($a1)."\n";
 				}
 			?></textarea>
 			<form action="git.php" method="POST">			

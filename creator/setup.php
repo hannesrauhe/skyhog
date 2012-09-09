@@ -91,10 +91,11 @@ if($ret!==0) {
 	exit(1);
 }
 
-echo "Checking local git config:\n";
+echo "Checking local git config:";
 system( GIT_CMD. 'config --get user.name',$ret);
+echo $ret."\n";
 if($ret==1) {
-	echo "No local user is set, setting the defaults for you:\n";
+	echo "No local user is set, setting the defaults for you\n";
 	system( GIT_CMD. 'config user.name "SkyHog CMS"');
 	system( GIT_CMD. 'config user.email info@scitivity.net');
 }
