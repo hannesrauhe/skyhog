@@ -91,6 +91,14 @@ if($ret!==0) {
 	exit(1);
 }
 
+echo "Checking local git config:\n";
+system( GIT_CMD. 'config --get user.name',$ret);
+if($ret==1) {
+	echo "No local user is set, setting the defaults for you:\n";
+	system( GIT_CMD. 'config user.name "SkyHog CMS"');
+	system( GIT_CMD. 'config user.email info@scitivity.net');
+}
+
 if(!is_file(".gitignore")) {
 	if(FALSE===file_put_contents(".gitignore", "*.html\n!_*.html")) {
 		echo ".gitignore could not be created\n";
