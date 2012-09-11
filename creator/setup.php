@@ -1,22 +1,10 @@
+<a href="index.php">Start (wait for SUCCESS message)</a>
+<br />
+<a href="setup.php">Reload</a>
+<br />
+<textarea readonly="readonly" rows="20" cols="80">
 <?php
-if((include_once("./config.inc.php")) === FALSE) {
-//config does not exist yet - use template
-	if(!array_key_exists('DOMAIN', $_POST)) {
-		echo "TODO: Print form!\n"; //TODO
-		exit(1);
-	} else {
-		//relevant data has been POSTED - replace in config-template
-		$file_c = file_get_contents("./config.inc.php.template");
-		if($file_c) {
-		    $file = str_replace(array_keys($_POST), array_values($_POST), $file);
-		    if(file_put_contents("./config.inc.php", $file_c) === FALSE) {
-		    	echo "The config file hasn't been written, make the scyhog directory writable for the webserver and reload or copy this content to config.inc.php:\n";
-				echo $file;
-				exit(1);
-		    }
-		}
-	}
-}
+require_once("setup/00_check_config.inc.php");
 
 //reinit Session
 session_start();
@@ -39,7 +27,7 @@ if(is_dir(UPLOAD_DIR)) {
 }
 
 //db
-$db = new SQLite3(UPLOAD_DIR."scihog.db");
+$db = new SQLite3(UPLOAD_DIR.DB_NAME);
 
 /* Users table */
 $query_result = $db->querySingle('SELECT * FROM users', true);
@@ -69,23 +57,13 @@ if($query_result===FALSE) {
 	}
 }
 
-/* nav table */
-$query_result = $db->querySingle('SELECT * FROM nav', true);
-if($query_result===FALSE) {
-	$r = $db->exec("CREATE TABLE nav (link TEXT, id TEXT PRIMARY KEY, name TEXT, menu_order INTEGER);");
-	if(!$r) {
-		echo "Nav table cannot be created, because: \n";
-		echo $db->lastErrorMsg();
-		exit(1);
-	}
-} 
-
 $db->close();
-
 
 // basic tests are done - now do the authentication
 require_once("./base.inc.php");
 
+//check the tables now
+require_once("./setup/01_check_tables.inc.php");
 
 //live directory
 if(is_dir(PAGE_DIR)) {
@@ -113,11 +91,47 @@ if($ret!==0) {
 	exit(1);
 }
 
+echo "Checking local git config:";
+system( GIT_CMD. ' config --get user.name',$ret);
+echo $ret."\n";
+if($ret!=0) {
+	echo "No local user is set, setting the defaults for you\n";
+	system( GIT_CMD. ' config user.name "SkyHog CMS"');
+	system( GIT_CMD. ' config user.email info@scitivity.net');
+}
+
 if(!is_file(".gitignore")) {
 	if(FALSE===file_put_contents(".gitignore", "*.html\n!_*.html")) {
 		echo ".gitignore could not be created\n";
+		exit(1);
 	}
 	echo ".gitignore created\n";
+} else {
+	echo ".gitignore is there\n";	
 }
 
+if(!is_file("__template.html")) {
+	if(!copy("setup/__template.html", "__template.html")) {
+		echo "__template.html could not be created\n";
+		exit(1);
+	}
+	echo "__template.html created\n";
+} else {
+	echo "__template.html is there\n";	
+}
+
+
+if(!is_file("_index.html")) {
+	if(!copy("setup/_index.html", "__template.html")) {
+		echo "_index.html could not be created\n";
+		exit(1);
+	}
+	echo "_index.html created\n";
+} else {
+	echo "_index.html is there\n";	
+}
+
+echo "SUCCESS";
+?>
+</textarea>
 

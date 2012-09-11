@@ -20,6 +20,9 @@
 	padding:10px
 }
 
-#skyhog_pages ul {
-	list-style: none;
-}
+#skyhog_pages ul {list-style: none;}
+
+#generate_buttons { margin: 5px }
+#sorted_menu, #unsorted_menu { 	list-style-type: none; margin: 0 auto; background: #eee; padding: 5px;	}
+#sorted_menu li, #unsorted_menu li { margin: 1px; padding: 1px; }
+	

@@ -4,7 +4,7 @@ require_once("./openid.inc.php");
 
 class sqlite_db extends SQLite3 {
 	public function __construct() {
-		$this->open(UPLOAD_DIR."/scihog.db");
+		$this->open(UPLOAD_DIR.DB_NAME);
 	}
 	
 	public function insertUser($openid,$name,$email) {
@@ -77,7 +77,7 @@ class sqlite_db extends SQLite3 {
 	
 	public function getNavEntries() {		
 		$nav=array();
-		$stmt = $this->prepare("SELECT * FROM `nav` ORDER BY menu_order;");
+		$stmt = $this->prepare("SELECT * FROM `nav` WHERE menu_order>=0 ORDER BY menu_order;");
 		if($stmt) {
 			$r = $stmt->execute();
 			while($res = $r->fetchArray(SQLITE3_ASSOC)) {
@@ -88,6 +88,53 @@ class sqlite_db extends SQLite3 {
 			throw new Exception("Error Processing Request", 1);			
 		}
 		return $nav;	
+	}
+	
+	public function insertNavEntry($link,$id,$name,$menu_order) {
+		$nav=array();
+		$stmt = $this->prepare("INSERT INTO nav (link,id,name,menu_order) VALUES (:link,:id,:name,:menu_order);");
+		if($stmt) {
+			$stmt->bindValue(':link',$link,SQLITE3_TEXT);
+			$stmt->bindValue(':id',$id,SQLITE3_TEXT);
+			$stmt->bindValue(':name',$name,SQLITE3_TEXT);
+			$stmt->bindValue(':menu_order',$menu_order,SQLITE3_INTEGER);
+			$stmt->execute();
+			$stmt->close();
+		} else {
+			throw new Exception("Error while inserting new nav entry", 1);			
+		}
+		
+	}
+			
+	public function orderNavEntries($nav_order) {	
+		$nav=array();
+		$stmt = $this->prepare("UPDATE `nav` SET menu_order=-1;");
+		if($stmt) {
+			$stmt->execute();
+			$stmt->close();
+		} else {
+			throw new Exception("Error while reseting menu_order", 1);			
+		}
+		
+		if(!empty($nav_order)) {
+			$i = 0;
+			$stmt = $this->prepare("UPDATE `nav` SET menu_order=:i WHERE id=:ent");
+			foreach($nav_order as $ent) {				
+				if($stmt) {
+					$stmt->bindValue(':i',$i,SQLITE3_INTEGER);
+					$stmt->bindValue(':ent',trim($ent),SQLITE3_TEXT); //have to trim because of strange spaces after JSON-parsing
+					$stmt->execute();
+					if($this->changes()==0) {
+						$this->insertNavEntry($ent, $ent, $ent, $i);
+					}
+					$stmt->reset();
+				} else {
+					throw new Exception("Error while setting menu_order", 1);			
+				}
+				$i++;
+			}
+			$stmt->close();
+		}
 	}
 }
 
@@ -185,6 +232,31 @@ class auth {
 			unset($_COOKIE['oid']);
 		}
 		session_destroy();
+	}
+}
+
+class git {
+	static public function add($file) {
+		$gitarg1 = escapeshellarg($file);
+		$retvar = 0;
+		$ret = system(GIT_CMD." add $gitarg1",$retvar);
+		if($ret === FALSE || $retvar!=0) {
+		    echo "ERROR: adding $file with git wasn't possible\n";
+			echo $ret;
+		    exit();
+		}
+	}
+	
+	static public function commit($author,$msg) {		
+		$gitarg1 = escapeshellarg($author);
+		$gitarg2 = escapeshellarg($msg.", IP:".$_SERVER["REMOTE_ADDR"]);
+		$retvar = 0;
+		$ret = system(GIT_CMD." commit --author $gitarg1 -m $gitarg2",$retvar);
+		if($ret === FALSE || $retvar!=0) {
+		    echo "ERROR: commiting staged $file with git wasn't possible, commit-msg was $gitarg\n";
+			echo $ret;
+		    exit();
+		}
 	}
 }
 
