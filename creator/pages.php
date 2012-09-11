@@ -40,36 +40,11 @@ if ($handle = opendir(UPLOAD_DIR)) {
 <link rel="stylesheet" type="text/css" href="css/ui-lightness/jquery-ui-1.8.23.custom.css" media="all">
 <script src="js/jquery-ui-1.8.23.custom.min.js"></script>
 <!--<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>-->
-<script src="http://malsup.github.com/jquery.form.js"></script> 
- 
-<script> 
-    $(document).ready(function() { 
-        $('#content_form').ajaxForm({ 
-            target: '#msg' 
-        }); 
-        $('#b_generate_prev').click(function() {
-        	$.post('generate.target.php', function(data) {
-        		$("#msg").html(data);
-        	});
-        });
-        $('#b_generate').click(function() {
-        	$.post('generate.target.php', 
-	        	{finalize:"1"},
-	        	function(data) {
-	        		$("#msg").html(data);
-	        	});
-        });
-        $('#sorted_menu, #unsorted_menu').sortable({
-			connectWith: ".connectedSortable",
-			change: function(event, ui) { 
-				$('input[name="navigation_changed"]').attr('value','1');
-			 }
-		});
-    }); 
-</script> 
+<script src="js/jquery.form.js"></script>
+<script src="js/pages.js"></script>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-<script type="text/javascript" src="tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript" src="tiny_mce/tiny_mce.js" />
 <script type="text/javascript">	
 	function openKCFinder(field_name, url, type, win) {
 	    tinyMCE.activeEditor.windowManager.open({
@@ -155,6 +130,9 @@ include_once("nav.inc.phtml");
 			}
 			?>				
 		</ul>
+		<form id="nav_order">
+			
+		</form>
 		<button id="b_generate_prev">Generate Preview</button>
 		<button id="b_generate">Generate!</button><br />
 		<a href="<?php echo UPLOAD_PATH ?>" target="new" >Show Preview</a>
