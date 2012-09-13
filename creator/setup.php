@@ -110,8 +110,9 @@ if(!is_file(".gitignore")) {
 	echo ".gitignore is there\n";	
 }
 
-if(!is_file("__template.html")) {
-	if(!copy("setup/__template.html", "__template.html")) {
+chdir(basename(__FILE__));
+if(!is_file(UPLOAD_DIR."__template.html")) {
+	if(!copy("setup/__template.html", UPLOAD_DIR."__template.html")) {
 		echo "__template.html could not be created\n";
 		exit(1);
 	}
@@ -121,8 +122,8 @@ if(!is_file("__template.html")) {
 }
 
 
-if(!is_file("_index.html")) {
-	if(!copy("setup/_index.html", "__template.html")) {
+if(!is_file(UPLOAD_DIR."_index.html")) {
+	if(!copy("setup/_index.html", UPLOAD_DIR."__index.html")) {
 		echo "_index.html could not be created\n";
 		exit(1);
 	}

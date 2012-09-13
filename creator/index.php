@@ -3,10 +3,16 @@ session_start();
 if(isset($_SESSION['user']) && $_SESSION['user']['active']) {
 	header("Location: pages.php");	
 }
+
+$redirect = "pages.php";
+if(isset($_REQUEST['redirect'])) {
+	$redirect = $_REQUEST['redirect'];
+}
+
 ?>
 <html>
 	<head>
-		<title>SkyHog</title>
+		<title>SkyHog Cockpit</title>
 		<link rel="stylesheet" type="text/css" href="style.css" media="all">
 	</head>
 	<body>
@@ -23,15 +29,18 @@ if(is_file("config.inc.php")):
 			</p>
 			<?php endif; ?>
 			<div>
-				<form action="pages.php" method="post">
-				    <button>Login with Google</button>
+				<form action="<?php echo $redirect; ?>" method="post">
+				    OpenID: <input type="text" name="openid_identifier" value="<?php echo $_COOKIE['oid']; ?>" /> 
+				    <input type="submit" value"Login" />
+				</form>
+				<p>or:</p>
+			</div>								
+			<div>
+				<form action="<?php echo $redirect; ?>" method="post">
+					<input type="hidden" name="openid_identifier" value="'https://www.google.com/accounts/o8/id'"/>
+				    <input type="submit" value="Login with Google" />
 				</form>
 			</div>
-			<div>
-				<form action="pages.php" method="post">
-				    OpenID: <input type="text" name="openid_identifier" style="float:left;"/> <button>Submit</button>
-				</form>
-			</div>	
 		</section>
 <?php
 else:	

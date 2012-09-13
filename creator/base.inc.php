@@ -157,6 +157,9 @@ class auth {
 		}
 		
     	if(!$this->openid->mode) {
+    		if(empty($oid)) {
+    			return false;
+    		}
     		$this->openid->identity = $oid;
 			$this->openid->required = array('namePerson/friendly', 'contact/email','namePerson/first');
 	        header('Location: ' . $this->openid->authUrl());
@@ -264,7 +267,7 @@ session_start();
 
 $d = new sqlite_db();
 $a = new auth();
-$oid = 'https://www.google.com/accounts/o8/id';
+$oid = '';
 
 if(array_key_exists("oid", $_COOKIE) && !empty($_COOKIE['oid'])) {
 	$oid = $_COOKIE['oid'];
@@ -275,8 +278,8 @@ if(array_key_exists("openid_identifier", $_POST) && !empty($_POST["openid_identi
 }
 
 if(!$a->auth($d,$oid)) {
-	$msg = "you have to register with google";	
-	Header("Location: index.php?msg=".urlencode($msg));
+	$msg = "Please provide a valid OpenID";	
+	Header("Location: index.php?msg=".urlencode($msg)."&redirect=".urlencode($_SERVER['SCRIPT_NAME']));
 	exit(0);
 }
 
