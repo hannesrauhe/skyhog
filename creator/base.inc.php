@@ -256,7 +256,7 @@ class git {
 		$retvar = 0;
 		$ret = system(GIT_CMD." commit --author $gitarg1 -m $gitarg2",$retvar);
 		if($ret === FALSE || $retvar!=0) {
-		    echo "ERROR: commiting staged $file with git wasn't possible, commit-msg was $gitarg\n";
+		    echo "ERROR: commiting staged files with git wasn't possible, commit-msg was $gitarg2\n";
 			echo $ret;
 		    exit();
 		}

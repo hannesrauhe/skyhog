@@ -15,6 +15,9 @@ var generate_callback=
 	        
 $(document).ready(function() { 
     $('#content_form').ajaxForm({ 
+    	beforeSerialize: function($form, options) { 
+		    tinyMCE.get("elm1").save();              
+		},
         target: '#msg' 
     }); 
     $('#b_generate_prev').click(function() {
@@ -49,4 +52,5 @@ $(document).ready(function() {
 		 }
 	});
 	$('#sorted_menu, #unsorted_menu').disableSelection();
+	$('#plain_options').hide();
 }); 

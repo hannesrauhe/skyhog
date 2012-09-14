@@ -36,16 +36,16 @@ if ($handle = opendir(UPLOAD_DIR)) {
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>Edit Pages</title>
-<script src="js/jquery-1.8.0.min.js"></script>
 <link rel="stylesheet" type="text/css" href="css/ui-lightness/jquery-ui-1.8.23.custom.css" media="all">
-<script src="js/jquery-ui-1.8.23.custom.min.js"></script>
-<script src="js/jquery.form.js"></script>
-<script src="js/pages.js"></script>
-
+<link rel="stylesheet" type="text/css" href="style.css" media="all">
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-<script type="text/javascript" src="tiny_mce/tiny_mce.js" />
-<script type="text/javascript">	
+<script src="js/jquery-1.8.0.min.js"></script>
+<script src="js/jquery-ui-1.8.23.custom.min.js"></script>
+<script src="js/jquery.form.js"></script>
+<script src="js-beautify/beautify-html.js"></script>
+<script src="tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript" >	
 	function openKCFinder(field_name, url, type, win) {
 	    tinyMCE.activeEditor.windowManager.open({
 	        file: 'kcfinder-2.51/browse.php?opener=tinymce&type=' + type,
@@ -95,10 +95,8 @@ if ($handle = opendir(UPLOAD_DIR)) {
 			{title : 'Table row 1', selector : 'tr', classes : 'tablerow1'}
 		]
 	});
-
 </script>
-
-		<link rel="stylesheet" type="text/css" href="style.css" media="all">
+<script src="js/pages.js"></script>
 </head>
 <body role="application" class="starting">
 <?php
@@ -151,19 +149,31 @@ include_once("nav.inc.phtml");
 					<textarea id="elm1" name="elm1" rows="40" cols="180" style="width: 80%">
 			                <?php	echo file_get_contents (UPLOAD_DIR.$file); ?>
 					</textarea>
-				</div>
-		
-				<!-- Some integration calls -->
-				<a href="javascript:;" onclick="tinyMCE.get('elm1').show();return false;">[Show]</a>
-				<a href="javascript:;" onclick="tinyMCE.get('elm1').hide();return false;">[Hide]</a>
-				<a href="javascript:;" onclick="tinyMCE.get('elm1').execCommand('Bold');return false;">[Bold]</a>
-				<a href="javascript:;" onclick="alert(tinyMCE.get('elm1').getContent());return false;">[Get contents]</a>
-				<a href="javascript:;" onclick="alert(tinyMCE.get('elm1').selection.getContent());return false;">[Get selected HTML]</a>
-				<a href="javascript:;" onclick="alert(tinyMCE.get('elm1').selection.getContent({format : 'text'}));return false;">[Get selected text]</a>
-				<a href="javascript:;" onclick="alert(tinyMCE.get('elm1').selection.getNode().nodeName);return false;">[Get selected element]</a>
-				<a href="javascript:;" onclick="tinyMCE.execCommand('mceInsertContent',false,'<b>Hello world!!</b>');return false;">[Insert HTML]</a>
-				<a href="javascript:;" onclick="tinyMCE.execCommand('mceReplaceContent',false,'<b>{$selection}</b>');return false;">[Replace selection]</a>
+				</div>	
 				
+				<span id="plain_options">
+					<a id="show_tiny" href="javascript:;">[Show TinyMCE]</a>
+					<a href="javascript:;" onclick="document.getElementById('elm1').value = style_html(tinyMCE.get('elm1').getContent());return false;">[Beautify Code]</a>
+				</span>
+				
+				<span id="tinymce_options">
+					<a id="hide_tiny" href="javascript:;">[Show Code]</a>	
+				</span>	
+				
+				<script type="text/javascript">
+					$('#show_tiny').click(function() {
+						$('#plain_options').hide();
+						$('#tinymce_options').show();
+						tinyMCE.get('elm1').show();
+						return false;
+					});
+					$('#hide_tiny').click(function() {
+						$('#tinymce_options').hide();
+						$('#plain_options').show();
+						tinyMCE.get('elm1').hide();
+						return false;
+					});
+				</script>		
 				<br />
 				<input type="hidden" name="file" value="<?php echo $file; ?>" />
 				<input type="hidden" name="navigation_changed" value="0" />
