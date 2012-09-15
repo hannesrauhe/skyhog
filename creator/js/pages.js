@@ -53,4 +53,13 @@ $(document).ready(function() {
 	});
 	$('#sorted_menu, #unsorted_menu').disableSelection();
 	$('#plain_options').hide();
+	
+	$('#sh_icons').show();
+	$('#sh_new_file_form').hide();
+	$('#sh_add_page').click(function() {
+		$('#sh_icons').hide();
+		$('#sh_new_file_form').show();
+		$('#sh_new_file_name').focus();
+		return false;
+    });
 }); 

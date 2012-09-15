@@ -14,13 +14,23 @@
 	padding: 10px 15px 0px;
 }
 
-#skyhog_pages {
+#skyhog_aside_right {
 	float:right; 
+	padding:5px
+}
+
+aside .sh_with_border {
 	border-style: solid;
-	padding:10px
+	margin: 3px;
+	padding: 5px;
 }
 
 #skyhog_pages ul {list-style: none;}
+
+.ui-icon {
+	width: 16px;
+	height: 16px;
+}
 
 #generate_buttons { margin: 5px }
 #sorted_menu, #unsorted_menu { 	list-style-type: none; margin: 0 auto; background: #eee; padding: 5px;	}

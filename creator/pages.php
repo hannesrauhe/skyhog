@@ -2,6 +2,8 @@
 require_once("base.inc.php");
 
 $msg = "";
+$file = "";
+
 if(array_key_exists("file",$_GET)) {
 	$file = basename($_GET['file']);
 	if(!is_file(UPLOAD_DIR.$file)) {
@@ -26,6 +28,9 @@ if ($handle = opendir(UPLOAD_DIR)) {
         	$pages[] = $f;
 		}
     }
+	if($is_new_file) {
+		$pages[] = substr($file,1);
+	}
 } else {
 	$msg .= "Error: preview-directory cannot be opened! Run the maintenance script for more information";
 }
@@ -102,40 +107,55 @@ if ($handle = opendir(UPLOAD_DIR)) {
 <?php
 include_once("nav.inc.phtml");
 ?>
-	<p id="msg"> 
+	<p id="sh_msg"> 
 		<?php echo $msg; ?>
 	</p>
-	<aside id="skyhog_pages" >
+	<aside id="skyhog_aside_right">
 		<h2>Pages</h2>
-		<h3>In Nav Menu</h3>
-		<ul id="sorted_menu" class="connectedSortable">
-			<?php
-		    foreach($ordered_pages as $f) {
-	        	echo "<li class='ui-state-default'>
-		        	<span class='ui-icon ui-icon-arrowthick-2-n-s'></span><a href='".$_SERVER['PHP_SELF']."?file=_".$f['link']."'>".$f['id']."</a>
-		        	</li>";
-			}
-			?>
-				
-		</ul>
-		<h3>Not in Nav Menu</h3>
-		<ul id="unsorted_menu" class="connectedSortable">
-			<?php
-		    foreach($pages as $f) {
-	        	echo "<li class='ui-state-highlight new_menu_entry'>
-	        		<span class='ui-icon ui-icon-arrowthick-2-n-s'></span><a href='".$_SERVER['PHP_SELF']."?file=_$f'>$f</a>
-	        		</li>";
-			}
-			?>				
-		</ul>
-		<div id="generate_buttons">
-			<input type="hidden" name="navigation_changed" value="0" />
-			<button id="b_generate_prev">Generate Preview</button>
-			<button id="b_generate">Generate!</button><br />
+		<div id="skyhog_pages" class="sh_with_border">
+			<h3>In Nav Menu</h3>
+			<ul id="sorted_menu" class="connectedSortable">
+				<?php
+			    foreach($ordered_pages as $f) {
+		        	echo "<li class='ui-state-default'>
+			        	<span class='ui-icon ui-icon-arrowthick-2-n-s'></span><a href='".$_SERVER['PHP_SELF']."?file=_".$f['link']."'>".$f['id']."</a>
+			        	</li>";
+				}
+				?>
+					
+			</ul>
+			<h3>Not in Nav Menu</h3>
+			<ul id="unsorted_menu" class="connectedSortable">
+				<?php
+			    foreach($pages as $f) {
+		        	echo "<li class='ui-state-highlight new_menu_entry'>
+		        		<span class='ui-icon ui-icon-arrowthick-2-n-s'></span><a href='".$_SERVER['PHP_SELF']."?file=_$f'>$f</a>
+		        		</li>";
+				}
+				?>				
+			</ul>	
+			<ul id="sh_icons" class="ui-widget ui-helper-clearfix" style="display:none;">			
+				<li class="ui-state-default ui-corner-all" title="Add Page" id="sh_add_page">
+					<a href="<?php echo $_SERVER['SCRIPT_NAME']; ?>?new=html" class="ui-icon ui-icon-plusthick"></a>
+				</li>	
+			</ul>
+			<form id="sh_new_file_form" method="POST" action="new.redirect.php">
+				<input id="sh_new_file_name" type="text" name="file" />
+				<input type="hidden" name="format" value="html" />
+				<input type="submit" value="+" />
+			</form>		
+
 		</div>
-		<div id="preview_links">
-			<a href="<?php echo UPLOAD_PATH ?>" target="new" >Show Preview</a>
-			<a href="<?php echo PAGE_PATH ?>" target="new" >Show Homepage</a>
+		<div class="sh_with_border">
+			<div id="generate_buttons">
+				<input type="hidden" name="navigation_changed" value="0" />
+				<button id="b_generate_prev">Generate Preview</button>
+				<button id="b_generate">Generate!</button><br />
+			</div>
+			<div id="preview_links">
+				<a href="<?php echo UPLOAD_PATH ?>" target="new" >Show Preview</a>
+				<a href="<?php echo PAGE_PATH ?>" target="new" >Show Homepage</a>
+			</div>
 		</div>
 	</aside>
 	<section id="main_container" style="padding:10px">
@@ -147,7 +167,7 @@ include_once("nav.inc.phtml");
 				<!-- Gets replaced with TinyMCE, remember HTML in a textarea should be encoded -->
 				<div>
 					<textarea id="elm1" name="elm1" rows="40" cols="180" style="width: 80%">
-			                <?php	echo file_get_contents (UPLOAD_DIR.$file); ?>
+			                <?php echo file_get_contents (UPLOAD_DIR.$file); ?>
 					</textarea>
 				</div>	
 				

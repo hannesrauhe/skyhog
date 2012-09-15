@@ -7,7 +7,7 @@ if(!array_key_exists("file",$_POST)) {
 }
 
 $file = basename($_POST['file']);
-if(!is_file(UPLOAD_DIR.$file)) {
+if(!is_file(UPLOAD_DIR.$file) && !array_key_exists("new",$_POST)) {
 	echo "ERROR: file does not exist";
 	exit(); 	
 }
