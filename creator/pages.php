@@ -28,9 +28,6 @@ if ($handle = opendir(UPLOAD_DIR)) {
         	$pages[] = $f;
 		}
     }
-	if($is_new_file) {
-		$pages[] = substr($file,1);
-	}
 } else {
 	$msg .= "Error: preview-directory cannot be opened! Run the maintenance script for more information";
 }
@@ -44,6 +41,7 @@ if ($handle = opendir(UPLOAD_DIR)) {
 <link rel="stylesheet" type="text/css" href="css/ui-lightness/jquery-ui-1.8.23.custom.css" media="all">
 <link rel="stylesheet" type="text/css" href="style.css" media="all">
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta charset="UTF-8" />
 
 <script src="js/jquery-1.8.0.min.js"></script>
 <script src="js/jquery-ui-1.8.23.custom.min.js"></script>
@@ -166,7 +164,7 @@ include_once("nav.inc.phtml");
 			<div>	
 				<!-- Gets replaced with TinyMCE, remember HTML in a textarea should be encoded -->
 				<div>
-					<textarea id="elm1" name="elm1" rows="40" cols="180" style="width: 80%">
+					<textarea id="elm1" name="elm1" rows="40" cols="180" style="width: 80%" enctype="multipart/form-data">
 			                <?php echo file_get_contents (UPLOAD_DIR.$file); ?>
 					</textarea>
 				</div>	

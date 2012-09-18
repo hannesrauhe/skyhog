@@ -1,11 +1,40 @@
 <?php
 require_once("base.inc.php");
 
+function bfglob($path, $pattern = '*', $flags = 0, $depth = 0) {
+    $matches = array();
+    $folders = array(rtrim($path, DIRECTORY_SEPARATOR));
+    
+    while($folder = array_shift($folders)) {
+        $matches = array_merge($matches, glob($folder.DIRECTORY_SEPARATOR.$pattern, $flags));
+        if($depth != 0) {
+            $moreFolders = glob($folder.DIRECTORY_SEPARATOR.'*', GLOB_ONLYDIR);
+            $depth   = ($depth < -1) ? -1: $depth + count($moreFolders) - 2;
+            $folders = array_merge($folders, $moreFolders);
+        }
+    }
+    return $matches;
+}
+
 $msg = "";
-$file = "__template.html";
+$file = $_REQUEST['file'];
+$ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+if(!in_array($ext,array("html","css","js")) || strstr($file,"..")) {
+	$file = "__template.html";
+}
+
 if(!is_file(UPLOAD_DIR.$file)) {
-	$msg = "File $file does not exist - Run setup script!";
+	$msg = "File $file does not exist!";
 }		
+
+$file_list = array();
+$startpos = strlen(realpath(UPLOAD_DIR))+1;
+foreach(bfglob(UPLOAD_DIR,"*.{css,js}", GLOB_BRACE, -1) as $f) {
+	$file_list[] = substr($f,$startpos);
+}
+foreach(bfglob(UPLOAD_DIR,"__*.html", GLOB_BRACE, -1) as $f) {
+	$file_list[] = substr($f,$startpos);
+}
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -25,6 +54,7 @@ if(!is_file(UPLOAD_DIR.$file)) {
     }); 
 </script> 
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta charset="UTF-8" />
 
 
 <link rel="stylesheet" type="text/css" href="style.css" media="all">
@@ -36,11 +66,26 @@ include_once("nav.inc.phtml");
 	<p id="msg"> 
 		<?php echo $msg; ?>
 	</p>
+	<aside id="skyhog_aside_right">
+		<h2>Files</h2>
+		<div id="skyhog_files" class="sh_with_border">
+			<ul>
+				<?php
+			    foreach($file_list as $f) {
+		        	echo "<li>
+			        	<a href='".$_SERVER['PHP_SELF']."?file=$f'>$f</a>
+			        	</li>";
+				}
+				?>
+					
+			</ul>
+		</div>
+	</aside>
 	<section id="main_container" style="padding:10px">
 		<h2>
-		Template
+		Template <?php echo $file; ?>
 		</h2>
-		<form method="post" action="save.target.php" id="content_form">
+		<form method="post" action="save.target.php" id="content_form" enctype="multipart/form-data">
 			<div>	
 				<!-- Gets replaced with TinyMCE, remember HTML in a textarea should be encoded -->
 				<div>
