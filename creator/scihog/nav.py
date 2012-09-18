@@ -8,9 +8,9 @@ def generate(generator_class,content_name):
     code.append('<ul>\n')
     for entry in cursor.fetchall():
         if content_name==entry[0]:
-            code.append('<a href="%s"><li id="%s" class="m_active">%s</li></a>\n' % entry[:3])
+            code.append('<li id="%s" class="m_active"><a href="%s">%s</a></li>\n' % entry[:3])
         else:
-            code.append('<a href="%s"><li id="%s">%s</li></a>\n' % entry[:3])
+            code.append('<li id="%s"><a href="%s">%s</a></li>\n' % entry[:3])
     code.append('</ul>\n')
     code.append('</nav>\n')
     return code
