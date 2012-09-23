@@ -62,4 +62,13 @@ $(document).ready(function() {
 		$('#sh_new_file_name').focus();
 		return false;
     });
+    
+	$('.sh_page_settings').click(function() {
+		$( "#sh_page_settings_dialog" ).dialog({
+			height: 140,
+			modal: true
+		});
+		
+		return false;
+    });
 }); 

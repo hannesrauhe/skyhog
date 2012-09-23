@@ -116,7 +116,8 @@ include_once("nav.inc.phtml");
 				<?php
 			    foreach($ordered_pages as $f) {
 		        	echo "<li class='ui-state-default'>
-			        	<span class='ui-icon ui-icon-arrowthick-2-n-s'></span><a href='".$_SERVER['PHP_SELF']."?file=_".$f['link']."'>".$f['id']."</a>
+			        	<span class='ui-icon ui-icon-arrowthick-2-n-s' style='float:left'></span><a href='".$_SERVER['PHP_SELF']."?file=_".$f['link']."'>".$f['id']."</a>
+			        	<span class='ui-icon ui-icon-wrench sh_page_settings' style='float:right'>".$f['id']."</span>
 			        	</li>";
 				}
 				?>
@@ -127,7 +128,7 @@ include_once("nav.inc.phtml");
 				<?php
 			    foreach($pages as $f) {
 		        	echo "<li class='ui-state-highlight new_menu_entry'>
-		        		<span class='ui-icon ui-icon-arrowthick-2-n-s'></span><a href='".$_SERVER['PHP_SELF']."?file=_$f'>$f</a>
+		        		<span class='ui-icon ui-icon-arrowthick-2-n-s' style='float:left'></span><a href='".$_SERVER['PHP_SELF']."?file=_$f'>$f</a>
 		        		</li>";
 				}
 				?>				
@@ -195,11 +196,20 @@ include_once("nav.inc.phtml");
 				<br />
 				<input type="hidden" name="file" value="<?php echo $file; ?>" />
 				<input type="hidden" name="navigation_changed" value="0" />
-				<input type="submit" name="save" value="Submit" />
+				<input type="submit" name="save"/>
 				<input type="reset" name="reset" value="Reset" />
 			</div>
 		</form>
 	</section>
+	<div id="sh_page_settings_dialog" title="Basic modal dialog">
+		<form method="post" action="save.target.php" id="sh_page_settings_form">
+			<input type="hidden" name="sh_page_id_old" value="" />
+			<span id="sh_page_file">file</span><br />
+			<input type="text" name="sh_page_name" value="" /><br />
+			<input type="text" name="sh_page_title" value="" />	<br />
+			<input type="submit" name="save"/>
+		</form>
+	</div>
 	<div  style="clear: both"></div>
 <?php
 include_once("footer.inc.phtml");
