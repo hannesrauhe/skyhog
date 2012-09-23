@@ -52,7 +52,7 @@ $(document).ready(function() {
 		 }
 	});
 	$('#sorted_menu, #unsorted_menu').disableSelection();
-	$('#plain_options').hide();
+	$('#sh_plain_options').hide();
 	
 	$('#sh_icons').show();
 	$('#sh_new_file_form').hide();
@@ -65,10 +65,14 @@ $(document).ready(function() {
     
 	$('.sh_page_settings').click(function() {
 		$( "#sh_page_settings_dialog" ).dialog({
-			height: 140,
+			height: 200,
 			modal: true
 		});
-		
+		var obj = jQuery.parseJSON($(this).text());
+		$("#sh_page_id_old").attr("value",obj.id);
+		$("#sh_page_id").attr("value",obj.id);		
+		$("#sh_page_name").attr("value",obj.name);
+		$("#sh_page_link").attr("value",obj.link);
 		return false;
     });
 }); 

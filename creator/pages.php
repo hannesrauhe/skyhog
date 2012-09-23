@@ -117,7 +117,7 @@ include_once("nav.inc.phtml");
 			    foreach($ordered_pages as $f) {
 		        	echo "<li class='ui-state-default'>
 			        	<span class='ui-icon ui-icon-arrowthick-2-n-s' style='float:left'></span><a href='".$_SERVER['PHP_SELF']."?file=_".$f['link']."'>".$f['id']."</a>
-			        	<span class='ui-icon ui-icon-wrench sh_page_settings' style='float:right'>".$f['id']."</span>
+			        	<span class='ui-icon ui-icon-wrench sh_page_settings' style='float:right'>".json_encode($f)."</span>
 			        	</li>";
 				}
 				?>
@@ -170,25 +170,25 @@ include_once("nav.inc.phtml");
 					</textarea>
 				</div>	
 				
-				<span id="plain_options">
-					<a id="show_tiny" href="javascript:;">[Show TinyMCE]</a>
+				<span id="sh_plain_options">
+					<a id="sh_show_tiny" href="javascript:;">[Show TinyMCE]</a>
 					<a href="javascript:;" onclick="document.getElementById('elm1').value = style_html(tinyMCE.get('elm1').getContent());return false;">[Beautify Code]</a>
 				</span>
 				
-				<span id="tinymce_options">
-					<a id="hide_tiny" href="javascript:;">[Show Code]</a>	
+				<span id="sh_tinymce_options">
+					<a id="sh_hide_tiny" href="javascript:;">[Show Code]</a>	
 				</span>	
 				
 				<script type="text/javascript">
-					$('#show_tiny').click(function() {
-						$('#plain_options').hide();
-						$('#tinymce_options').show();
+					$('#sh_show_tiny').click(function() {
+						$('#sh_plain_options').hide();
+						$('#sh_tinymce_options').show();
 						tinyMCE.get('elm1').show();
 						return false;
 					});
-					$('#hide_tiny').click(function() {
-						$('#tinymce_options').hide();
-						$('#plain_options').show();
+					$('#sh_hide_tiny').click(function() {
+						$('#sh_tinymce_options').hide();
+						$('#sh_plain_options').show();
 						tinyMCE.get('elm1').hide();
 						return false;
 					});
@@ -201,12 +201,14 @@ include_once("nav.inc.phtml");
 			</div>
 		</form>
 	</section>
-	<div id="sh_page_settings_dialog" title="Basic modal dialog">
-		<form method="post" action="save.target.php" id="sh_page_settings_form">
-			<input type="hidden" name="sh_page_id_old" value="" />
-			<span id="sh_page_file">file</span><br />
-			<input type="text" name="sh_page_name" value="" /><br />
-			<input type="text" name="sh_page_title" value="" />	<br />
+	<div id="sh_page_settings_dialog" title="Change Page Settings">
+		<form method="post" action="page_setting.target.php" id="sh_page_settings_form">
+			<input type="hidden" name="sh_page_id_old" id="sh_page_id_old" value="" />
+			<table>
+				<tr><td>Link: </td>			<td><input type="text" id="sh_page_link" name="sh_page_link" value="" readonly="readonly" /></td></tr>
+				<tr><td>ID (HTML): </td>	<td><input type="text" id="sh_page_id" name="sh_page_id" value="" /></td></tr>
+				<tr><td>Name/Title: </td>	<td><input type="text" id="sh_page_name" name="sh_page_name" value="" /></td></tr>
+			</table>
 			<input type="submit" name="save"/>
 		</form>
 	</div>
