@@ -34,7 +34,7 @@
 //BEGIN USER-DEFINED VARIABLES
 //////////////////////////////
 
-include_once("config.inc.php");
+include_once("../config.inc.php");
 //password to gain access
 $password = "scidbhog";
 
