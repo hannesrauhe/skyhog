@@ -27,7 +27,7 @@ aside .sh_with_border {
 
 #skyhog_pages ul {list-style: none;}
 #sh_page_settings {cursor: pointer;}
-#sh_page_settings_dialog { font-size: 0.7em}
+#sh_page_settings_dialog { font-size: 0.7em; display: none;}
 
 .ui-icon {
 	width: 16px;

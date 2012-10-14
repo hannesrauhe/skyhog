@@ -41,8 +41,21 @@ if(is_dir(UPLOAD_DIR)) {
 		exit(1);
 	}
 } else {
-	if(mkdir(UPLOAD_DIR)) {
-		echo "Preview dir created\n";
+	if(defined("USE_GIT_REPO")) {
+		$ret=1;
+		echo "The output of git clone:\n";
+		system( GIT_CMD." clone ".escapeshellarg(USE_GIT_REPO)." ".UPLOAD_DIR." 2>&1", $ret); 		
+		if($ret!==0) {
+			echo "git clone failed somehow!\n";
+			exit(1);
+		}
+	} else {
+		if(mkdir(UPLOAD_DIR)) {
+			echo "Preview dir created\n";
+		} else {
+			echo "couldn't create the preview/upload dir!\n";
+			exit(1);
+		}
 	}
 }
 
@@ -130,7 +143,8 @@ if(!is_file(".gitignore")) {
 	echo ".gitignore is there\n";	
 }
 
-chdir(basename(__FILE__));
+
+chdir(dirname(__FILE__));
 if(!is_file(UPLOAD_DIR."__template.html")) {
 	if(!copy("setup/__template.html", UPLOAD_DIR."__template.html")) {
 		echo "__template.html could not be created\n";
@@ -143,7 +157,7 @@ if(!is_file(UPLOAD_DIR."__template.html")) {
 
 
 if(!is_file(UPLOAD_DIR."_index.html")) {
-	if(!copy("setup/_index.html", UPLOAD_DIR."__index.html")) {
+	if(!copy("setup/_index.html", UPLOAD_DIR."_index.html")) {
 		echo "_index.html could not be created\n";
 		exit(1);
 	}

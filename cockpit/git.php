@@ -36,10 +36,11 @@ if(array_key_exists("push", $_POST)) {
 	$cmd = "pull ".escapeshellarg($_POST['remote'])." ".escapeshellarg($_POST['branch']);
 } else if(array_key_exists("log", $_POST)) {
 	$cmd = "log";
+} else if(array_key_exists("add", $_POST)) {
+	$arr = git::add("*");
 } else if(array_key_exists("commit", $_POST)) {
-	$gitarg1 = escapeshellarg($a->getAuthUserName());
-	$gitarg2 = escapeshellarg("Commit from webinterface, IP:".$_SERVER["REMOTE_ADDR"]);
-	$cmd = "commit -a --author $gitarg1 -m $gitarg2";
+	$cmd = "commit";
+	$arr = git::commit($a->getAuthUserName(),"Commit from webinterface");
 } else if(array_key_exists("remote_add", $_POST)) {
 	$cmd = "remote add ".escapeshellarg($_POST['remote_name'])." ".escapeshellarg($_POST['remote_url']);
 } else if(array_key_exists("remote_rm", $_POST)) {
@@ -48,7 +49,8 @@ if(array_key_exists("push", $_POST)) {
 } else {
 	$cmd = "status";
 }
-exec ( GIT_CMD." $cmd 2>&1", $arr);
+if(empty($arr))
+	exec ( GIT_CMD." $cmd 2>&1", $arr);
 exec ( GIT_CMD." remote", $remotes);
 exec ( GIT_CMD." branch", $branches);
 
@@ -78,6 +80,7 @@ if($CMS_update):
 			<form action="git.php" method="POST">			
 				<input type="hidden" name="CMS_update" value="<?php echo $CMS_update; ?>" />	
 				<input type="submit" name="log" value="log"/><br /><br />
+				<input type="submit" name="add" value="add all untracked"/>
 				<input type="submit" name="commit" value="commit all"/><br /><br />
 				<select name="remote" size="<?php echo count($remotes);?>">
 					<?php

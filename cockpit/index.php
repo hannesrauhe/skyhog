@@ -48,7 +48,7 @@ if(is_file("config.inc.php")):
 			<?php endif; ?>
 			<div>
 				<form action="<?php echo $redirect; ?>" method="post">
-				    OpenID: <input type="text" name="openid_identifier" value="<?php echo $_COOKIE['oid']; ?>" /> 
+				    OpenID: <input type="text" name="openid_identifier" value="<?php if(isset($_COOKIE['oid'])) echo $_COOKIE['oid']; ?>" /> 
 				    <input type="submit" value"Login" />
 				</form>
 				<p>or:</p>

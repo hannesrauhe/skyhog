@@ -2,5 +2,7 @@ testsites
 *.class
 *.pyc
 *.pyo
-/creator/preview
-/creator/config.inc.php
+/cockpit/preview
+/cockpit/config.inc.php
+/preview
+/live*

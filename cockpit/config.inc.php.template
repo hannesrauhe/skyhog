@@ -1,10 +1,17 @@
 <?php
-define("DOMAIN","__DOMAIN__");
+//fill in your domain - without subfolders 
+define("DOMAIN","Put your domain here!");
+
+//uncomment the next line and fill in your repo-URL - Skyhog will try to clone on setup
+define("USE_GIT_REPO","https://github.com/hannesrauhe/skyhog_example_template.git");
 
 define("PAGE_DIR","../");
 define("PAGE_PATH","../");
-define("UPLOAD_PATH", "./preview/");
-define("UPLOAD_DIR", dirname(__FILE__) . "/preview/");
+define("UPLOAD_PATH", "../preview/");
+define("UPLOAD_DIR", dirname(__FILE__) . "/../preview/");
 define("GIT_CMD","git");
 define("PYTHON_CMD","python");
 define("DB_NAME","scihog.db");
+
+//in case you have to use PHPsqliteadmin - set a separate password for access
+define("PHPSQLITEADMIN_PASSWD","scihogdb")
