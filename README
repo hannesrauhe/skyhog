@@ -1,0 +1,12 @@
+Welcome to Skyhog!
+
+Skyhog is a CMS, which creates static html pages.
+
+It's alpha at the moment, so there is no documentation. Sorry. 
+
+Features:
+*templates are written in plain HTML with a few HTML comments -- nothing to learn
+*the core is written in python and independent from the webinterface -- pages can be generated offline if needed
+*the system updates come in via git
+*the content is managed with git, can be deployed on different servers -- changes can be made on the local machine and transferred via git
+
