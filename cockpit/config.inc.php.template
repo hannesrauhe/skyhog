@@ -14,4 +14,4 @@ define("PYTHON_CMD","python");
 define("DB_NAME","scihog.db");
 
 //in case you have to use PHPsqliteadmin - set a separate password for access
-define("PHPSQLITEADMIN_PASSWD","scihogdb")
+define("PHPSQLITEADMIN_PASSWD","scihogdb");

@@ -55,7 +55,8 @@ Have fun!
 			if(array_key_exists($key, $_POST) ) {
 				$use_value = trim($_POST[$key]);
 				if(empty($use_value)) {
-					$use_value = $value;
+                                        continue;
+					//$use_value = $value;
 				}
 			}
 			$file_c .= "define(\"$key\",\"$use_value\");\n";
