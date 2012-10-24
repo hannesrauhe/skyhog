@@ -40,7 +40,7 @@ if(array_key_exists("push", $_POST)) {
 	$arr = git::add("*");
 } else if(array_key_exists("commit", $_POST)) {
 	$cmd = "commit";
-	$arr = git::commit($a->getAuthUserName(),"Commit from webinterface");
+	$arr = git::commit($a->getAuthUserName()." <".$a->getAuthUserMail().">","Commit from webinterface");
 } else if(array_key_exists("remote_add", $_POST)) {
 	$cmd = "remote add ".escapeshellarg($_POST['remote_name'])." ".escapeshellarg($_POST['remote_url']);
 } else if(array_key_exists("remote_rm", $_POST)) {

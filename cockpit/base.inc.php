@@ -52,7 +52,19 @@ class sqlite_db extends SQLite3 {
 		}
 		return $user;		
 	}
-	
+	public function getUserByID($id) {
+		$user=array();
+		$stmt = $this->prepare("SELECT * FROM `users` WHERE `user_id` = :id");
+		if($stmt) {
+			$stmt->bindValue(':id',$id,SQLITE3_INTEGER);
+			$r = $stmt->execute();
+			$user = $r->fetchArray();
+			$stmt->close();
+		} else {
+			throw new Exception("Error Processing Request", 1);			
+		}
+		return $user;		
+	}
 	public function getUsers() {		
 		$users=array();
 		$stmt = $this->prepare("SELECT * FROM `users`;");
@@ -234,6 +246,11 @@ class auth {
 		if(!$this->isAuth())
 			return false;
 		return $_SESSION['user']['name'];
+	}
+    public function getAuthUserMail() {
+		if(!$this->isAuth())
+			return false;
+		return $_SESSION['user']['email'];
 	}
 	public function setUserName($name) {
 		if(!$this->isAuth())
