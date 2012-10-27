@@ -55,7 +55,7 @@ if(is_file("config.inc.php")):
 			</div>								
 			<div>
 				<form action="<?php echo $redirect; ?>" method="post">
-					<input type="hidden" name="openid_identifier" value="'https://www.google.com/accounts/o8/id'"/>
+					<input type="hidden" name="openid_identifier" value="https://www.google.com/accounts/o8/id"/>
 				    <input type="submit" value="Login with Google" />
 				</form>
 			</div>

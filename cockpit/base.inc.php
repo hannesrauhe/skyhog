@@ -20,6 +20,28 @@ along with Skyhog.  If not, see <http://www.gnu.org/licenses/>.
 require_once("./config.inc.php");
 require_once("./openid.inc.php");
 
+class skylog {
+    var logfile = FALSE;
+    var loguser;
+    
+    public function __construct($file,$username) {
+        if(defined("ENABLE_LOG") {
+            $this->logfile = fopen("log/$file","a");
+            if($this->logfile===FALSE)
+                echo "unable to open log file '".$file."'\n";
+            $this->loguser = $username;
+        }
+    }
+    public function write($msg) {
+        if(defined("ENABLE_LOG") {
+            if($this->logfile===FALSE)
+                echo "unable to open log file '".$file."'\n";
+            else
+                fwrite($this->logfile,date("Y-m-d H:i:s (").$this->loguser.")".$msg."\n");            
+        }
+    }
+}
+
 class sqlite_db extends SQLite3 {
 	public function __construct() {
 		$this->open(UPLOAD_DIR.DB_NAME);
@@ -329,5 +351,7 @@ if($a->isInactiveUser()) {
 
 $_SESSION['KCFINDER'] = array();
 $_SESSION['KCFINDER']['disabled'] = false;
+
+$l = new skylog("system.log",$a->getAuthUserName());
 
 $msg = '';

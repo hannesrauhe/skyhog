@@ -15,3 +15,6 @@ define("DB_NAME","scihog.db");
 
 //in case you have to use PHPsqliteadmin - set a separate password for access
 define("PHPSQLITEADMIN_PASSWD","scihogdb");
+
+//uncomment if you want to enable logging
+//define("ENABLE_LOG","1");
