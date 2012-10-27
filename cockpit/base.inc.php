@@ -25,7 +25,7 @@ class skylog {
     var $loguser;
     
     public function __construct($file,$username) {
-        if(defined("ENABLE_LOG") {
+        if(defined("ENABLE_LOG")) {
             $this->logfile = fopen("log/$file","a");
             if($this->logfile===FALSE)
                 echo "unable to open log file '".$file."'\n";
@@ -33,7 +33,7 @@ class skylog {
         }
     }
     public function write($msg) {
-        if(defined("ENABLE_LOG") {
+        if(defined("ENABLE_LOG")) {
             if($this->logfile===FALSE)
                 echo "unable to open log file '".$file."'\n";
             else
