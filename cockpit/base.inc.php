@@ -337,16 +337,22 @@ if(array_key_exists("openid_identifier", $_POST) && !empty($_POST["openid_identi
 	$oid = $_POST['openid_identifier'];
 }
 
-if(!$a->auth($d,$oid)) {
-	$msg = "Please provide a valid OpenID";	
-	Header("Location: index.php?msg=".urlencode($msg)."&redirect=".urlencode($_SERVER['SCRIPT_NAME']));
-	exit(0);
-}
+try {
+    if(!$a->auth($d,$oid)) {
+        $msg = "Please provide a valid OpenID";	
+        Header("Location: index.php?msg=".urlencode($msg)."&redirect=".urlencode($_SERVER['SCRIPT_NAME']));
+        exit(0);
+    }
 
-if($a->isInactiveUser()) {
-	$msg = "your account needs to be activated by the administrator";
-	Header("Location: index.php?msg=".urlencode($msg));
-	exit(0);
+    if($a->isInactiveUser()) {
+        $msg = "your account needs to be activated by the administrator";
+        Header("Location: index.php?msg=".urlencode($msg));
+        exit(0);
+    }
+} catch (Exception $e) {
+    $msg = 'An error occured: ',  $e->getMessage();
+    Header("Location: index.php?msg=".urlencode($msg));
+    exit(0);
 }
 
 $_SESSION['KCFINDER'] = array();
