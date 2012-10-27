@@ -21,8 +21,8 @@ require_once("./config.inc.php");
 require_once("./openid.inc.php");
 
 class skylog {
-    var logfile = FALSE;
-    var loguser;
+    var $logfile = FALSE;
+    var $loguser;
     
     public function __construct($file,$username) {
         if(defined("ENABLE_LOG") {
