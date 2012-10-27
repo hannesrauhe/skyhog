@@ -350,7 +350,7 @@ try {
         exit(0);
     }
 } catch (Exception $e) {
-    $msg = 'An error occured: ',  $e->getMessage();
+    $msg = 'An error occured: '.$e->getMessage();
     Header("Location: index.php?msg=".urlencode($msg));
     exit(0);
 }
