@@ -3,6 +3,8 @@
 define("DOMAIN","Put your domain here!");
 
 //uncomment the next line and fill in your repo-URL - Skyhog will try to clone on setup
+//if you want to create a new site, do not define USE_GIT_REPO
+//this value has no effect on a running installation
 define("USE_GIT_REPO","https://github.com/hannesrauhe/skyhog_example_template.git");
 
 define("PAGE_DIR","../");
@@ -14,7 +16,9 @@ define("PYTHON_CMD","python");
 define("DB_NAME","scihog.db");
 
 //in case you have to use PHPsqliteadmin - set a separate password for access
-define("PHPSQLITEADMIN_PASSWD","scihogdb");
+//only do this if you know what you are doing!
+//if you do not define PHPSQLITEADMIN_PASSWD, phpsqladmin is deactivated (default)
+//define("PHPSQLITEADMIN_PASSWD","scihogdb");
 
 //uncomment if you want to enable logging
 //define("ENABLE_LOG","1");
