@@ -5,7 +5,7 @@ define("DOMAIN",$_SERVER['SERVER_NAME'];);
 //uncomment the next line and fill in your repo-URL - Skyhog will try to clone on setup
 //if you want to create a new site, do not define USE_GIT_REPO
 //this value has no effect on a running installation
-define("USE_GIT_REPO","https://github.com/hannesrauhe/skyhog_example_template.git");
+define("USE_GIT_REPO"," ");//"https://github.com/hannesrauhe/skyhog_example_template.git");
 
 //all paths/dirs can be given relative to base.inc.php
 //DIR means the file system path, while PATH means the path relative to the webroot
