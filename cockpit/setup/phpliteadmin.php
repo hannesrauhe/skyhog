@@ -35,6 +35,11 @@
 //////////////////////////////
 
 include_once("../config.inc.php");
+
+if(!defined('PHPSQLITEADMIN_PASSWD')) {
+    echo "phpsqliteadmin is deactivated;\nactivate by setting defining PHPSQLITEADMIN_PASSWD in config.inc.php";
+    exit(0);
+}
 //password to gain access
 $password = PHPSQLITEADMIN_PASSWD;
 

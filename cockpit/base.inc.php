@@ -20,6 +20,28 @@ along with Skyhog.  If not, see <http://www.gnu.org/licenses/>.
 require_once("./config.inc.php");
 require_once("./openid.inc.php");
 
+class skylog {
+    var $logfile = FALSE;
+    var $loguser;
+    
+    public function __construct($file,$username) {
+        if(defined("ENABLE_LOG")) {
+            $this->logfile = fopen("log/$file","a");
+            if($this->logfile===FALSE)
+                echo "unable to open log file '".$file."'\n";
+            $this->loguser = $username;
+        }
+    }
+    public function write($msg) {
+        if(defined("ENABLE_LOG")) {
+            if($this->logfile===FALSE)
+                echo "unable to open log file '".$file."'\n";
+            else
+                fwrite($this->logfile,date("Y-m-d H:i:s (").$this->loguser.")".$msg."\n");            
+        }
+    }
+}
+
 class sqlite_db extends SQLite3 {
 	public function __construct() {
 		$this->open(UPLOAD_DIR.DB_NAME);
@@ -52,7 +74,19 @@ class sqlite_db extends SQLite3 {
 		}
 		return $user;		
 	}
-	
+	public function getUserByID($id) {
+		$user=array();
+		$stmt = $this->prepare("SELECT * FROM `users` WHERE `user_id` = :id");
+		if($stmt) {
+			$stmt->bindValue(':id',$id,SQLITE3_INTEGER);
+			$r = $stmt->execute();
+			$user = $r->fetchArray();
+			$stmt->close();
+		} else {
+			throw new Exception("Error Processing Request", 1);			
+		}
+		return $user;		
+	}
 	public function getUsers() {		
 		$users=array();
 		$stmt = $this->prepare("SELECT * FROM `users`;");
@@ -239,6 +273,11 @@ class auth {
 			return false;
 		return $_SESSION['user']['name'];
 	}
+    public function getAuthUserMail() {
+		if(!$this->isAuth())
+			return false;
+		return $_SESSION['user']['email'];
+	}
 	public function setUserName($name) {
 		if(!$this->isAuth())
 			return false;
@@ -302,19 +341,27 @@ if(array_key_exists("openid_identifier", $_POST) && !empty($_POST["openid_identi
 	$oid = $_POST['openid_identifier'];
 }
 
-if(!$a->auth($d,$oid)) {
-	$msg = "Please provide a valid OpenID";	
-	Header("Location: index.php?msg=".urlencode($msg)."&redirect=".urlencode($_SERVER['SCRIPT_NAME']));
-	exit(0);
-}
+try {
+    if(!$a->auth($d,$oid)) {
+        $msg = "Please provide a valid OpenID";	
+        Header("Location: index.php?msg=".urlencode($msg)."&redirect=".urlencode($_SERVER['SCRIPT_NAME']));
+        exit(0);
+    }
 
-if($a->isInactiveUser()) {
-	$msg = "your account needs to be activated by the administrator";
-	Header("Location: index.php?msg=".urlencode($msg));
-	exit(0);
+    if($a->isInactiveUser()) {
+        $msg = "your account needs to be activated by the administrator";
+        Header("Location: index.php?msg=".urlencode($msg));
+        exit(0);
+    }
+} catch (Exception $e) {
+    $msg = 'An error occured: '.$e->getMessage();
+    Header("Location: index.php?msg=".urlencode($msg));
+    exit(0);
 }
 
 $_SESSION['KCFINDER'] = array();
 $_SESSION['KCFINDER']['disabled'] = false;
+
+$l = new skylog("system.log",$a->getAuthUserName());
 
 $msg = '';

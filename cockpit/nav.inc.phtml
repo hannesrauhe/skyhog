@@ -26,7 +26,9 @@ along with Skyhog.  If not, see <http://www.gnu.org/licenses/>.
 				<li><a href="#">System</a>
 				<ul>
 					<li><a href="setup.php">Maintenance</a></li>
+                    <?php if(defined("PHPSQLITEADMIN_PASSWD")): ?>
 					<li><a href="setup/phpliteadmin.php">PHPLiteAdmin</a></li>
+                    <?php endif; ?>
 					<li><a href="git.php?CMS_update=1">Update</a></li>
 					<li><a href="users.php">Users</a></li>
 				</ul></li>
