@@ -208,7 +208,7 @@ class auth {
 			return true;
 		}
 		
-		try {
+		//try { //exception handling outside
 	    	if(!$this->openid->mode) {
 	    		if(empty($oid)) {
 	    			return false;
@@ -234,9 +234,9 @@ class auth {
 					return true;
 				}
 			}
-		} catch(ErrorException $e) {
-    		echo 'Caught exception: ',  $e->getMessage(), "\n";			
-		}
+		//} catch(ErrorException $e) {
+    	//	echo 'Caught exception: ',  $e->getMessage(), "\n";			
+		//}
 		setcookie('oid');
 		unset($_COOKIE['oid']);
 		return false;
