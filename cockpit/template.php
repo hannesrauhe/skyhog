@@ -35,7 +35,7 @@ function bfglob($path, $pattern = '*', $flags = 0, $depth = 0) {
 }
 
 $msg = "";
-$file = $_REQUEST['file'];
+$file = isset($_REQUEST['file']) ? $_REQUEST['file'] : "__template.html";
 $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
 if(!in_array($ext,array("html","css","js")) || strstr($file,"..")) {
 	$file = "__template.html";
@@ -64,13 +64,7 @@ foreach(bfglob(UPLOAD_DIR,"__*.html", GLOB_BRACE, -1) as $f) {
 <script src="js/jquery-ui-1.8.23.custom.min.js"></script>
 <!--<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>-->
 <script src="http://malsup.github.com/jquery.form.js"></script> 
-<script> 
-    $(document).ready(function() { 
-        $('#content_form').ajaxForm({ 
-            target: '#msg' 
-        }); 
-    }); 
-</script> 
+<script src="js/template.js"></script>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta charset="UTF-8" />
 
@@ -97,6 +91,17 @@ include_once("nav.inc.phtml");
 				?>
 					
 			</ul>
+		</div>
+		<div class="sh_with_border">
+			<div id="generate_buttons">
+				<input type="hidden" name="navigation_changed" value="0" />
+				<button id="b_generate_prev">Generate Preview</button>
+				<button id="b_generate">Generate!</button><br />
+			</div>
+			<div id="preview_links">
+				<a href="<?php echo UPLOAD_PATH ?>" target="new" >Show Preview</a>
+				<a href="<?php echo PAGE_PATH ?>" target="new" >Show Homepage</a>
+			</div>
 		</div>
 	</aside>
 	<section id="main_container" style="padding:10px">
