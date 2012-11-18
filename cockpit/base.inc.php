@@ -26,7 +26,7 @@ class skylog {
     
     public function __construct($file,$username) {
         if(defined("ENABLE_LOG")) {
-            $this->logfile = fopen("log/$file","a");
+            $this->logfile = fopen(LOG_DIR."/$file","a");
             if($this->logfile===FALSE)
                 echo "unable to open log file '".$file."'\n";
             $this->loguser = $username;
@@ -224,6 +224,7 @@ class auth {
 					$user=$d->getUserByOpenID($oid);
 					if(!empty($user)) {
 						$_SESSION['user']=$user;
+						file_put_contents(LOG_DIR."/last_login_user".$user['user_id'].".log", date("Y-m-d H:i:s"));
 					} else {
 						$attr = $this->openid->getAttributes();
 						$name = empty($attr['namePerson/friendly']) ? $attr['namePerson/first'] : $attr['namePerson/friendly'];

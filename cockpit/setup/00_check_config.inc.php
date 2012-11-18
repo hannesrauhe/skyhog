@@ -92,9 +92,23 @@ Have fun!
 	    	exit(0);
 	    }		
 	}
+	/*
 	if(! (defined("PHPSQLITEADMIN_PASSWD")) ) {
 		echo "but PHPSQLITEADMIN_PASSWD is missing. Trying to add the default value automatically...";
 		$cont_app = 'define("PHPSQLITEADMIN_PASSWD","scihogdb");';
+	    if(file_put_contents("./config.inc.php", $cont_app,FILE_APPEND) === FALSE) {
+	    	echo "The config file hasn't been written, make the skyhog directory writable for the webserver and reload or add this content to config.inc.php:\n";
+			echo $cont_app;
+			exit(1);
+	    } else {
+	    	echo "succeded. Please reload page for further tests!\n";
+	    	exit(0);
+	    }		
+	}
+	*/ 
+	if(! (defined("LOG_DIR")) ) {
+		echo "but LOG_DIR is missing. Trying to add the default value automatically...";
+		$cont_app = "\n".'define("LOG_DIR","../log/");';
 	    if(file_put_contents("./config.inc.php", $cont_app,FILE_APPEND) === FALSE) {
 	    	echo "The config file hasn't been written, make the skyhog directory writable for the webserver and reload or add this content to config.inc.php:\n";
 			echo $cont_app;

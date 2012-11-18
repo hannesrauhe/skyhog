@@ -23,6 +23,7 @@ along with Skyhog.  If not, see <http://www.gnu.org/licenses/>.
 				<li><a href="pages.php">Pages</a></li>
 				<li><a href="template.php">Template</a></li>
 				<li><a href="git.php">git</a></li>
+                <?php if(isset($a) && $a->isAdmin()): ?>
 				<li><a href="#">System</a>
 				<ul>
 					<li><a href="setup.php">Maintenance</a></li>
@@ -31,6 +32,8 @@ along with Skyhog.  If not, see <http://www.gnu.org/licenses/>.
                     <?php endif; ?>
 					<li><a href="git.php?CMS_update=1">Update</a></li>
 					<li><a href="users.php">Users</a></li>
-				</ul></li>
+					<li><a href="settings.php">Settings</a></li>
+				</ul></li>				
+                <?php endif; ?>
 			</ul>
 		</nav>

@@ -58,13 +58,16 @@ if(!empty($msg)) {
 				foreach (array_keys($users[0]) as $key) {
 					echo "<th>$key</th>";
 				}
-				echo "<th>Functions</th></tr>";
+				echo "<th>Last Login</th><th>Functions</th></tr>";
 				foreach ($users as $user) {
 					echo "<tr>";
 					foreach ($user as $key => $value) {
 						echo "<td>$value</td>";
 					}
-					echo "<td>
+					echo "<td>";
+					if(is_file(LOG_DIR."/last_login_user".$user['user_id'].".log"))					
+						echo file_get_contents(LOG_DIR."/last_login_user".$user['user_id'].".log");
+					echo "</td><td>
 					<form action=\"users.php\" method=\"POST\">
 					<input type='hidden' name='user_id' value='".$user['user_id']."' />
 					<input type=\"submit\" name='action' value='Delete' />

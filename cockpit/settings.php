@@ -19,27 +19,34 @@ along with Skyhog.  If not, see <http://www.gnu.org/licenses/>.
 */
 require_once('./base.inc.php');
 
-if(!array_key_exists("file",$_POST)) {
-	echo "ERROR: wrong data submitted (file missing)";
-	exit(); 
-}
-
-$file = basename($_POST['file']);
-if(!is_file(UPLOAD_DIR.$file) && !array_key_exists("new",$_POST)) {
-	echo "ERROR: file does not exist";
-	exit(); 	
-}
-
-if(array_key_exists('elm1',$_POST) && !empty($_POST['elm1'])) {
-	file_put_contents (UPLOAD_DIR.$file,$_POST['elm1']);
+if($a->isAdmin()) {
+	$msg = "Settings have to be changed manually in config.inc.php";
 } else {
-	echo "ERROR: no content for $file submitted!";
-	exit();
+	$msg = "You don't have admin permissions!";
 }
-
-chdir(UPLOAD_DIR);
-git::add($file);
-git::commit($a->getAuthUserName()." <".$a->getAuthUserMail().">", "Commit from webinterface");
-echo "\n";
-echo "SUCCESS";
 ?>
+
+<html>
+	<head>		
+		<link rel="stylesheet" type="text/css" href="style.css" media="all">
+	</head>
+	<body>
+<?php
+include_once("nav.inc.phtml");
+if(!empty($msg)) {
+	echo "<p id=\"msg\">$msg</p>";
+}
+	$const_d = get_defined_constants(true);
+	$const_d = $const_d['user'];
+?>
+	<table>
+	<?php foreach ($const_d as $key => $value) {
+		echo "<tr><td>$key</td><td>$value</td></tr>\n"; 
+	}
+	?>
+	</table>	
+<?php
+include_once("footer.inc.phtml");
+?>	
+	</body>
+</html>

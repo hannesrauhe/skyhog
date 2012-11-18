@@ -114,6 +114,23 @@ if(is_dir(PAGE_DIR)) {
 	echo "Page dir does not exist!\n";
 	exit(1);
 }
+//log directory
+if(is_dir(LOG_DIR)) {
+	echo "Log dir exists ";
+	if(touch(LOG_DIR."/testtouch") && unlink(LOG_DIR."/testtouch")) {
+		echo "and is writable\n";
+	} else {
+		echo "but is not writable!\n";
+		exit(1);
+	}
+} else {
+	if(mkdir(LOG_DIR)) {
+		echo "Log dir created\n";
+	} else {
+		echo "couldn't create the log dir!\n";
+		exit(1);
+	}
+}
 
 //git
 chdir(UPLOAD_DIR);

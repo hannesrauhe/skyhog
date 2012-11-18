@@ -27,7 +27,7 @@ if(array_key_exists("navigation_changed", $_POST) && !empty($_POST["navigation_c
 	if(is_array($nav_order)) {
 		$d->orderNavEntries($nav_order);
 		git::add(DB_NAME);
-		git::commit($a->getAuthUserName(), "Navigation changes");
+		git::commit($a->getAuthUserName()." <".$a->getAuthUserMail().">", "Navigation changes");
 	} else {
 		echo "Internal Error: new navigation submitted is not an array";
 	}
