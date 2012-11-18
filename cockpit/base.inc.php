@@ -174,29 +174,33 @@ class auth {
 			return true;
 		}
 		
-    	if(!$this->openid->mode) {
-    		if(empty($oid)) {
-    			return false;
-    		}
-    		$this->openid->identity = $oid;
-			$this->openid->required = array('namePerson/friendly', 'contact/email','namePerson/first');
-	        header('Location: ' . $this->openid->authUrl());
-			exit(0);
-		} elseif($this->openid->mode!= 'cancel') {
-			if($this->openid->validate()) {
-				$oid = $this->openid->identity;
-				setcookie('oid',$oid);
-				$user=$d->getUserByOpenID($oid);
-				if(!empty($user)) {
-					$_SESSION['user']=$user;
-				} else {
-					$attr = $this->openid->getAttributes();
-					$name = empty($attr['namePerson/friendly']) ? $attr['namePerson/first'] : $attr['namePerson/friendly'];
-					$d->insertUser($oid,$name,$attr['contact/email']);
-					$_SESSION['user']=$d->getUserByOpenID($oid);
+		try {
+	    	if(!$this->openid->mode) {
+	    		if(empty($oid)) {
+	    			return false;
+	    		}
+	    		$this->openid->identity = $oid;
+				$this->openid->required = array('namePerson/friendly', 'contact/email','namePerson/first');
+		        header('Location: ' . $this->openid->authUrl());
+				exit(0);
+			} elseif($this->openid->mode!= 'cancel') {
+				if($this->openid->validate()) {
+					$oid = $this->openid->identity;
+					setcookie('oid',$oid);
+					$user=$d->getUserByOpenID($oid);
+					if(!empty($user)) {
+						$_SESSION['user']=$user;
+					} else {
+						$attr = $this->openid->getAttributes();
+						$name = empty($attr['namePerson/friendly']) ? $attr['namePerson/first'] : $attr['namePerson/friendly'];
+						$d->insertUser($oid,$name,$attr['contact/email']);
+						$_SESSION['user']=$d->getUserByOpenID($oid);
+					}
+					return true;
 				}
-				return true;
 			}
+		} catch(ErrorException $e) {
+    		echo 'Caught exception: ',  $e->getMessage(), "\n";			
 		}
 		setcookie('oid');
 		unset($_COOKIE['oid']);
