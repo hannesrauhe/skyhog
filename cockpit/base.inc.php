@@ -351,7 +351,7 @@ try {
 
     if($a->isInactiveUser()) {
         $msg = "your account needs to be activated by the administrator";
-        Header("Location: index.php?msg=".urlencode($msg));
+        Header("Location: index.php?msg=".urlencode($msg)."&redirect=".urlencode($_SERVER['SCRIPT_NAME']));
         exit(0);
     }
 } catch (Exception $e) {

@@ -13,7 +13,7 @@ define("PAGE_DIR","../");
 define("PAGE_PATH","../");
 define("UPLOAD_PATH", "../preview/");
 define("UPLOAD_DIR", dirname(__FILE__) . "/../preview/");
-define("LOG_DIR","../log");
+define("LOG_DIR","../log/");
 define("GIT_CMD","git");
 define("PYTHON_CMD","python");
 define("DB_NAME","scihog.db");
