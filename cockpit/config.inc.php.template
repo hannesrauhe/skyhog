@@ -1,6 +1,6 @@
 <?php
 //fill in your domain - without subfolders 
-define("DOMAIN",$_SERVER['SERVER_NAME'];);
+define("DOMAIN",$_SERVER['SERVER_NAME']);
 
 //uncomment the next line and fill in your repo-URL - Skyhog will try to clone on setup
 //if you want to create a new site, do not define USE_GIT_REPO
