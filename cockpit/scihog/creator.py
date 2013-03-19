@@ -16,9 +16,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Skyhog.  If not, see <http://www.gnu.org/licenses/>.
 '''
-import os
-import shutil
-import time
+import os,shutil,time
+from sci_template import *
 
 
 class creator(object):
@@ -98,6 +97,8 @@ class creator(object):
             new_file = open(self.output_dir+f[1:],'w')
             self.insert_content(f[1:],content_file)
             self.insert_module("nav")
+            content_node = sci_page(content_file)
+            content_node.generate_output()
             self.write_to_file(new_file)
             self.clear()
             print "generated",f[1:]
