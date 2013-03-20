@@ -23,10 +23,9 @@ from sci_template import *
 class creator(object):
     '''
     classdocs
-    '''        
+    '''
+    templ_path = ""        
     templ = []  
-    generated = []
-    content_name = ''
     template_files = []
     output_dir = ''
     input_dir = ''
@@ -40,76 +39,44 @@ class creator(object):
         self.output_dir = os.path.dirname(t)+'/'
         self.input_dir = self.output_dir
 
+        self.templ_path = t
         template_file = open(t, 'r')
         self.templ = template_file.readlines()
         self.template_files = [item for item in os.listdir(self.output_dir) if self.template_name_condition(item)]
         
-    def insert_content(self,content_name,content_file):
-        self.content_name = content_name
-        skip = False
-        for line in self.templ:        
-            if line.strip().startswith("<!-- GENERATOR END content -->"):
-                skip = False
-            
-            if not skip:
-                self.generated.append(line) 
-                
-            if line.strip().startswith("<!-- GENERATOR BEGIN content -->"):                
-                self.generated.extend(content_file.readlines())
-                skip = True
-                
-    def insert_module(self,module_name):
-        try:
-            mod = __import__("scihog."+module_name, globals(), locals(), [module_name], -1)
-            module_cont = mod.generate(self,self.content_name)
-            new_generated = [] 
-            skip = False
-            for line in self.generated:        
-                if line.strip().startswith("<!-- GENERATOR END %s -->" % module_name):
-                    skip = False
-                
-                if not skip:
-                    new_generated.append(line) 
-                    
-                if line.strip().startswith("<!-- GENERATOR BEGIN %s -->" % module_name):                
-                    new_generated.extend(module_cont)
-                    skip = True
-            if not skip:
-                self.generated = new_generated
-            else:
-                print 'start tag without end tag for module %s found in template -> ignoring module' % module_name
-        except ImportError:
-            print 'error while importing',module_name
-    
-    def write_to_file(self,html_file):
-        html_file.writelines(self.generated)
-        
     def template_name_condition(self,f):
         return f.lower().endswith('.html') and not f.startswith('__') and f.startswith('_')
-    
-    def clear(self):
-        self.generated=[]
-        self.content_name=''
-        
+            
     def generate(self):
-        t_dom = parseString("<body><div class=\"__skyhog_blog_article\" dir=\"articles\" number=\"5\" /><div> ting</div><div class=\"__skyhog_t\"> ting</div></body>")        
+        t_dom = parse(self.templ_path)       
         for f in self.template_files: 
             content_file_path = self.input_dir+f
             
             p_dom = t_dom.cloneNode(True)
-            matchingNodes = [node for node in p_dom.getElementsByTagName("div") if node.hasAttribute("class") and node.getAttribute("class").startswith("__skyhog")]           
-            for el in matchingNodes:
+            while True:
+                matchingNodes = [node for node in p_dom.getElementsByTagName("div") if node.hasAttribute("class") and node.getAttribute("class").startswith("__skyhog")]           
+                if len(matchingNodes)==0:
+                    break;
+                el = matchingNodes[0]
                 parent = el.parentNode
-                if "blog_article"==el.getAttribute("class")[9:]:
-                    artdom = sci_blog(content_file_path,el.attributes).generate()
+                if "blog"==el.getAttribute("class")[9:]:
+                    artdom = sci_blog(self.input_dir,f,self.output_dir,f[1:],el.attributes).generate()
                     parent.replaceChild(artdom.childNodes[0],el)
-            p_dom.toxml()
+                elif "static_page"==el.getAttribute("class")[9:]:
+                    artdom = sci_page(self.input_dir,f,self.output_dir,f[1:],el.attributes).generate()
+                    parent.replaceChild(artdom.childNodes[0],el)
+                elif "nav"==el.getAttribute("class")[9:]:
+                    artdom = sci_nav(self.input_dir,f,self.output_dir,f[1:],el.attributes).generate()
+                    parent.replaceChild(artdom,el)
+                else:
+                    print "removed unknown element of class",el.getAttribute("class")[9:]
+                    parent.removeChild(el)
+#                print p_dom.toxml()
+#                print "____________________________!"
             
             
             new_file = open(self.output_dir+f[1:],'w')
-            self.generated = p_dom.toprettyxml
-            self.write_to_file(new_file)
-            self.clear()
+            new_file.write(p_dom.toxml())
             print "generated",f[1:]
             
     def move_to_page_dir(self):
