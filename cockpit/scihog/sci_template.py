@@ -3,7 +3,8 @@ from xml.dom.minidom import parse,parseString
 class sci_blog(object):
     options = {"number":5,"dir":"article"}
     attributes = []
-    def __init__(self,attr):
+    content_file = ""
+    def __init__(self,content_file,attr):
         self.attributes = attr
 
     def generate(self):

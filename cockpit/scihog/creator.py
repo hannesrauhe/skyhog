@@ -94,17 +94,21 @@ class creator(object):
     def generate(self):
         t_dom = parseString("<body><div class=\"__skyhog_blog_article\" dir=\"articles\" number=\"5\" /><div> ting</div><div class=\"__skyhog_t\"> ting</div></body>")        
         for f in self.template_files: 
-            content_file = open(self.input_dir+f,'r')
-            new_file = open(self.output_dir+f[1:],'w')
+            content_file_path = self.input_dir+f
+            
             p_dom = t_dom.cloneNode(True)
             matchingNodes = [node for node in p_dom.getElementsByTagName("div") if node.hasAttribute("class") and node.getAttribute("class").startswith("__skyhog")]           
             for el in matchingNodes:
                 parent = el.parentNode
                 if "blog_article"==el.getAttribute("class")[9:]:
-                    artdom = sci_blog(el.attributes).generate()
+                    artdom = sci_blog(content_file_path,el.attributes).generate()
                     parent.replaceChild(artdom.childNodes[0],el)
             p_dom.toxml()
-            self.write_to_file(p_dom.toprettyxml)
+            
+            
+            new_file = open(self.output_dir+f[1:],'w')
+            self.generated = p_dom.toprettyxml
+            self.write_to_file(new_file)
             self.clear()
             print "generated",f[1:]
             
