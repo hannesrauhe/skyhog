@@ -91,15 +91,20 @@ class creator(object):
         self.generated=[]
         self.content_name=''
         
-    def generate(self):        
-        for f in self.template_files:
+    def generate(self):
+        t_dom = parseString("<body><div class=\"__skyhog_blog_article\" dir=\"articles\" number=\"5\" /><div> ting</div><div class=\"__skyhog_t\"> ting</div></body>")        
+        for f in self.template_files: 
             content_file = open(self.input_dir+f,'r')
             new_file = open(self.output_dir+f[1:],'w')
-            self.insert_content(f[1:],content_file)
-            self.insert_module("nav")
-            content_node = sci_page(content_file)
-            content_node.generate_output()
-            self.write_to_file(new_file)
+            p_dom = t_dom.cloneNode(True)
+            matchingNodes = [node for node in p_dom.getElementsByTagName("div") if node.hasAttribute("class") and node.getAttribute("class").startswith("__skyhog")]           
+            for el in matchingNodes:
+                parent = el.parentNode
+                if "blog_article"==el.getAttribute("class")[9:]:
+                    artdom = sci_blog(el.attributes).generate()
+                    parent.replaceChild(artdom.childNodes[0],el)
+            p_dom.toxml()
+            self.write_to_file(p_dom.toprettyxml)
             self.clear()
             print "generated",f[1:]
             
@@ -107,3 +112,4 @@ class creator(object):
         if os.path.isdir(self.page_dir):
             shutil.move(self.page_dir, self.page_dir[:-1]+"."+str(time.time()))
         shutil.copytree(self.output_dir, self.page_dir, True, shutil.ignore_patterns('_*.html'))
+        
