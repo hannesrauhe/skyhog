@@ -1,5 +1,5 @@
 import os
-from xml.dom.minidom import parse,parseString
+from bs4 import *
 
 class sci_interface(object):
     def __init__(self,idir,ifile_name,odir,ofile_name,attr):
@@ -28,7 +28,7 @@ class sci_nav(sci_interface):
                 code.append('<li id="%s"><a href="%s">%s</a></li>\n' % entry[:3])
         code.append('</ul>\n')
         code.append('</nav>\n')
-        return parseString("".join(code)).childNodes[0]
+        return BeautifulSoup("".join(code)).body.contents[0]
         
 class sci_blog(sci_interface):
     options = {"number":5,"dir":"./","prefix":"_article"}
@@ -39,16 +39,16 @@ class sci_blog(sci_interface):
             print "ERROR:",articles_dir,"with articles not found"
             return parseString("<article>ERROR: Dir with articles not found</article>")
         
-        self.p_dom = parseString("<div class=\"blog\"></div>")
+        self.p_dom = BeautifulSoup("<div class=\"blog\"></div>")
         article_files = [f for f in os.listdir(articles_dir) if f.startswith(self.options["prefix"])]
 #        article_files.reverse()
         for a in article_files:
-            a_dom = parse(articles_dir+a)
-            self.p_dom.childNodes[0].appendChild(a_dom.childNodes[0])
-        return self.p_dom
+            self.p_dom.div.append(BeautifulSoup(open(articles_dir+a,"r").read()).body.contents[0])
+#        print self.p_dom.body.contents[0]
+        return self.p_dom.body.contents[0]
 
 class sci_page(sci_interface):        
     def generate(self):
-        self.p_dom = parse(self.idir+"/"+self.ifile_name)
-        return self.p_dom
+        self.p_dom = BeautifulSoup(open(self.idir+"/"+self.ifile_name,"r").read())
+        return self.p_dom.body.contents[0]
         

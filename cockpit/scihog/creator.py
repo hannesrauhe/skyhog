@@ -16,7 +16,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Skyhog.  If not, see <http://www.gnu.org/licenses/>.
 '''
-import os,shutil,time
+import os,shutil,time,re
 from sci_template import *
 
 
@@ -48,35 +48,35 @@ class creator(object):
         return f.lower().endswith('.html') and not f.startswith('__') and f.startswith('_')
             
     def generate(self):
-        t_dom = parse(self.templ_path)       
         for f in self.template_files: 
+            p_dom = BeautifulSoup(open(self.templ_path,"r").read())    
             content_file_path = self.input_dir+f
-            
-            p_dom = t_dom.cloneNode(True)
+
             while True:
-                matchingNodes = [node for node in p_dom.getElementsByTagName("div") if node.hasAttribute("class") and node.getAttribute("class").startswith("__skyhog")]           
-                if len(matchingNodes)==0:
+                el = p_dom.find("div",{"class":re.compile("__skyhog")})
+#                print el
+                if None==el:
                     break;
-                el = matchingNodes[0]
-                parent = el.parentNode
-                if "blog"==el.getAttribute("class")[9:]:
-                    artdom = sci_blog(self.input_dir,f,self.output_dir,f[1:],el.attributes).generate()
-                    parent.replaceChild(artdom.childNodes[0],el)
-                elif "static_page"==el.getAttribute("class")[9:]:
+                parent = el.parent
+                if "static_page"==el["class"][0][9:]:
                     artdom = sci_page(self.input_dir,f,self.output_dir,f[1:],el.attributes).generate()
-                    parent.replaceChild(artdom.childNodes[0],el)
-                elif "nav"==el.getAttribute("class")[9:]:
+                    el.replace_with(artdom)
+                elif "blog"==el["class"][0][9:]:
+                    artdom = sci_blog(self.input_dir,f,self.output_dir,f[1:],el.attributes).generate()
+                    el.replace_with(artdom)
+                elif "nav"==el["class"][0][9:]:
                     artdom = sci_nav(self.input_dir,f,self.output_dir,f[1:],el.attributes).generate()
-                    parent.replaceChild(artdom,el)
+                    el.replace_with(artdom)
                 else:
-                    print "removed unknown element of class",el.getAttribute("class")[9:]
-                    parent.removeChild(el)
-#                print p_dom.toxml()
+                    print "removed unknown element of class",el["class"]
+                    el.extract()
+#                print "___________________"
+#                print t_dom.prettify()
 #                print "____________________________!"
             
             
             new_file = open(self.output_dir+f[1:],'w')
-            new_file.write(p_dom.toxml())
+            new_file.write(p_dom.prettify())
             print "generated",f[1:]
             
     def move_to_page_dir(self):
