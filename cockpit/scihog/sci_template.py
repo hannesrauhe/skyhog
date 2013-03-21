@@ -31,7 +31,7 @@ class sci_nav(sci_interface):
         return parseString("".join(code)).childNodes[0]
         
 class sci_blog(sci_interface):
-    options = {"number":5,"dir":"articles"}
+    options = {"number":5,"dir":"./","prefix":"_article"}
 
     def generate(self):
         articles_dir = self.idir+"/"+self.options["dir"]+"/"
@@ -40,7 +40,7 @@ class sci_blog(sci_interface):
             return parseString("<article>ERROR: Dir with articles not found</article>")
         
         self.p_dom = parseString("<div class=\"blog\"></div>")
-        article_files = os.listdir(articles_dir)
+        article_files = [f for f in os.listdir(articles_dir) if f.startswith(self.options["prefix"])]
 #        article_files.reverse()
         for a in article_files:
             a_dom = parse(articles_dir+a)
