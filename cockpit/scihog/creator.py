@@ -70,9 +70,10 @@ class creator(object):
                 else:
                     print "removed unknown element of class",el["class"]
                     el.extract()
-#                print "___________________"
-#                print t_dom.prettify()
-#                print "____________________________!"
+                print "___________________"
+                print p_dom.prettify()
+                print "____________________________!"
+                break
             
             
             new_file = open(self.output_dir+f[1:],'w')
