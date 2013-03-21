@@ -44,7 +44,7 @@ class sci_blog(sci_interface):
         article_files = [f for f in os.listdir(articles_dir) if f.startswith(self.options["prefix"])]
 #        article_files.reverse()
         for a in article_files:
-            self.p_dom.div.append(BeautifulSoup(open(articles_dir+a,"r").read()).body.contents[0])
+            self.p_dom.div.append(BeautifulSoup(open(articles_dir+a,"r").read()).contents[0])
 #        print self.p_dom.body.contents[0]
         return self.p_dom.div
         
@@ -52,8 +52,5 @@ class sci_blog(sci_interface):
 class sci_page(sci_interface):        
     def generate(self):
         self.p_dom = BeautifulSoup(open(self.idir+"/"+self.ifile_name,"r").read())
-        if None==self.p_dom.body:
-            return self.p_dom
-        else:
-            return self.p_dom.body.contents[0]
+        return self.p_dom.body.contents[0]
         
