@@ -28,7 +28,11 @@ class sci_nav(sci_interface):
                 code.append('<li id="%s"><a href="%s">%s</a></li>\n' % entry[:3])
         code.append('</ul>\n')
         code.append('</nav>\n')
-        return BeautifulSoup("".join(code)).body.contents[0]
+        self.p_dom = BeautifulSoup("".join(code))
+        if None==self.p_dom.body:
+            return self.p_dom
+        else:
+            return self.p_dom.body.contents[0]
         
 class sci_blog(sci_interface):
     options = {"number":5,"dir":"./","prefix":"_article"}
@@ -45,10 +49,17 @@ class sci_blog(sci_interface):
         for a in article_files:
             self.p_dom.div.append(BeautifulSoup(open(articles_dir+a,"r").read()).body.contents[0])
 #        print self.p_dom.body.contents[0]
-        return self.p_dom.body.contents[0]
+        if None==self.p_dom.body:
+            return self.p_dom
+        else:
+            return self.p_dom.body.contents[0]
+        
 
 class sci_page(sci_interface):        
     def generate(self):
         self.p_dom = BeautifulSoup(open(self.idir+"/"+self.ifile_name,"r").read())
-        return self.p_dom.body.contents[0]
+        if None==self.p_dom.body:
+            return self.p_dom
+        else:
+            return self.p_dom.body.contents[0]
         
