@@ -326,6 +326,17 @@ class git {
 		}
 		return $arr;
 	}
+	
+	static public function diff() {		
+		$retvar = 0;
+		$ret = exec(GIT_CMD." diff 2>&1",$arr,$retvar);
+		if($ret === FALSE || $retvar!=0) {
+		    echo "ERROR: diff caused an error\n";
+			echo $ret;
+		    exit();
+		}
+		return $arr;
+	}
 }
 
 session_start();

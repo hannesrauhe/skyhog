@@ -39,6 +39,9 @@ if(array_key_exists("push", $_POST)) {
 } else if(array_key_exists("add", $_POST)) {
 	$cmd = "status";
 	$arr = git::add("*");
+} else if(array_key_exists("diff", $_POST)) {
+	$cmd = "status";
+	$arr = git::diff();
 } else if(array_key_exists("commit", $_POST)) {
 	$cmd = "status";
 	$arr = git::commit($a->getAuthUserName()." <".$a->getAuthUserMail().">","Commit from webinterface");
@@ -80,7 +83,7 @@ if($CMS_update):
 			?></textarea>
 			<form action="git.php" method="POST">			
 				<input type="hidden" name="CMS_update" value="<?php echo $CMS_update; ?>" />	
-				<input type="submit" name="log" value="log"/><br /><br />
+				<input type="submit" name="log" value="log"/><input type="submit" name="diff" value="diff"/><br /><br />
 				<input type="submit" name="add" value="add all untracked"/>
 				<input type="submit" name="commit" value="commit all"/><br /><br />
 				<select name="remote" size="<?php echo count($remotes);?>">
