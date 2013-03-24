@@ -51,6 +51,7 @@ class creator(object):
         for f in self.template_files: 
             p_dom = BeautifulSoup(open(self.templ_path,"r").read())    
             content_file_path = self.input_dir+f
+            pluged_in = {}
 
             while True:
                 el = p_dom.find("div",{"class":re.compile("__skyhog")})
@@ -79,8 +80,10 @@ class creator(object):
             new_file.write(p_dom.prettify())
             print "generated",f[1:]
             
-    def move_to_page_dir(self):
+    def move_to_page_dir(self,bak_dir):
         if os.path.isdir(self.page_dir):
-            shutil.move(self.page_dir, self.page_dir[:-1]+"."+str(time.time()))
-        shutil.copytree(self.output_dir, self.page_dir, True, shutil.ignore_patterns('_*.html'))
+            if not os.path.isdir(bak_dir):
+                os.mkdir(bak_dir)
+            shutil.move(self.page_dir, bak_dir+"/"+str(time.time()))
+        shutil.copytree(self.output_dir, self.page_dir, True, shutil.ignore_patterns('_*.html','.git'))
         

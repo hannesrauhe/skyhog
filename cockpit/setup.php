@@ -131,6 +131,23 @@ if(is_dir(LOG_DIR)) {
 		exit(1);
 	}
 }
+//backup directory
+if(is_dir(BAK_DIR)) {
+	echo "Backup dir exists ";
+	if(touch(BAK_DIR."/testtouch") && unlink(BAK_DIR."/testtouch")) {
+		echo "and is writable\n";
+	} else {
+		echo "but is not writable!\n";
+		exit(1);
+	}
+} else {
+	if(mkdir(BAK_DIR)) {
+		echo "Backup dir created\n";
+	} else {
+		echo "couldn't create the log dir!\n";
+		exit(1);
+	}
+}
 
 //git
 chdir(UPLOAD_DIR);

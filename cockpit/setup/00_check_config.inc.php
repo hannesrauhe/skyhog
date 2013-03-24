@@ -72,8 +72,8 @@ Have fun!
 	}
 } else {
 	echo "The config file exists... ";
-	if(! (defined("DOMAIN") ||	defined("PAGE_DIR") || defined("PAGE_PATH") || defined("UPLOAD_PATH") || defined("UPLOAD_DIR"))) {
-		echo "but DOMAIN, PAGE_* or UPLOAD_* rule is missing. Repair by hand please!\n";
+	if(! (defined("DOMAIN") &&	defined("PAGE_DIR") && defined("PAGE_PATH") && defined("UPLOAD_PATH") && defined("UPLOAD_DIR") && defined("BAK_DIR"))) {
+		echo "but DOMAIN, BAK_DIR, PAGE_* or UPLOAD_* rule is missing. Repair by hand please!\n";
 		exit(1);
 	}
 	if(! (defined("GIT_CMD") || defined("PYTHON_CMD"))) {
