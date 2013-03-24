@@ -58,19 +58,24 @@ class creator(object):
 #                print el
                 if None==el:
                     break;
-                parent = el.parent
-                if "static_page"==el["class"][0][9:]:
-                    artdom = sci_page(self.input_dir,f,self.output_dir,f[1:],el.attributes).generate()
-                    el.replace_with(artdom)
-                elif "blog"==el["class"][0][9:]:
-                    artdom = sci_blog(self.input_dir,f,self.output_dir,f[1:],el.attributes).generate()
-                    el.replace_with(artdom)
-                elif "nav"==el["class"][0][9:]:
-                    artdom = sci_nav(self.input_dir,f,self.output_dir,f[1:],el.attributes).generate()
-                    el.replace_with(artdom)
-                else:
-                    print "removed unknown element of class",el["class"]
-                    el.extract()
+                for c in el["class"]:
+                    if c.startswith("__skyhog"):
+                        plugin_name = el["class"][0][9:]
+                        
+                if not pluged_in.has_key(plugin_name):
+                    if "static_page"==plugin_name:
+                        pluged_in[plugin_name] = sci_page(self.input_dir,f,self.output_dir,f[1:])
+                    elif "blog"==el["class"][0][9:]:
+                        pluged_in[plugin_name] = sci_blog(self.input_dir,f,self.output_dir,f[1:])
+                    elif "nav"==el["class"][0][9:]:
+                        pluged_in[plugin_name] = sci_nav(self.input_dir,f,self.output_dir,f[1:])
+                    else:
+                        print "removed unknown element of class",el["class"]
+                        el.extract()
+                        continue
+                
+                artdom = pluged_in[plugin_name].generate(el["class"])
+                el.replace_with(artdom)
 #                print "___________________"
 #                print p_dom.prettify()
 #                print "____________________________!"
@@ -85,5 +90,6 @@ class creator(object):
             if not os.path.isdir(bak_dir):
                 os.mkdir(bak_dir)
             shutil.move(self.page_dir, bak_dir+"/"+str(time.time()))
+        print self.output_dir,self.page_dir
         shutil.copytree(self.output_dir, self.page_dir, True, shutil.ignore_patterns('_*.html','.git'))
         
