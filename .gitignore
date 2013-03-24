@@ -6,4 +6,4 @@ testsites
 /cockpit/preview
 /cockpit/config.inc.php
 /preview
-/live*
+/bak
