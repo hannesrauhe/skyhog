@@ -318,7 +318,7 @@ class git {
 		$gitarg1 = escapeshellarg($author);
 		$gitarg2 = escapeshellarg($msg.", IP:".$_SERVER["REMOTE_ADDR"]);
 		$retvar = 0;
-		$ret = exec(GIT_CMD." commit --author $gitarg1 -m $gitarg2 2>&1",$arr,$retvar);
+		$ret = exec(GIT_CMD." commit -a --author $gitarg1 -m $gitarg2 2>&1",$arr,$retvar);
 		if($ret === FALSE || $retvar!=0) {
 		    echo "ERROR: commiting staged files with git wasn't possible, commit-msg was $gitarg2\n";
 			echo $ret;
