@@ -73,7 +73,7 @@ class sci_blog(sci_interface):
             article_dom = BeautifulSoup(open(articles_dir+a,"r").read())
             l_entry = article_dom.new_tag("li")
             l_link = article_dom.new_tag("a",href=a[1:])
-            l_link.append(article_dom.h3.get_text())
+            l_link.append(article_dom.h2.get_text())
             l_entry.insert(1,l_link)
             self.p_dom.div.append(article_dom.contents[0])
             self.list_dom.append(l_entry)
