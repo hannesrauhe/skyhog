@@ -33,7 +33,7 @@ if(array_key_exists("navigation_changed", $_POST) && !empty($_POST["navigation_c
 	}
 }
 
-$arg1 = escapeshellarg(dirname(__FILE__)."/generate.py");
+$arg1 = escapeshellarg(dirname(__FILE__)."../scihog/generate.py");
 $arg2 = "";
 $arg4 = "";
 $arg5 = "";

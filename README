@@ -2,11 +2,18 @@ Welcome to Skyhog!
 
 Skyhog is a CMS, which creates static html pages.
 
-It's alpha at the moment, so there is no documentation. Sorry. 
+It conists of two different parts:
+
+*scihog (former "Scitivity Homepage Generator") - the actual compiler written in python 
+*the Skyhog Cockpit - a webinterface to create and update the homepage templates, written in PHP
+
+You can just ignore the cockpit directory and do everything on the command line with the python scripts and your favorite (HTML-)editor. Since you files are managed with git, you can edit and preview your page on any machine. Then you use your favorite workflow to transfer everything via git and generate the page on you webserver.
+
+If you want to manage your homepage with a webinterface, you may want to use the Cockpit as well - call the setup.php in browser. (This is also the maintenance-script, you can execute it, whenver you like to check your installation for errors and correct them)
+
 
 Features:
 *templates are written in plain HTML with a few HTML comments -- nothing to learn
-*the core is written in python and independent from the webinterface -- pages can be generated offline if needed
 *the system updates come in via git
 *the content is managed with git, can be deployed on different servers -- changes can be made on the local machine and transferred via git
 
