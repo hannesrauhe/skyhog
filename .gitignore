@@ -3,7 +3,6 @@ testsites
 *.pyc
 *.pyo
 *.log
-/cockpit/preview
 /cockpit/config.inc.php
 /preview
 /live
