@@ -64,11 +64,11 @@ class creator(object):
                         
                 if not pluged_in.has_key(plugin_name):
                     if "static_page"==plugin_name:
-                        pluged_in[plugin_name] = sci_page(self.input_dir,f,self.output_dir,f[1:])
+                        pluged_in[plugin_name] = sci_page(self.input_dir,f,self.output_dir,f[1:],p_dom)
                     elif "blog"==el["class"][0][9:]:
-                        pluged_in[plugin_name] = sci_blog(self.input_dir,f,self.output_dir,f[1:])
+                        pluged_in[plugin_name] = sci_blog(self.input_dir,f,self.output_dir,f[1:],p_dom)
                     elif "nav"==el["class"][0][9:]:
-                        pluged_in[plugin_name] = sci_nav(self.input_dir,f,self.output_dir,f[1:])
+                        pluged_in[plugin_name] = sci_nav(self.input_dir,f,self.output_dir,f[1:],p_dom)
                     else:
                         print "removed unknown element of class",el["class"]
                         el.extract()

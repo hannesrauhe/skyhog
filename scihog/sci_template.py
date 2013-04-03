@@ -1,13 +1,14 @@
-import os
+import os,datetime
 from bs4 import *
 from PyRSS2Gen import *
 
 class sci_interface(object):
-    def __init__(self,idir,ifile_name,odir,ofile_name):
+    def __init__(self,idir,ifile_name,odir,ofile_name,t_dom):
         self.idir = idir
         self.ifile_name = ifile_name
         self.odir = odir
         self.ofile_name = ofile_name
+        self.t_dom = t_dom
         self.init()
 
     def init(self):
@@ -42,21 +43,11 @@ class sci_blog(sci_interface):
     
     def createRSS(self):
         self.rss = RSS2(
-            title = "",
-            link = "",
-            description = "",
-        
-            lastBuildDate = datetime.datetime.now(),
-        
-            items = [
-               RSSItem(
-                 title = "",
-                 link = "",
-                 description = "",
-                 guid = Guid("http://www.dalkescientific.com/news/"
-                                  "030906-PyRSS2Gen.html"),
-                 pubDate = datetime.datetime(2003, 9, 6, 21, 31)),
-            ])
+            title = self.t_dom.title.text, 
+            link = "notapaper.de",
+            description = "",       
+            lastBuildDate = datetime.datetime.now()
+        )
         
     def init(self):
         articles_dir = self.idir+"/"+self.options["dir"]+"/"
@@ -71,12 +62,23 @@ class sci_blog(sci_interface):
         article_files.sort(reverse=True)
         for a in article_files:
             article_dom = BeautifulSoup(open(articles_dir+a,"r").read())
+            a_title = article_dom.h2.get_text()
+            a_short = article_dom.find("div",{"class":"short"}).text
+            a_date = article_dom.find("div",{"class":"date"}).text.strip()
+            
             l_entry = article_dom.new_tag("li")
             l_link = article_dom.new_tag("a",href=a[1:])
-            l_link.append(article_dom.h2.get_text())
+            l_link.append(a_title)
             l_entry.insert(1,l_link)
             self.p_dom.div.append(article_dom.contents[0])
             self.list_dom.append(l_entry)
+            self.rss.items.append(
+                RSSItem(
+                 title = a_title,
+                 link = a[1:],
+                 description = a_short,
+                 pubDate = datetime.datetime.strptime(a_date,"%Y-%m-%d"))
+            )
 
     def generate(self,attr):
         if "blog_list" in attr:
