@@ -43,7 +43,7 @@ class sci_blog(sci_interface):
     
     def createRSS(self):
         self.rss = RSS2(
-            title = self.t_dom.title.text, 
+            title = self.t_dom.title.get_text(), 
             link = "notapaper.de",
             description = "",       
             lastBuildDate = datetime.datetime.now()
@@ -62,9 +62,9 @@ class sci_blog(sci_interface):
         article_files.sort(reverse=True)
         for a in article_files:
             article_dom = BeautifulSoup(open(articles_dir+a,"r").read())
-            a_title = article_dom.h2.get_text()
-            a_short = article_dom.find("div",{"class":"short"}).text
-            a_date = article_dom.find("div",{"class":"date"}).text.strip()
+            a_title = article_dom.h2.get_text().strip()
+            a_short = article_dom.find("div",{"class":"short"}).get_text()
+            a_date = article_dom.find("div",{"class":"date"}).get_text().strip()
             
             l_entry = article_dom.new_tag("li")
             l_link = article_dom.new_tag("a",href=a[1:])
