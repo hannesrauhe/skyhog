@@ -84,7 +84,7 @@ class sci_blog(sci_interface):
         if "blog_list" in attr:
             return self.list_dom
         elif "rss_link" in attr:
-            self.rss.write_xml(open("rss.xml", "w"))
+            self.rss.write_xml(open(self.odir+"/rss.xml", "w"))
             rssl = self.p_dom.new_tag("link", rel="alternate", type="application/rss+xml", title="HTML-Feed", href="rss.xml")
             return rssl
         return self.p_dom.div
