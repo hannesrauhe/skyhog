@@ -71,7 +71,7 @@ if ($handle = opendir(UPLOAD_DIR)) {
 <?php
 include_once("nav.inc.phtml");
 ?>
-	<p id="sh_msg"> 
+	<p id="msg"> 
 		<?php echo $msg; ?>
 	</p>
 	<aside id="skyhog_aside_right">
