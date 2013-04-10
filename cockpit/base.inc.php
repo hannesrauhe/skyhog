@@ -48,6 +48,9 @@ class sqlite_db extends SQLite3 {
 	}
 	
 	public function insertUser($openid,$name,$email) {
+		if(empty($name)) {
+			$name="unknown";
+		}
 		$stmt = $this->prepare("INSERT INTO `users` (`name`,`openid`,`email`) VALUES (:name,:id,:mail)");
 		if($stmt) {
 			$stmt->bindValue(':name',$name,SQLITE3_TEXT);
