@@ -33,7 +33,7 @@ if(array_key_exists("navigation_changed", $_POST) && !empty($_POST["navigation_c
 	}
 }
 
-$arg1 = escapeshellarg(dirname(__FILE__)."../scihog/generate.py");
+$arg1 = escapeshellarg(dirname(__FILE__)."/../generate.py");
 $arg2 = "";
 $arg4 = "";
 $arg5 = "";
@@ -45,7 +45,7 @@ if(array_key_exists("finalize", $_POST)) {
 $arg3 = "--template ".escapeshellarg(UPLOAD_DIR."__template.html");
 $retvar = 0;
 $ret = system(PYTHON_CMD." $arg1 $arg2 $arg3 $arg4 $arg5",$retvar);
-//echo PYTHON_CMD." $arg1 $arg2 $arg3";
+echo PYTHON_CMD." $arg1 $arg2 $arg3 $arg4 $arg5";
 if($ret === FALSE || $retvar!=0) {
     echo "ERROR executing python\n";
 	echo $ret;
