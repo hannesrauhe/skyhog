@@ -58,6 +58,9 @@ Have fun!
                                         continue;
 					//$use_value = $value;
 				}
+				if((substr($key, -3)=="DIR" ||  substr($key, -4)=="PATH") && substr($use_value,-1)!="/") {
+					$use_value.="/";
+				}
 			}
 			$file_c .= "define(\"$key\",\"$use_value\");\n";
 		}
@@ -72,6 +75,7 @@ Have fun!
 	}
 } else {
 	echo "The config file exists... ";
+
 	if(! (defined("DOMAIN") &&	defined("PAGE_DIR") && defined("PAGE_PATH") && defined("UPLOAD_PATH") && defined("UPLOAD_DIR") && defined("BAK_DIR"))) {
 		echo "but DOMAIN, BAK_DIR, PAGE_* or UPLOAD_* rule is missing. Repair by hand please!\n";
 		exit(1);
@@ -119,4 +123,13 @@ Have fun!
 	    }		
 	}
 	echo "and looks fine.\n";
+	
+	$consts = get_defined_constants(true);
+	$consts = $consts['user'];
+	foreach ($consts as $key => $value) {
+		$use_value = $value;
+		if((substr($key, -3)=="DIR" ||  substr($key, -4)=="PATH") && substr($use_value,-1)!="/") {
+			echo "WARNING: ".$key." should have a / in the end! Something could go terribly long if it has not.\n";
+		}
+	}
 }
