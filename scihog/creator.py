@@ -49,7 +49,7 @@ class creator(object):
             
     def generate(self):
         for f in self.template_files: 
-            p_dom = BeautifulSoup(open(self.templ_path,"r").read())    
+            p_dom = BeautifulSoup(open(self.templ_path,"r").read().strip())    
             content_file_path = self.input_dir+f
             pluged_in = {}
 
@@ -82,7 +82,7 @@ class creator(object):
             
             
             new_file = open(self.output_dir+f[1:],'w')
-            new_file.write(p_dom.prettify())
+            new_file.write(p_dom.prettify().encode("UTF-8"))
             print "generated",f[1:]
             
     def move_to_page_dir(self,bak_dir):

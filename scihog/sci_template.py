@@ -92,6 +92,6 @@ class sci_blog(sci_interface):
 
 class sci_page(sci_interface):        
     def generate(self,attr):
-        self.p_dom = BeautifulSoup(open(self.idir+"/"+self.ifile_name,"r").read())
+        self.p_dom = BeautifulSoup(open(self.idir+"/"+self.ifile_name,"r").read().strip())
         return self.p_dom.contents[0]
         

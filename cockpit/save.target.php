@@ -31,7 +31,7 @@ if(!is_file(UPLOAD_DIR.$file) && !array_key_exists("new",$_POST)) {
 }
 
 if(array_key_exists('elm1',$_POST) && !empty($_POST['elm1'])) {
-	file_put_contents (UPLOAD_DIR.$file,$_POST['elm1']);
+	file_put_contents (UPLOAD_DIR.$file,trim($_POST['elm1']));
 } else {
 	echo "ERROR: no content for $file submitted!";
 	exit();
