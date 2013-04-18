@@ -3,12 +3,13 @@ from bs4 import *
 from PyRSS2Gen import *
 
 class sci_interface(object):
-    def __init__(self,idir,ifile_name,odir,ofile_name,t_dom):
+    def __init__(self,idir,ifile_name,odir,ofile_name,t_dom,db_dir):
         self.idir = idir
         self.ifile_name = ifile_name
         self.odir = odir
         self.ofile_name = ofile_name
         self.t_dom = t_dom
+        self.db_dir = db_dir
         self.init()
 
     def init(self):
@@ -20,7 +21,7 @@ class sci_interface(object):
 class sci_nav(sci_interface):
     def generate(self,attr):
         import sqlite3 
-        connection = sqlite3.connect(self.idir+"/scihog.db")
+        connection = sqlite3.connect(self.db_dir+"/scihog.db")
         cursor = connection.cursor()
         cursor.execute("SELECT id,link,name FROM nav WHERE menu_order>=0 ORDER BY menu_order")
         code = []
@@ -92,6 +93,6 @@ class sci_blog(sci_interface):
 
 class sci_page(sci_interface):        
     def generate(self,attr):
-        self.p_dom = BeautifulSoup(open(self.idir+"/"+self.ifile_name,"r").read().strip())
+        self.p_dom = BeautifulSoup(open(self.idir+'/'+self.ifile_name,"r").read().strip())
         return self.p_dom.contents[0]
         
