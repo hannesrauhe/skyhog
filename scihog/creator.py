@@ -38,11 +38,20 @@ class creator(object):
         self.page_dir = page_directory+'/'
         self.output_dir = os.path.dirname(t)+'/'
         self.input_dir = self.output_dir
+        self.db_dir = self.input_dir
 
         self.templ_path = t
         template_file = open(t, 'r')
         self.templ = template_file.readlines()
-        self.template_files = [item for item in os.listdir(self.output_dir) if self.template_name_condition(item)]
+        #self.template_files = [item for item in os.listdir(self.output_dir) if self.template_name_condition(item)]
+        self.template_files = self.find_files(self.output_dir)
+        print self.template_files
+    
+    def find_files(self, dir):
+        file_list = [ os.path.join(dir,item) for item in os.listdir(dir) if self.template_name_condition(item)]
+        for file in [ item for item in os.listdir(dir) if os.path.isdir(os.path.join(dir, item))]:
+            file_list.extend(self.find_files(os.path.join(dir, file)))
+        return file_list
         
     def template_name_condition(self,f):
         return f.lower().endswith('.html') and not f.startswith('__') and f.startswith('_')
@@ -50,9 +59,12 @@ class creator(object):
     def generate(self):
         for f in self.template_files: 
             p_dom = BeautifulSoup(open(self.templ_path,"r").read().strip())    
-            content_file_path = self.input_dir+f
+            #content_file_path = self.input_dir+f
             pluged_in = {}
-
+ 
+            h = f.rsplit('/',1) 
+            f = h[1] # filename
+            d = h[0].replace(self.output_dir[:-1],'',1) # remove the base directory output_dir from the path
             while True:
                 el = p_dom.find("div",{"class":re.compile("__skyhog")})
 #                print el
@@ -64,11 +76,11 @@ class creator(object):
                         
                 if not pluged_in.has_key(plugin_name):
                     if "static_page"==plugin_name:
-                        pluged_in[plugin_name] = sci_page(self.input_dir,f,self.output_dir,f[1:],p_dom)
+                        pluged_in[plugin_name] = sci_page(self.input_dir+'/'+d,f,self.output_dir+'/'+d,f[1:],p_dom,self.db_dir)
                     elif "blog"==el["class"][0][9:]:
-                        pluged_in[plugin_name] = sci_blog(self.input_dir,f,self.output_dir,f[1:],p_dom)
+                        pluged_in[plugin_name] = sci_blog(self.input_dir+'/'+d,f,self.output_dir+'/'+d,f[1:],p_dom,self.db_dir)
                     elif "nav"==el["class"][0][9:]:
-                        pluged_in[plugin_name] = sci_nav(self.input_dir,f,self.output_dir,f[1:],p_dom)
+                        pluged_in[plugin_name] = sci_nav(self.input_dir+'/'+d,f,self.output_dir+'/'+d,f[1:],p_dom,self.db_dir)
                     else:
                         print "removed unknown element of class",el["class"]
                         el.extract()
@@ -79,11 +91,9 @@ class creator(object):
 #                print "___________________"
 #                print p_dom.prettify()
 #                print "____________________________!"
-            
-            
-            new_file = open(self.output_dir+f[1:],'w')
+            new_file = open(self.output_dir+'/'+d+'/'+f[1:],'w')
             new_file.write(p_dom.prettify().encode("UTF-8"))
-            print "generated",f[1:]
+            print "generated",d+'/'+f[1:]
             
     def move_to_page_dir(self,bak_dir):
         if os.path.isdir(self.page_dir):
