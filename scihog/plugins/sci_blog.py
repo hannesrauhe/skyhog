@@ -1,24 +1,27 @@
-import os,datetime
-from bs4 import *
-from PyRSS2Gen import *
+'''
+Copyright 2012 Hannes Rauhe
 
-class sci_interface(object):
-    def __init__(self,idir,ifile_name,odir,ofile_name,t_dom,db_dir):
-        self.idir = idir
-        self.ifile_name = ifile_name
-        self.odir = odir
-        self.ofile_name = ofile_name
-        self.t_dom = t_dom
-        self.db_dir = db_dir
-        self.init()
+This file is part of Skyhog.
 
-    def init(self):
-        pass
+Skyhog is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
     
-    def generate(self,attr):
-        pass
-        
-class sci_blog(sci_interface):
+Skyhog is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Skyhog.  If not, see <http://www.gnu.org/licenses/>.
+'''
+import os,datetime
+from PyRSS2Gen import *
+from bs4 import *
+from scihog.iface_plugin import iface_plugin
+
+class sci_blog(iface_plugin):
     options = {"number":5,"dir":"./","prefix":"_article"}
     p_dom = None
     rss = None
@@ -31,7 +34,7 @@ class sci_blog(sci_interface):
             lastBuildDate = datetime.datetime.now()
         )
         
-    def init(self):
+    def init2(self):
         articles_dir = self.idir+"/"+self.options["dir"]+"/"
         if not os.path.isdir(articles_dir):
             print "ERROR:",articles_dir,"with articles not found"
@@ -70,10 +73,3 @@ class sci_blog(sci_interface):
             rssl = self.p_dom.new_tag("link", rel="alternate", type="application/rss+xml", title="HTML-Feed", href="rss.xml")
             return rssl
         return self.p_dom.div
-        
-
-class sci_page(sci_interface):        
-    def generate(self,attr):
-        self.p_dom = BeautifulSoup(open(self.idir+"/"+self.ifile_name,"r").read())
-        return self.p_dom.contents[0]
-        

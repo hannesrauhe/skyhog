@@ -1,0 +1,9 @@
+[Core]
+Name = blog
+Module = sci_blog
+   
+[Documentation]
+Description = Creates blog a list of blog entries on a front page or just the titles as a list, e.g. for a side bar
+Author = Hannes Rauhe
+Version = 0.1
+Website = scitivity.net

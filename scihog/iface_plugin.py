@@ -19,15 +19,20 @@ class iface_plugin(IPlugin):
         """
         IPlugin.deactivate(self)
         
-    def init(self,idir,ifile_name,odir,ofile_name,t_dom):
+    def init(self,idir,ifile_name,odir,ofile_name,t_dom,db_dir):
         self.idir = idir
         self.ifile_name = ifile_name
         self.odir = odir
         self.ofile_name = ofile_name
         self.t_dom = t_dom
+        self.db_dir = db_dir
+        self.init2()
+        
+    def init2(self):
+        pass
     
     def generate(self,attr):
-        pass
+        raise NotImplementedError("generate method of plugin not implemented")
         
     def read_options_from_file(self):
         if not self.options:

@@ -1,0 +1,9 @@
+[Core]
+Name = nav
+Module = sci_nav
+   
+[Documentation]
+Description = Creates a navigation menu
+Author = Hannes Rauhe
+Version = 0.1
+Website = scitivity.net

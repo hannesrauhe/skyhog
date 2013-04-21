@@ -1,0 +1,9 @@
+[Core]
+Name = static_page
+Module = sci_page
+   
+[Documentation]
+Description = Copies a html file into the template
+Author = Hannes Rauhe
+Version = 0.1
+Website = scitivity.net
