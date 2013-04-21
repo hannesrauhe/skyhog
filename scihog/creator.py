@@ -17,7 +17,10 @@ You should have received a copy of the GNU General Public License
 along with Skyhog.  If not, see <http://www.gnu.org/licenses/>.
 '''
 import os,shutil,time,re
+from bs4 import *
+from PyRSS2Gen import *
 from sci_template import *
+from yapsy.PluginManager import PluginManagerSingleton
 
 
 class creator(object):
@@ -30,6 +33,7 @@ class creator(object):
     output_dir = ''
     input_dir = ''
     page_dir = ''
+    _pm = None
     
     def __init__(self,t,page_directory):
         '''
@@ -46,6 +50,10 @@ class creator(object):
         #self.template_files = [item for item in os.listdir(self.output_dir) if self.template_name_condition(item)]
         self.template_files = self.find_files(self.output_dir)
         print self.template_files
+        
+        self._pm = PluginManagerSingleton.get()
+        self._pm.setPluginPlaces(["plugins"])
+        self._pm.collectPlugins()
     
     def find_files(self, dir):
         file_list = [ os.path.join(dir,item) for item in os.listdir(dir) if self.template_name_condition(item)]
@@ -79,12 +87,17 @@ class creator(object):
                         pluged_in[plugin_name] = sci_page(self.input_dir+'/'+d,f,self.output_dir+'/'+d,f[1:],p_dom,self.db_dir)
                     elif "blog"==el["class"][0][9:]:
                         pluged_in[plugin_name] = sci_blog(self.input_dir+'/'+d,f,self.output_dir+'/'+d,f[1:],p_dom,self.db_dir)
-                    elif "nav"==el["class"][0][9:]:
-                        pluged_in[plugin_name] = sci_nav(self.input_dir+'/'+d,f,self.output_dir+'/'+d,f[1:],p_dom,self.db_dir)
+#                    elif "nav"==el["class"][0][9:]:
+#                        pluged_in[plugin_name] = sci_nav(self.input_dir+'/'+d,f,self.output_dir+'/'+d,f[1:],p_dom,self.db_dir)
                     else:
-                        print "removed unknown element of class",el["class"]
-                        el.extract()
-                        continue
+                        pluginInfo = self._pm.getPluginByName(plugin_name)
+                        if pluginInfo:
+                            pluged_in[plugin_name] = pluginInfo.plugin_object
+                            pluged_in[plugin_name].init(self.input_dir+'/'+d,f,self.output_dir+'/'+d,f[1:],p_dom,self.db_dir)
+                        else:
+                            print "removed unknown element of class",el["class"]
+                            el.extract()
+                            continue
                 
                 artdom = pluged_in[plugin_name].generate(el["class"])
                 el.replace_with(artdom)

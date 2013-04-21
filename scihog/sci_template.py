@@ -3,13 +3,12 @@ from bs4 import *
 from PyRSS2Gen import *
 
 class sci_interface(object):
-    def __init__(self,idir,ifile_name,odir,ofile_name,t_dom,db_dir):
+    def __init__(self,idir,ifile_name,odir,ofile_name,t_dom):
         self.idir = idir
         self.ifile_name = ifile_name
         self.odir = odir
         self.ofile_name = ofile_name
         self.t_dom = t_dom
-        self.db_dir = db_dir
         self.init()
 
     def init(self):
@@ -17,25 +16,6 @@ class sci_interface(object):
     
     def generate(self,attr):
         pass
-    
-class sci_nav(sci_interface):
-    def generate(self,attr):
-        import sqlite3 
-        connection = sqlite3.connect(self.db_dir+"/scihog.db")
-        cursor = connection.cursor()
-        cursor.execute("SELECT id,link,name FROM nav WHERE menu_order>=0 ORDER BY menu_order")
-        code = []
-        code.append('<nav>\n')
-        code.append('<ul>\n')
-        for entry in cursor.fetchall():
-            if self.ofile_name==entry[1]:
-                code.append('<li id="%s" class="m_active"><a href="%s">%s</a></li>\n' % entry[:3])
-            else:
-                code.append('<li id="%s"><a href="%s">%s</a></li>\n' % entry[:3])
-        code.append('</ul>\n')
-        code.append('</nav>\n')
-        self.p_dom = BeautifulSoup("".join(code))
-        return self.p_dom.nav
         
 class sci_blog(sci_interface):
     options = {"number":5,"dir":"./","prefix":"_article"}
@@ -93,6 +73,6 @@ class sci_blog(sci_interface):
 
 class sci_page(sci_interface):        
     def generate(self,attr):
-        self.p_dom = BeautifulSoup(open(self.idir+'/'+self.ifile_name,"r").read().strip())
+        self.p_dom = BeautifulSoup(open(self.idir+"/"+self.ifile_name,"r").read())
         return self.p_dom.contents[0]
         
