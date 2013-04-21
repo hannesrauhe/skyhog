@@ -2,9 +2,6 @@ from yapsy.IPlugin import IPlugin
 import types
 
 class iface_plugin(IPlugin):
-    options = None
-    option_widgets = {}
-    
     def activate(self):
         """
         Call the parent class's acivation method
@@ -18,6 +15,39 @@ class iface_plugin(IPlugin):
         Just call the parent class's method
         """
         IPlugin.deactivate(self)
+        
+class iface_unknown_plugin(iface_plugin):     
+    def activate(self):
+        """
+        Call the parent class's acivation method
+        """
+        iface_plugin.activate(self)
+        return
+
+
+    def deactivate(self):
+        """
+        Just call the parent class's method
+        """
+        iface_plugin.deactivate(self)
+        
+class iface_generate_plugin(iface_plugin):        
+    options = None
+    option_widgets = {}
+    
+    def activate(self):
+        """
+        Call the parent class's acivation method
+        """
+        iface_plugin.activate(self)
+        return
+
+
+    def deactivate(self):
+        """
+        Just call the parent class's method
+        """
+        iface_plugin.deactivate(self)
         
     def init(self,idir,ifile_name,odir,ofile_name,t_dom,db_dir):
         self.idir = idir

@@ -18,9 +18,9 @@ along with Skyhog.  If not, see <http://www.gnu.org/licenses/>.
 '''
 import sqlite3 
 from bs4 import *
-from scihog.iface_plugin import iface_plugin
+from scihog.iface_plugin import *
 
-class sci_nav(iface_plugin):
+class sci_nav(iface_generate_plugin):
     def generate(self,attr):
         connection = sqlite3.connect(self.idir+"/scihog.db")
         cursor = connection.cursor()

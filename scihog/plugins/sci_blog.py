@@ -19,9 +19,9 @@ along with Skyhog.  If not, see <http://www.gnu.org/licenses/>.
 import os,datetime
 from PyRSS2Gen import *
 from bs4 import *
-from scihog.iface_plugin import iface_plugin
+from scihog.iface_plugin import *
 
-class sci_blog(iface_plugin):
+class sci_blog(iface_generate_plugin):
     options = {"number":5,"dir":"./","prefix":"_article"}
     p_dom = None
     rss = None

@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with Skyhog.  If not, see <http://www.gnu.org/licenses/>.
 '''
 from bs4 import *
-from scihog.iface_plugin import iface_plugin
+from scihog.iface_plugin import *
      
-class sci_page(iface_plugin):
+class sci_page(iface_generate_plugin):
     def generate(self,attr):
         self.p_dom = BeautifulSoup(open(self.idir+"/"+self.ifile_name,"r").read())
         return self.p_dom.contents[0]

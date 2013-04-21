@@ -19,7 +19,7 @@ along with Skyhog.  If not, see <http://www.gnu.org/licenses/>.
 import os,shutil,time,re,logging
 from bs4 import *
 from PyRSS2Gen import *
-from sci_template import *
+from iface_plugin import *
 from yapsy.PluginManager import PluginManagerSingleton
 
 
@@ -56,8 +56,12 @@ class creator(object):
         logging.basicConfig(level=logging.ERROR)
         self._pm = PluginManagerSingleton.get()
         self._pm.setPluginPlaces(self.plugin_dirs)
+        self._pm.setCategoriesFilter({
+           "unknown" : iface_unknown_plugin,
+           "generate" : iface_generate_plugin
+           })
         self._pm.collectPlugins()
-        self.list_available_plugins()
+#        self.list_available_plugins()
 
     def find_files(self, dir):
         file_list = [ os.path.join(dir,item) for item in os.listdir(dir) if self.template_name_condition(item)]
@@ -94,7 +98,7 @@ class creator(object):
 #                    elif "nav"==el["class"][0][9:]:
 #                        pluged_in[plugin_name] = sci_nav(self.input_dir+'/'+d,f,self.output_dir+'/'+d,f[1:],p_dom,self.db_dir)
 #                    else:
-                    plugin_object = self._pm.activatePluginByName(plugin_name)
+                    plugin_object = self._pm.activatePluginByName(plugin_name,"generate")
                     logger.debug("loading plugin with name %s: %s",plugin_name,str(plugin_object))
                     if plugin_object:
                         pluged_in[plugin_name] = plugin_object
