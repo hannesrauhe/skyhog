@@ -3,12 +3,13 @@ from bs4 import *
 from PyRSS2Gen import *
 
 class sci_interface(object):
-    def __init__(self,idir,ifile_name,odir,ofile_name,t_dom):
+    def __init__(self,idir,ifile_name,odir,ofile_name,t_dom,db_dir):
         self.idir = idir
         self.ifile_name = ifile_name
         self.odir = odir
         self.ofile_name = ofile_name
         self.t_dom = t_dom
+        self.db_dir = db_dir
         self.init()
 
     def init(self):
