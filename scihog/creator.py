@@ -53,7 +53,6 @@ class creator(object):
         self.template_files = self.find_files(self.output_dir)
 #        print self.template_files
         
-        logging.basicConfig(level=logging.ERROR)
         self._pm = PluginManagerSingleton.get()
         self._pm.setPluginPlaces(self.plugin_dirs)
         self._pm.setCategoriesFilter({
