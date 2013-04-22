@@ -22,7 +22,7 @@ from scihog.iface_plugin import *
 
 class sci_nav(iface_generate_plugin):
     def generate(self,attr):
-        connection = sqlite3.connect(self.idir+"/scihog.db")
+        connection = sqlite3.connect(self.db_dir+"/scihog.db")
         cursor = connection.cursor()
         cursor.execute("SELECT id,link,name FROM nav WHERE menu_order>=0 ORDER BY menu_order")
         code = []
