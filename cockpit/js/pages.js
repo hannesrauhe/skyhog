@@ -57,7 +57,7 @@ $(document).ready(function() {
 		dropOnEmpty: true,
 		stop: function(event, ui) { 
 			navigation_changed=1;
-			$('#sorted_menu li').each(function(index) {
+			$('#sorted_menu li a').each(function(index) {
 				navigation_order[index] = $.trim($(this).text());
 			});
 			$('#generate_buttons').css("border","2px solid red");
