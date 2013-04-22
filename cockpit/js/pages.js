@@ -58,7 +58,7 @@ $(document).ready(function() {
 		stop: function(event, ui) { 
 			navigation_changed=1;
 			$('#sorted_menu li').each(function(index) {
-				navigation_order[index] = $.trim($(this).text());
+				navigation_order[index] = $.trim($(this).children(":visible").text());
 			});
 			$('#generate_buttons').css("border","2px solid red");
 			//just debugging - and alternative later...
