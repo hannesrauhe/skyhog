@@ -21,7 +21,7 @@ import argparse,logging
 from scihog.creator import *
 
 parser = argparse.ArgumentParser(description='Create HTML-Files from Template.')
-parser.add_argument('--template', type=str, default='preview/__template.html',
+parser.add_argument('--template', type=str, default='./__template.html',
                    help='the template file and in the preview directory')
 parser.add_argument('--page_dir', type=str, default='live',
                    help='the directory for the final output')
