@@ -76,8 +76,8 @@ Have fun!
 } else {
 	echo "The config file exists... ";
 
-	if(! (defined("DOMAIN") &&	defined("PAGE_DIR") && defined("PAGE_PATH") && defined("UPLOAD_PATH") && defined("UPLOAD_DIR") && defined("BAK_DIR"))) {
-		echo "but DOMAIN, BAK_DIR, PAGE_* or UPLOAD_* rule is missing. Repair by hand please!\n";
+	if(! (defined("DOMAIN") &&	defined("WRK_DIR") && defined("LOG_DIR") && defined("BAK_DIR"))) {
+		echo "but DOMAIN, BAK_DIR, LOG_DIR, WRK_DIR rule is missing. Repair by hand please!\n";
 		exit(1);
 	}
 	if(! (defined("GIT_CMD") || defined("PYTHON_CMD"))) {
@@ -86,7 +86,7 @@ Have fun!
 	}
 	if(! (defined("DB_NAME")) ) {
 		echo "but DB_NAME is missing. Trying to add the default value automatically...";
-		$cont_app = 'define("DB_NAME","scihog.db");';
+		$cont_app = 'define("DB_NAME",WRK_DIR."scihog.db");';
 	    if(file_put_contents("./config.inc.php", $cont_app,FILE_APPEND) === FALSE) {
 	    	echo "The config file hasn't been written, make the skyhog directory writable for the webserver and reload or add this content to config.inc.php:\n";
 			echo $cont_app;

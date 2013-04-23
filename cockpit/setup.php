@@ -2,6 +2,25 @@
 if (!ini_get('display_errors')) {
     ini_set('display_errors', '1');
 }
+
+function check_dir($path,$descr) {
+if(is_dir($path)) {
+    echo $descr." exists ";
+    if(@touch($path."/testtouch") && @unlink($path."/testtouch")) {
+        echo "and is writable\n";
+    } else {
+        echo "but is not writable!\n";
+        exit(1);
+    }
+} else {
+    if(mkdir($path)) {
+        echo $descr." created\n";
+    } else {
+        echo "couldn't create ".$descr."!\n";
+        exit(1);
+    }
+}
+}
 /*
 Copyright 2012 Hannes Rauhe
 
@@ -35,6 +54,7 @@ $_SESSION = array();
 session_destroy();
 
 //preview/upload directory
+/*
 if(is_dir(UPLOAD_DIR)) {
 	echo "Preview dir exists ";
 	if(touch(UPLOAD_DIR."/testtouch") && unlink(UPLOAD_DIR."/testtouch")) {
@@ -61,9 +81,15 @@ if(is_dir(UPLOAD_DIR)) {
 		}
 	}
 }
+*/
+
+//create/check directories
+check_dir(LOG_DIR, "log directory");
+check_dir(BAK_DIR, "backup directory");
+check_dir(WRK_DIR, "working directory");
 
 //db
-$db = new SQLite3(UPLOAD_DIR.DB_NAME);
+$db = new SQLite3(DB_NAME);
 
 /* Users table */
 $query_result = $db->querySingle('SELECT * FROM users', true);
@@ -99,56 +125,10 @@ $db->close();
 require_once("./base.inc.php");
 
 //check the tables now
-require_once("./setup/01_check_tables.inc.php");
+//require_once("./setup/01_check_tables.inc.php");
 
-//live directory
-if(is_dir(PAGE_DIR)) {
-	echo "Page dir exists ";
-	if(touch(PAGE_DIR."/testtouch") && unlink(PAGE_DIR."/testtouch")) {
-		echo "and is writable\n";
-	} else {
-		echo "but is not writable!\n";
-		exit(1);
-	}	
-} else {
-	echo "Page dir does not exist!\n";
-	exit(1);
-}
-//log directory
-if(is_dir(LOG_DIR)) {
-	echo "Log dir exists ";
-	if(touch(LOG_DIR."/testtouch") && unlink(LOG_DIR."/testtouch")) {
-		echo "and is writable\n";
-	} else {
-		echo "but is not writable!\n";
-		exit(1);
-	}
-} else {
-	if(mkdir(LOG_DIR)) {
-		echo "Log dir created\n";
-	} else {
-		echo "couldn't create the log dir!\n";
-		exit(1);
-	}
-}
-//backup directory
-if(is_dir(BAK_DIR)) {
-	echo "Backup dir exists ";
-	if(touch(BAK_DIR."/testtouch") && unlink(BAK_DIR."/testtouch")) {
-		echo "and is writable\n";
-	} else {
-		echo "but is not writable!\n";
-		exit(1);
-	}
-} else {
-	if(mkdir(BAK_DIR)) {
-		echo "Backup dir created\n";
-	} else {
-		echo "couldn't create the log dir!\n";
-		exit(1);
-	}
-}
 
+/*
 //git
 chdir(UPLOAD_DIR);
 $arr = array();
@@ -202,7 +182,7 @@ if(!is_file(UPLOAD_DIR."_index.html")) {
 } else {
 	echo "_index.html is there\n";	
 }
-
+*/
 echo "SUCCESS";
 ?>
 </textarea>

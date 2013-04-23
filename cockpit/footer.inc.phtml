@@ -25,5 +25,10 @@ along with Skyhog.  If not, see <http://www.gnu.org/licenses/>.
 	} else {
 		echo "You're not logged in.";		
 	}
-	?></p>
+	if($s->getSiteID()!=-1) {
+	    echo " Currently working on ".$s->getSiteName();
+        echo " (<a href=\"sites.php\">Change</a>)";
+	}
+	?>
+	</p>
 </footer>

@@ -24,7 +24,7 @@ $file = "";
 
 if(array_key_exists("file",$_GET)) {
 	$file = basename($_GET['file']);
-	if(!is_file(UPLOAD_DIR.$file)) {
+	if(!is_file($s->getPreviewDir().$file)) {
 		$msg = "File $file does not exist";
 		$file = "_index.html";
 	}
@@ -32,10 +32,11 @@ if(array_key_exists("file",$_GET)) {
 	$file = "_index.html";
 }
 
-$ordered_pages = $d->getNavEntries();
+$ordered_pages = $ds->getNavEntries();
+//$ordered_pages = array();
 
 $pages = array();
-if ($handle = opendir(UPLOAD_DIR)) {
+if ($handle = opendir($s->getPreviewDir())) {
     while (false !== ($f = readdir($handle))) {
     	if(substr($f,0,1)=='_' && substr($f,1,1)!='_') {
     		$f = substr($f,1);
@@ -131,7 +132,7 @@ include_once("nav.inc.phtml");
 			<div>	
 				<!-- Gets replaced with TinyMCE, remember HTML in a textarea should be encoded -->
 				<div>
-					<textarea id="elm1" name="elm1" rows="40" cols="180" style="width: 80%" enctype="multipart/form-data"><?php echo file_get_contents (UPLOAD_DIR.$file); ?></textarea>
+					<textarea id="elm1" name="elm1" rows="40" cols="180" style="width: 80%" enctype="multipart/form-data"><?php echo file_get_contents ($s->getPreviewDir().$file); ?></textarea>
 				</div>	
 				
 				<span id="sh_plain_options">

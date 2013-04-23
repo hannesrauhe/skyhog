@@ -17,6 +17,12 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Skyhog.  If not, see <http://www.gnu.org/licenses/>.
 */
+//if(defined(ENABLE_DEBUG)) {
+if (!ini_get('display_errors')) {
+    ini_set('display_errors', '1');
+}
+//}
+
 require_once("./config.inc.php");
 require_once("./openid.inc.php");
 
@@ -27,24 +33,27 @@ class skylog {
     public function __construct($file,$username) {
         if(defined("ENABLE_LOG")) {
             $this->logfile = fopen(LOG_DIR."/$file","a");
-            if($this->logfile===FALSE)
-                echo "unable to open log file '".$file."'\n";
+            if($this->logfile===FALSE) {
+                echo "FATAL: unable to open log file '".$file."'\n";
+                exit(1);
+            }
             $this->loguser = $username;
         }
     }
     public function write($msg) {
         if(defined("ENABLE_LOG")) {
-            if($this->logfile===FALSE)
-                echo "unable to open log file '".$file."'\n";
-            else
+            if($this->logfile===FALSE) {
+                echo "FATAL: unable to open log file '".$file."'\n";
+                exit(1);
+            } else
                 fwrite($this->logfile,date("Y-m-d H:i:s (").$this->loguser.")".$msg."\n");            
         }
     }
 }
 
-class sqlite_db extends SQLite3 {
+class skyhog_db extends SQLite3 {
 	public function __construct() {
-		$this->open(UPLOAD_DIR.DB_NAME);
+		$this->open(DB_NAME);
 	}
 	
 	public function insertUser($openid,$name,$email) {
@@ -126,70 +135,6 @@ class sqlite_db extends SQLite3 {
 			throw new Exception("Error Processing Request", 1);	
 		}	
 		return 0;
-	}
-	
-	/** nav table **/
-	
-	public function getNavEntries() {		
-		$nav=array();
-		$stmt = $this->prepare("SELECT * FROM `nav` WHERE menu_order>=0 ORDER BY menu_order;");
-		if($stmt) {
-			$r = $stmt->execute();
-			while($res = $r->fetchArray(SQLITE3_ASSOC)) {
-				$nav[]=$res;
-			}
-			$stmt->close();
-		} else {
-			throw new Exception("Error Processing Request", 1);			
-		}
-		return $nav;	
-	}
-	
-	public function insertNavEntry($link,$id,$name,$menu_order) {
-		$nav=array();
-		$stmt = $this->prepare("INSERT INTO nav (link,id,name,menu_order) VALUES (:link,:id,:name,:menu_order);");
-		if($stmt) {
-			$stmt->bindValue(':link',$link,SQLITE3_TEXT);
-			$stmt->bindValue(':id',$id,SQLITE3_TEXT);
-			$stmt->bindValue(':name',$name,SQLITE3_TEXT);
-			$stmt->bindValue(':menu_order',$menu_order,SQLITE3_INTEGER);
-			$stmt->execute();
-			$stmt->close();
-		} else {
-			throw new Exception("Error while inserting new nav entry", 1);			
-		}
-		
-	}
-			
-	public function orderNavEntries($nav_order) {	
-		$nav=array();
-		$stmt = $this->prepare("UPDATE `nav` SET menu_order=-1;");
-		if($stmt) {
-			$stmt->execute();
-			$stmt->close();
-		} else {
-			throw new Exception("Error while reseting menu_order", 1);			
-		}
-		
-		if(!empty($nav_order)) {
-			$i = 0;
-			$stmt = $this->prepare("UPDATE `nav` SET menu_order=:i WHERE id=:ent");
-			foreach($nav_order as $ent) {				
-				if($stmt) {
-					$stmt->bindValue(':i',$i,SQLITE3_INTEGER);
-					$stmt->bindValue(':ent',trim($ent),SQLITE3_TEXT); //have to trim because of strange spaces after JSON-parsing
-					$stmt->execute();
-					if($this->changes()==0) {
-						$this->insertNavEntry($ent, $ent, $ent, $i);
-					}
-					$stmt->reset();
-				} else {
-					throw new Exception("Error while setting menu_order", 1);			
-				}
-				$i++;
-			}
-			$stmt->close();
-		}
 	}
 }
 
@@ -342,9 +287,58 @@ class git {
 	}
 }
 
+class site {
+    var $site_id = -1;
+    public function __construct($s_id = -1) {
+        $this->site_id=$s_id;
+        if(!isset($_SESSION['site']['id'])) {
+            if(isset($_COOKIE['site_id']) && $site_id==-1) {
+                $site_id = $_COOKIE['site_id'];
+            }
+            $this->init($this->site_id);
+            setcookie('site_id',$site_id);
+        } else if($this->site_id!=-1 && $_SESSION['site']['id']!=$this->site_id) {
+            $this->init($this->site_id);
+            setcookie('site_id',$this->site_id);
+        }
+    }
+    
+    public function init($site_id) {    
+        $this->site_id=$site_id;
+        if($this->site_id!=-1) {
+            $_SESSION['site'] = array();
+            $_SESSION['site']['id'] = $site_id;
+            $_SESSION['site']['name']="Notapaper";
+            $_SESSION['site']['page_url']="http://localhost/notapaper";
+            $_SESSION['site']['page_dir']="/var/www/notapaper/";
+            $_SESSION['site']['preview_url']="http://localhost/p_notapaper";
+            $_SESSION['site']['preview_dir']="/var/www/p_notapaper/";
+            $_SESSION['site']['git']="https://github.com/hannesrauhe/notapaper.git";
+         }
+    }
+    
+    public function getSiteID() {
+        return $this->site_id;
+    }
+    
+    public function getSiteName() {
+        if($this->site_id!=-1) {
+            return $_SESSION['site']['name'];
+        }
+        return false;
+    }
+    
+    public function getPreviewDir() {
+        if($this->site_id!=-1) {
+            return $_SESSION['site']['preview_dir'];
+        }
+        return false;
+    }
+}
+
 session_start();
 
-$d = new sqlite_db();
+$d = new skyhog_db();
 $a = new auth();
 $oid = '';
 
@@ -377,6 +371,11 @@ try {
 $_SESSION['KCFINDER'] = array();
 $_SESSION['KCFINDER']['disabled'] = false;
 
+$site_id = -1;
+if(isset($_GET['site_id'])) {
+    $site_id = $_GET['site_id'];
+}
+$s = new site($site_id);
 $l = new skylog("system.log",$a->getAuthUserName());
 
 $msg = '';
