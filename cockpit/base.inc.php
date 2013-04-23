@@ -136,6 +136,23 @@ class skyhog_db extends SQLite3 {
 		}	
 		return 0;
 	}
+	
+	/*sites table*/
+	
+	
+    public function getSiteByID($id) {
+        $site=array();
+        $stmt = $this->prepare("SELECT * FROM `sites` WHERE `site_id` = :id");
+        if($stmt) {
+            $stmt->bindValue(':id',$id,SQLITE3_INTEGER);
+            $r = $stmt->execute();
+            $user = $r->fetchArray();
+            $stmt->close();
+        } else {
+            throw new Exception("Error Processing Request", 1);         
+        }
+        return $site;       
+    }
 }
 
 class auth {
@@ -289,31 +306,42 @@ class git {
 
 class site {
     var $site_id = -1;
-    public function __construct($s_id = -1) {
+    public function __construct(&$d,$s_id = -1) {
         $this->site_id=$s_id;
         if(!isset($_SESSION['site']['id'])) {
-            if(isset($_COOKIE['site_id']) && $site_id==-1) {
-                $site_id = $_COOKIE['site_id'];
+            if(isset($_COOKIE['site_id']) && $this->site_id==-1) {
+                $this->site_id = $_COOKIE['site_id'];
             }
-            $this->init($this->site_id);
-            setcookie('site_id',$site_id);
-        } else if($this->site_id!=-1 && $_SESSION['site']['id']!=$this->site_id) {
-            $this->init($this->site_id);
+            $this->init($d,$this->site_id);
             setcookie('site_id',$this->site_id);
+        } else if($this->site_id!=-1 && $_SESSION['site']['id']!=$this->site_id) {
+            $this->init($d,$this->site_id);
+            setcookie('site_id',$this->site_id);
+        } else {
+            $this->site_id = $_SESSION['site']['id'];
         }
     }
     
-    public function init($site_id) {    
+    public function init(&$d,$site_id) {    
         $this->site_id=$site_id;
         if($this->site_id!=-1) {
+            $site = $d->getSiteByID($this->site_id);
+            if(empty($site)) {
+                $this->site_id = -1;
+                return;
+            }
+                
+            $_SESSION['site'] = $site;
+        /*
             $_SESSION['site'] = array();
-            $_SESSION['site']['id'] = $site_id;
+            $_SESSION['site']['id'] = $this->site_id;
             $_SESSION['site']['name']="Notapaper";
             $_SESSION['site']['page_url']="http://localhost/notapaper";
             $_SESSION['site']['page_dir']="/var/www/notapaper/";
             $_SESSION['site']['preview_url']="http://localhost/p_notapaper";
             $_SESSION['site']['preview_dir']="/var/www/p_notapaper/";
             $_SESSION['site']['git']="https://github.com/hannesrauhe/notapaper.git";
+          */
          }
     }
     
@@ -333,6 +361,84 @@ class site {
             return $_SESSION['site']['preview_dir'];
         }
         return false;
+    }
+    public function getPreviewURL() {
+        if($this->site_id!=-1) {
+            return $_SESSION['site']['preview_url'];
+        }
+        return false;
+    }
+    public function getPageURL() {
+        if($this->site_id!=-1) {
+            return $_SESSION['site']['page_url'];
+        }
+        return false;
+    }
+}
+
+class site_db extends SQLite3 {
+    /** nav table **/
+    
+    public function getNavEntries() {       
+        $nav=array();
+        $stmt = $this->prepare("SELECT * FROM `nav` WHERE menu_order>=0 ORDER BY menu_order;");
+        if($stmt) {
+            $r = $stmt->execute();
+            while($res = $r->fetchArray(SQLITE3_ASSOC)) {
+                $nav[]=$res;
+            }
+            $stmt->close();
+        } else {
+            throw new Exception("Error Processing Request", 1);         
+        }
+        return $nav;    
+    }
+    
+    public function insertNavEntry($link,$id,$name,$menu_order) {
+        $nav=array();
+        $stmt = $this->prepare("INSERT INTO nav (link,id,name,menu_order) VALUES (:link,:id,:name,:menu_order);");
+        if($stmt) {
+            $stmt->bindValue(':link',$link,SQLITE3_TEXT);
+            $stmt->bindValue(':id',$id,SQLITE3_TEXT);
+            $stmt->bindValue(':name',$name,SQLITE3_TEXT);
+            $stmt->bindValue(':menu_order',$menu_order,SQLITE3_INTEGER);
+            $stmt->execute();
+            $stmt->close();
+        } else {
+            throw new Exception("Error while inserting new nav entry", 1);          
+        }
+        
+    }
+            
+    public function orderNavEntries($nav_order) {   
+        $nav=array();
+        $stmt = $this->prepare("UPDATE `nav` SET menu_order=-1;");
+        if($stmt) {
+            $stmt->execute();
+            $stmt->close();
+        } else {
+            throw new Exception("Error while reseting menu_order", 1);          
+        }
+        
+        if(!empty($nav_order)) {
+            $i = 0;
+            $stmt = $this->prepare("UPDATE `nav` SET menu_order=:i WHERE id=:ent");
+            foreach($nav_order as $ent) {               
+                if($stmt) {
+                    $stmt->bindValue(':i',$i,SQLITE3_INTEGER);
+                    $stmt->bindValue(':ent',trim($ent),SQLITE3_TEXT); //have to trim because of strange spaces after JSON-parsing
+                    $stmt->execute();
+                    if($this->changes()==0) {
+                        $this->insertNavEntry($ent, $ent, $ent, $i);
+                    }
+                    $stmt->reset();
+                } else {
+                    throw new Exception("Error while setting menu_order", 1);           
+                }
+                $i++;
+            }
+            $stmt->close();
+        }
     }
 }
 
@@ -368,8 +474,7 @@ try {
     exit(0);
 }
 
-$_SESSION['KCFINDER'] = array();
-$_SESSION['KCFINDER']['disabled'] = false;
+$msg = '';
 
 $site_id = -1;
 if(isset($_GET['site_id'])) {
@@ -378,4 +483,11 @@ if(isset($_GET['site_id'])) {
 $s = new site($site_id);
 $l = new skylog("system.log",$a->getAuthUserName());
 
-$msg = '';
+if($site_id!=$s->getSiteID()) {
+    $msg="The requested site does not exist! Check the maintenance script, if that seems to be wrong.";
+}
+
+if($s->getSiteID()==-1 && "sites.php"!=basename($_SERVER['SCRIPT_NAME']) && "setup.php"!=basename($_SERVER['SCRIPT_NAME'])) {
+    Header("Location: sites.php?msg=".urlencode($msg)."&redirect=".urlencode($_SERVER['SCRIPT_NAME']));
+    exit(0);
+}

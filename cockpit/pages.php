@@ -19,6 +19,21 @@ along with Skyhog.  If not, see <http://www.gnu.org/licenses/>.
 */
 require_once("base.inc.php");
 
+function bfglob($path, $pattern = '*', $flags = 0, $depth = 0) {
+    $matches = array();
+    $folders = array(rtrim($path, DIRECTORY_SEPARATOR));
+    
+    while($folder = array_shift($folders)) {
+        $matches = array_merge($matches, glob($folder.DIRECTORY_SEPARATOR.$pattern, $flags));
+        if($depth != 0) {
+            $moreFolders = glob($folder.DIRECTORY_SEPARATOR.'*', GLOB_ONLYDIR);
+            $depth   = ($depth < -1) ? -1: $depth + count($moreFolders) - 2;
+            $folders = array_merge($folders, $moreFolders);
+        }
+    }
+    return $matches;
+}
+
 $msg = "";
 $file = "";
 
@@ -31,7 +46,25 @@ if(array_key_exists("file",$_GET)) {
 } else {
 	$file = "_index.html";
 }
+$ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+if(!in_array($ext,array("html","css","js")) || strstr($file,"..")) {
+	$file = "__template.html";
+}
 
+if(!is_file($s->getPreviewDir().$file)) {
+	$msg = "File $file does not exist!";
+}		
+
+$file_list = array();
+$startpos = strlen(realpath($s->getPreviewDir()))+1;
+foreach(bfglob($s->getPreviewDir(),"*.{css,js}", GLOB_BRACE, -1) as $f) {
+	$file_list[] = substr($f,$startpos);
+}
+foreach(bfglob($s->getPreviewDir(),"__*.html", GLOB_BRACE, -1) as $f) {
+	$file_list[] = substr($f,$startpos);
+}
+
+$ds = new site_db($s->getPreviewDir()."scihog.db");
 $ordered_pages = $ds->getNavEntries();
 //$ordered_pages = array();
 
@@ -76,9 +109,9 @@ include_once("nav.inc.phtml");
 		<?php echo $msg; ?>
 	</p>
 	<aside id="skyhog_aside_right">
-		<h2>Pages</h2>
 		<div id="skyhog_pages" class="sh_with_border">
-			<h3>In Nav Menu</h3>
+			<h3>Pages</h3>
+			<h4>In Nav Menu</h4>
 			<ul id="sorted_menu" class="connectedSortable">
 				<?php
 			    foreach($ordered_pages as $f) {
@@ -90,7 +123,7 @@ include_once("nav.inc.phtml");
 				?>
 					
 			</ul>
-			<h3>Not in Nav Menu</h3>
+			<h4>Not in Nav Menu</h4>
 			<ul id="unsorted_menu" class="connectedSortable">
 				<?php
 			    foreach($pages as $f) {
@@ -112,6 +145,21 @@ include_once("nav.inc.phtml");
 			</form>		
 
 		</div>
+		
+		
+		<div class="sh_with_border">
+		  <h3>Files</h3>
+		  <ul>
+			  <?php
+		      foreach($file_list as $f) {
+	          	echo "<li>
+		          	<a href='".$_SERVER['PHP_SELF']."?file=$f'>$f</a>
+		          	</li>";
+			  }
+			  ?>
+				
+		  </ul>
+		</div>
 		<div class="sh_with_border">
 			<div id="generate_buttons">
 				<input type="hidden" name="navigation_changed" value="0" />
@@ -119,8 +167,8 @@ include_once("nav.inc.phtml");
 				<button id="b_generate">Generate!</button><br />
 			</div>
 			<div id="preview_links">
-				<a href="<?php echo UPLOAD_PATH ?>" target="new" >Show Preview</a>
-				<a href="<?php echo PAGE_PATH ?>" target="new" >Show Homepage</a>
+				<a href="<?php echo $s->getPreviewURL() ?>" target="new" >Show Preview</a>
+				<a href="<?php echo $s->getPageURL() ?>" target="new" >Show Homepage</a>
 			</div>
 		</div>
 	</aside>

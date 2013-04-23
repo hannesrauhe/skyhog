@@ -19,34 +19,31 @@ along with Skyhog.  If not, see <http://www.gnu.org/licenses/>.
 */
 require_once("base.inc.php");
 
-$_SESSION['KCFINDER'] = array();
-$_SESSION['KCFINDER']['disabled'] = false;
-$_SESSION['KCFINDER']['uploadURL'] = $s->getPreviewURL();
-$_SESSION['KCFINDER']['uploadDir'] = $s->getPreviewDir();
 ?>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Media Manager</title>
-<link rel="stylesheet" type="text/css" href="css/ui-lightness/jquery-ui-1.8.23.custom.css" media="all">
-<link rel="stylesheet" type="text/css" href="style.css" media="all">
-<link rel="stylesheet" type="text/css" href="css/media.css" media="all">
+<title>Change Site</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta charset="UTF-8" />
 
-<script src="js/jquery-1.8.0.min.js"></script>
-<script src="js/media.js"></script>
+
+<link rel="stylesheet" type="text/css" href="style.css" media="all">
 </head>
 <body role="application" class="starting">
 <?php
 include_once("nav.inc.phtml");
 ?>
-	<p id="sh_msg"> 
+	<p id="msg"> 
 		<?php echo $msg; ?>
 	</p>
-	<div id="kcfinder_div">
-		<iframe name="kcfinder_iframe" src="kcfinder-2.51/browse.php?type=files"frameborder="0" width="100%" height="100%" marginwidth="0" marginheight="0" scrolling="no" />
-    </div>
+	<section id="main_container" style="padding:10px">
+		<h2>
+		Change Site
+		</h2>
+	</section>
+	<div  style="clear: both"></div>
 <?php
 include_once("footer.inc.phtml");
 ?>

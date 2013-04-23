@@ -125,8 +125,7 @@ $db->close();
 require_once("./base.inc.php");
 
 //check the tables now
-//require_once("./setup/01_check_tables.inc.php");
-
+require_once("./setup/01_check_tables.inc.php");
 
 /*
 //git
