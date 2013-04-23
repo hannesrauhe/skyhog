@@ -1,23 +1,18 @@
 <?php
-//fill in your domain - without subfolders 
+//fill in the domain where skyhog is installed - without subfolders 
 define("DOMAIN",$_SERVER['SERVER_NAME']);
 
-//uncomment the next line and fill in your repo-URL - Skyhog will try to clone on setup
-//if you want to create a new site, do not define USE_GIT_REPO
-//this value has no effect on a running installation
-define("USE_GIT_REPO"," ");//"https://github.com/hannesrauhe/skyhog_example_template.git");
-
-//all paths/dirs can be given relative to base.inc.php
-//DIR means the file system path, while PATH means the path relative to the webroot
-define("PAGE_DIR", realpath(dirname(__FILE__) . "/../live")."/");
-define("PAGE_PATH","../live/");
-define("UPLOAD_PATH", "../preview/");
-define("UPLOAD_DIR", realpath(dirname(__FILE__) . "/../preview")."/");
+//the following directories should be writable by the server but not be accessible from the web 
 define("LOG_DIR", realpath(dirname(__FILE__) . "/../log")."/");
+define("WRK_DIR", realpath(dirname(__FILE__) . "/../wrk")."/");
 define("BAK_DIR", realpath(dirname(__FILE__) . "/../bak")."/");
+
+//in case you want to store the db somewhere else...
+define("DB_NAME",WRK_DIR."skyhog.db");
+
+//path to git/python if they are not in your $PATH
 define("GIT_CMD","git");
 define("PYTHON_CMD","python");
-define("DB_NAME","scihog.db");
 
 //in case you have to use PHPsqliteadmin - set a separate password for access
 //only do this if you know what you are doing!

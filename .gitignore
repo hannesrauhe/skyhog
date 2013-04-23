@@ -4,6 +4,9 @@ testsites
 *.pyo
 *.log
 /cockpit/config.inc.php
-/preview
-/live
-/bak
+/log/*
+!/log/.htaccess
+/wrk/*
+!/wrk/.htaccess
+/bak/*
+!/bak/.htaccess
