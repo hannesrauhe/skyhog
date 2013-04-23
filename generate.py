@@ -31,6 +31,8 @@ parser.add_argument('--final', default=False,
                    help='provide to overwrite the files in the page_dir with the generated ones')
 parser.add_argument('--verbose',type=int, default=1,
                    help='verbosity 0 - 3')
+parser.add_argument('--list_plugins',type=bool, default=False,
+                   help='list plugins and quit')
 
 args = parser.parse_args()
 
@@ -46,6 +48,10 @@ else:
 
 gen = creator(args.template,args.page_dir)
 
+if args.list_plugins:
+    gen.list_available_plugins()
+    sys.exit()
+    
 gen.generate()
 
 if args.final:

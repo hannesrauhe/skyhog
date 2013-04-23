@@ -34,7 +34,8 @@ class creator(object):
     input_dir = ''
     page_dir = ''
     
-    plugin_dirs = ["plugins","scihog/plugins",input_dir+"/plugins"]
+    #TODO: find a way to determine this modules path
+    plugin_dirs = [os.path.abspath(os.path.dirname(sys.argv[0]))+"/scihog/plugins"]
     _pm = None
     
     def __init__(self,t,page_directory):
@@ -129,6 +130,7 @@ class creator(object):
         shutil.copytree(self.output_dir, self.page_dir, True, shutil.ignore_patterns('_*.html','.git'))
         
     def list_available_plugins(self):
+        print "looking in",self.plugin_dirs
         for p in self._pm.getAllPlugins():
             print p.name,p.plugin_object
         
