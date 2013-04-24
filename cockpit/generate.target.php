@@ -19,7 +19,7 @@ along with Skyhog.  If not, see <http://www.gnu.org/licenses/>.
 */
 require_once('./base.inc.php');
 
-chdir(UPLOAD_DIR);	
+chdir($s->getPreviewDir());	
 
 if(array_key_exists("navigation_changed", $_POST) && !empty($_POST["navigation_changed"])) {
 	$nav_order = $_POST["navigation_changed"];
@@ -39,10 +39,10 @@ $arg4 = "";
 $arg5 = "";
 if(array_key_exists("finalize", $_POST)) {
 	$arg2 = "--final True";
-	$arg4 = "--page_dir ".escapeshellarg(PAGE_DIR);
+	$arg4 = "--page_dir ".escapeshellarg($s->getPageDir());
 	$arg5 = "--backup_dir ".escapeshellarg(BAK_DIR);
 }
-$arg3 = "--template ".escapeshellarg(UPLOAD_DIR."__template.html");
+$arg3 = "--template ".escapeshellarg($s->getPreviewDir()."__template.html");
 $retvar = 0;
 $ret = system(PYTHON_CMD." $arg1 $arg2 $arg3 $arg4 $arg5",$retvar);
 //echo PYTHON_CMD." $arg1 $arg2 $arg3 $arg4 $arg5";

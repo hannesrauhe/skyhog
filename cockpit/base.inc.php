@@ -99,6 +99,7 @@ class skyhog_db extends SQLite3 {
 		}
 		return $user;		
 	}
+    
 	public function getUsers() {		
 		$users=array();
 		$stmt = $this->prepare("SELECT * FROM `users`;");
@@ -142,16 +143,49 @@ class skyhog_db extends SQLite3 {
 	
     public function getSiteByID($id) {
         $site=array();
-        $stmt = $this->prepare("SELECT * FROM `sites` WHERE `site_id` = :id");
+        $stmt = $this->prepare("SELECT * FROM `sites` WHERE `id` = :id");
         if($stmt) {
             $stmt->bindValue(':id',$id,SQLITE3_INTEGER);
             $r = $stmt->execute();
-            $user = $r->fetchArray();
+            $site = $r->fetchArray();
             $stmt->close();
+            echo $id;
         } else {
             throw new Exception("Error Processing Request", 1);         
         }
         return $site;       
+    }
+    
+    public function getSites() {
+        $sitess=array();
+        $stmt = $this->prepare("SELECT * FROM `sites`;");
+        if($stmt) {
+            $r = $stmt->execute();
+            while($res = $r->fetchArray(SQLITE3_ASSOC)) {
+                $sites[]=$res;
+            }
+            $stmt->close();
+        } else {
+            throw new Exception("Error Processing Request", 1);         
+        }
+        return $sites;  
+    }
+    
+    public function insertSite($site) {
+        $cols = array("name","page_url","page_dir","preview_url","preview_dir","git");
+        
+        $stmt = $this->prepare("INSERT INTO `sites` (`".join("`,`",$cols)."`) VALUES (:".join(",:",$cols).")");
+        if($stmt) {
+            foreach($cols as $col) {
+                $stmt->bindValue(':'.$col,$site[$col],SQLITE3_TEXT);
+            }
+            $stmt->execute();
+            $stmt->close();
+            return $this->lastInsertRowID();
+        } else {
+            throw new Exception("Error Processing Request", 1);         
+        }       
+        return 0;
     }
 }
 
@@ -345,6 +379,21 @@ class site {
          }
     }
     
+    public function createSite($info_array,&$d) {
+        if(!array_key_exists("name",$info_array)) {
+            echo "Give the site a name.";
+            return false;
+        }
+        $default_site = array();
+        $default_site['page_url']="";
+        $default_site['preview_url']="";
+        $default_site['page_dir']=DEFAULT_LIVE_DIR.$info_array["name"]."/";
+        $default_site['preview_dir']=DEFAULT_PREVIEW_DIR.$info_array["name"]."/";
+        $default_site['git']="https://github.com/hannesrauhe/notapaper.git";
+        $site = array_merge($default_site,$info_array);
+        $d->insertSite($site);
+    }
+    
     public function getSiteID() {
         return $this->site_id;
     }
@@ -487,7 +536,7 @@ if($site_id!=$s->getSiteID()) {
     $msg="The requested site does not exist! Check the maintenance script, if that seems to be wrong.";
 }
 
-if($s->getSiteID()==-1 && "sites.php"!=basename($_SERVER['SCRIPT_NAME']) && "setup.php"!=basename($_SERVER['SCRIPT_NAME'])) {
+if($s->getSiteID()==-1 && FALSE===array_search(basename($_SERVER['SCRIPT_NAME']),array("sites.php","setup.php","create_site.target.php"))) {
     Header("Location: sites.php?msg=".urlencode($msg)."&redirect=".urlencode($_SERVER['SCRIPT_NAME']));
     exit(0);
 }

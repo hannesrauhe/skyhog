@@ -42,6 +42,9 @@ include_once("nav.inc.phtml");
 		<h2>
 		Change Site
 		</h2>
+		<?php
+		var_dump($d->getSites());
+		?>
 	</section>
 	<div  style="clear: both"></div>
 <?php

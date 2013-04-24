@@ -1,26 +1,4 @@
 <?php
-if (!ini_get('display_errors')) {
-    ini_set('display_errors', '1');
-}
-
-function check_dir($path,$descr) {
-if(is_dir($path)) {
-    echo $descr." exists ";
-    if(@touch($path."/testtouch") && @unlink($path."/testtouch")) {
-        echo "and is writable\n";
-    } else {
-        echo "but is not writable!\n";
-        exit(1);
-    }
-} else {
-    if(mkdir($path)) {
-        echo $descr." created\n";
-    } else {
-        echo "couldn't create ".$descr."!\n";
-        exit(1);
-    }
-}
-}
 /*
 Copyright 2012 Hannes Rauhe
 
@@ -39,6 +17,30 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Skyhog.  If not, see <http://www.gnu.org/licenses/>.
 */
+if (!ini_get('display_errors')) {
+    ini_set('display_errors', '1');
+}
+
+function check_dir($path,$descr,$warning='') {
+    if(is_dir($path)) {
+        echo $descr." exists ";
+        if(@touch($path."/testtouch") && @unlink($path."/testtouch")) {
+            echo "and is writable\n";
+        } else {
+            echo "but is not writable!\n";
+            if(empty($warning))
+                exit(1);
+            else "WARNING: Scyhog does not necessarily need acccess rights to this directory, but the following will not work: ".$warning."\n";
+        }
+    } else {
+        if(mkdir($path)) {
+            echo $descr." created\n";
+        } else {
+            echo "couldn't create ".$descr."!\n";
+            exit(1);
+        }
+    }
+}
 ?>
 <a href="index.php">Start (wait for SUCCESS message)</a>
 <br />
@@ -53,40 +55,13 @@ session_start();
 $_SESSION = array();
 session_destroy();
 
-//preview/upload directory
-/*
-if(is_dir(UPLOAD_DIR)) {
-	echo "Preview dir exists ";
-	if(touch(UPLOAD_DIR."/testtouch") && unlink(UPLOAD_DIR."/testtouch")) {
-		echo "and is writable\n";
-	} else {
-		echo "but is not writable!\n";
-		exit(1);
-	}
-} else {
-	if(defined("USE_GIT_REPO")) {
-		$ret=1;
-		echo "The output of git clone:\n";
-		system( GIT_CMD." clone ".escapeshellarg(USE_GIT_REPO)." ".UPLOAD_DIR." 2>&1", $ret); 		
-		if($ret!==0) {
-			echo "git clone failed somehow!\n";
-			exit(1);
-		}
-	} else {
-		if(mkdir(UPLOAD_DIR)) {
-			echo "Preview dir created\n";
-		} else {
-			echo "couldn't create the preview/upload dir!\n";
-			exit(1);
-		}
-	}
-}
-*/
-
 //create/check directories
+check_dir("./","skyhog directory","update via webinterface");
 check_dir(LOG_DIR, "log directory");
 check_dir(BAK_DIR, "backup directory");
 check_dir(WRK_DIR, "working directory");
+check_dir(DEFAULT_LIVE_DIR, "live pages directory","creating directories for new pages automatically");
+check_dir(DEFAULT_PREVIEW_DIR, "preview pages directory","creating directories for new pages automatically");
 
 //db
 $db = new SQLite3(DB_NAME);
@@ -127,6 +102,38 @@ require_once("./base.inc.php");
 //check the tables now
 require_once("./setup/01_check_tables.inc.php");
 
+
+//check sites
+
+//preview/upload directory
+/*
+if(is_dir(UPLOAD_DIR)) {
+    echo "Preview dir exists ";
+    if(touch(UPLOAD_DIR."/testtouch") && unlink(UPLOAD_DIR."/testtouch")) {
+        echo "and is writable\n";
+    } else {
+        echo "but is not writable!\n";
+        exit(1);
+    }
+} else {
+    if(defined("USE_GIT_REPO")) {
+        $ret=1;
+        echo "The output of git clone:\n";
+        system( GIT_CMD." clone ".escapeshellarg(USE_GIT_REPO)." ".UPLOAD_DIR." 2>&1", $ret);       
+        if($ret!==0) {
+            echo "git clone failed somehow!\n";
+            exit(1);
+        }
+    } else {
+        if(mkdir(UPLOAD_DIR)) {
+            echo "Preview dir created\n";
+        } else {
+            echo "couldn't create the preview/upload dir!\n";
+            exit(1);
+        }
+    }
+}
+*/
 /*
 //git
 chdir(UPLOAD_DIR);

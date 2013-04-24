@@ -6,6 +6,8 @@ define("DOMAIN",$_SERVER['SERVER_NAME']);
 define("LOG_DIR", realpath(dirname(__FILE__) . "/../log")."/");
 define("WRK_DIR", realpath(dirname(__FILE__) . "/../wrk")."/");
 define("BAK_DIR", realpath(dirname(__FILE__) . "/../bak")."/");
+define("DEFAULT_LIVE_DIR", realpath(dirname(__FILE__) . "/../live")."/");
+define("DEFAULT_PREVIEW_DIR", realpath(dirname(__FILE__) . "/../preview")."/");
 
 //in case you want to store the db somewhere else...
 define("DB_NAME",WRK_DIR."skyhog.db");
