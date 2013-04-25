@@ -42,9 +42,34 @@ include_once("nav.inc.phtml");
 		<h2>
 		Change Site
 		</h2>
-		<?php
-		var_dump($d->getSites());
-		?>
+		
+        <table>
+            <?php
+            $users = $d->getSites();
+            if(!empty($users)) {
+                echo "<tr>";
+                foreach (array_keys($users[0]) as $key) {
+                    echo "<th>$key</th>";
+                }
+                echo "<th>Functions</th></tr>";
+                foreach ($users as $user) {
+                    echo "<tr>";
+                    foreach ($user as $key => $value) {
+                        echo "<td>$value</td>";
+                    }
+                    echo "<td>
+                    <form action=\"sites.php\" method=\"POST\">
+                    <input type='hidden' name='site_id' value='".$user['id']."' />
+                    <input type=\"submit\" name='action' value='Change' />
+                    <input type=\"submit\" name='action' value='Delete' />
+                    </form>
+                    </td></tr>";
+                }
+            } else {
+                echo "<tr><td>There are no registered users! Run in maintenance mode!</td></tr>";
+            }
+            ?>
+        </table>    
 	</section>
 	<div  style="clear: both"></div>
 <?php

@@ -389,7 +389,7 @@ class site {
         $default_site['preview_url']="";
         $default_site['page_dir']=DEFAULT_LIVE_DIR.$info_array["name"]."/";
         $default_site['preview_dir']=DEFAULT_PREVIEW_DIR.$info_array["name"]."/";
-        $default_site['git']="https://github.com/hannesrauhe/notapaper.git";
+        $default_site['git']="";
         $site = array_merge($default_site,$info_array);
         $d->insertSite($site);
     }
