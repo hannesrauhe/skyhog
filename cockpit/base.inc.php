@@ -529,7 +529,7 @@ $site_id = -1;
 if(isset($_GET['site_id'])) {
     $site_id = $_GET['site_id'];
 }
-$s = new site($site_id);
+$s = new site($d,$site_id);
 $l = new skylog("system.log",$a->getAuthUserName());
 
 if($site_id!=$s->getSiteID()) {
