@@ -149,7 +149,6 @@ class skyhog_db extends SQLite3 {
             $r = $stmt->execute();
             $site = $r->fetchArray();
             $stmt->close();
-            echo $id;
         } else {
             throw new Exception("Error Processing Request", 1);         
         }
@@ -185,6 +184,42 @@ class skyhog_db extends SQLite3 {
         } else {
             throw new Exception("Error Processing Request", 1);         
         }       
+        return 0;
+    }    
+    
+    public function updateSite($site) {    
+        $cols = array("name","page_url","page_dir","preview_url","preview_dir","git"); 
+        $query_txt = "UPDATE `sites` SET ";
+        foreach($cols as $c) {
+            $query_txt .= "$c = :$c,";
+        }
+        $query_txt = substr($query_txt, 0, -1);
+        $query_txt .= " WHERE id=:id";
+        echo $query_txt;
+        $stmt = $this->prepare($query_txt);
+        if($stmt) {
+            foreach($cols as $col) {
+                $stmt->bindValue(':'.$col,$site[$col],SQLITE3_TEXT);
+            }
+            $stmt->bindValue(':id',$site["id"],SQLITE3_INTEGER);
+            $stmt->execute();
+            $stmt->close();
+            return True;
+        } else {
+            throw new Exception("Error Processing Request", 1);         
+        }       
+        return 0;
+    }
+    
+    public function deleteSite($site_id) {      
+        $stmt = $this->prepare("DELETE FROM `sites` WHERE id = :sid");
+        if($stmt) {
+            $stmt->bindValue(':sid',$site_id,SQLITE3_INTEGER);
+            $stmt->execute();
+            $stmt->close();
+        } else {
+            throw new Exception("Error Processing Request", 1); 
+        }   
         return 0;
     }
 }
@@ -348,11 +383,13 @@ class site {
             }
             $this->init($d,$this->site_id);
             setcookie('site_id',$this->site_id);
-        } else if($this->site_id!=-1 && $_SESSION['site']['id']!=$this->site_id) {
-            $this->init($d,$this->site_id);
-            setcookie('site_id',$this->site_id);
-        } else {
-            $this->site_id = $_SESSION['site']['id'];
+        } else {        
+            if($this->site_id!=-1 && $_SESSION['site']['id']!=$this->site_id) {
+                $this->init($d,$this->site_id);
+                setcookie('site_id',$this->site_id);
+            } else {
+                $this->site_id = $_SESSION['site']['id'];
+            }
         }
     }
     
@@ -377,21 +414,6 @@ class site {
             $_SESSION['site']['git']="https://github.com/hannesrauhe/notapaper.git";
           */
          }
-    }
-    
-    public function createSite($info_array,&$d) {
-        if(!array_key_exists("name",$info_array)) {
-            echo "Give the site a name.";
-            return false;
-        }
-        $default_site = array();
-        $default_site['page_url']="";
-        $default_site['preview_url']="";
-        $default_site['page_dir']=DEFAULT_LIVE_DIR.$info_array["name"]."/";
-        $default_site['preview_dir']=DEFAULT_PREVIEW_DIR.$info_array["name"]."/";
-        $default_site['git']="";
-        $site = array_merge($default_site,$info_array);
-        $d->insertSite($site);
     }
     
     public function getSiteID() {
@@ -420,6 +442,18 @@ class site {
     public function getPageURL() {
         if($this->site_id!=-1) {
             return $_SESSION['site']['page_url'];
+        }
+        return false;
+    }
+    public function getPageDir() {
+        if($this->site_id!=-1) {
+            return $_SESSION['site']['page_dir'];
+        }
+        return false;
+    }
+    public function getGitRemote() {
+        if($this->site_id!=-1) {
+            return $_SESSION['site']['git'];
         }
         return false;
     }
@@ -526,17 +560,17 @@ try {
 $msg = '';
 
 $site_id = -1;
-if(isset($_GET['site_id'])) {
-    $site_id = $_GET['site_id'];
+if(isset($_REQUEST['site_id'])) {
+    $site_id = $_REQUEST['site_id'];
 }
 $s = new site($d,$site_id);
 $l = new skylog("system.log",$a->getAuthUserName());
 
-if($site_id!=$s->getSiteID()) {
+if($site_id!=-1 && $site_id!=$s->getSiteID()) {
     $msg="The requested site does not exist! Check the maintenance script, if that seems to be wrong.";
 }
 
-if($s->getSiteID()==-1 && FALSE===array_search(basename($_SERVER['SCRIPT_NAME']),array("sites.php","setup.php","create_site.target.php"))) {
+if($s->getSiteID()==-1 && FALSE===array_search(basename($_SERVER['SCRIPT_NAME']),array("sites.php","setup.php","edit_site.redirect.php"))) {
     Header("Location: sites.php?msg=".urlencode($msg)."&redirect=".urlencode($_SERVER['SCRIPT_NAME']));
     exit(0);
 }

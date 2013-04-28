@@ -24,16 +24,26 @@ require_once('./base.inc.php');
 // require_once('libs/utf8/utils/validation.php');
 // require_once('libs/utf8_to_ascii/utf8_to_ascii.php');
 
-$site_name = '';
-if(isset($_REQUEST['site_name'])) {
-    $site_name = $_REQUEST['site_name'];
-    // if(!utf8_is_valid($site_name))
-    // {
-      // $site_name=utf8_bad_strip($site_name);
-    // }
-//     
-    // $site_name = utf8_to_ascii($site_name, '' );
-}
-echo $site_name;
 
-echo "SITE CREATED: ".$s->createSite(array("name"=>$site_name),$d);
+if($_REQUEST['action']=="Create") {
+    if(!array_key_exists("name",$_REQUEST)) {
+        $msg = "Give the site a name.";
+    } else  {
+        $site_name = $_REQUEST['name'];
+        $default_site = array();
+        $default_site['page_url']="";
+        $default_site['preview_url']="";
+        $default_site['page_dir']=DEFAULT_LIVE_DIR.$site_name."/";
+        $default_site['preview_dir']=DEFAULT_PREVIEW_DIR.$site_name."/";
+        $default_site['git']="";
+        $site = array_merge($default_site,$_REQUEST);
+        $d->insertSite($site);
+    }    
+} else if($_REQUEST['action']=="Update") {
+    $d->updateSite($_REQUEST);   
+} else if($_REQUEST['action']=="Delete") {
+    $d->deleteSite($_REQUEST['site_id']); 
+}
+
+Header("Location:sites.php?msg=".urlencode($msg));
+exit(0);

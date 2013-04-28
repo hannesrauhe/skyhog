@@ -80,6 +80,10 @@ Have fun!
 		echo "but DOMAIN, BAK_DIR, LOG_DIR, WRK_DIR rule is missing. Repair by hand please!\n";
 		exit(1);
 	}
+    if(! (defined("DEFAULT_LIVE_DIR") &&  defined("DEFAULT_PREVIEW_DIR"))) {
+        echo "but DEFAULT_LIVE_DIR or DEFAULT_PREVIEW_DIR is missing. Repair by hand please!\n";
+        exit(1);
+    }
 	if(! (defined("GIT_CMD") || defined("PYTHON_CMD"))) {
 		echo "but GIT_CMD or PYTHON_CMD is missing. Repair by hand please!\n";
 		exit(1);
