@@ -19,11 +19,12 @@ along with Skyhog.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 //preview/upload directory
-if(!is_dir($s->getPreviewDir()) && !empty($s->getGitRemote())) {
+$git_rem = $s->getGitRemote();
+if(!is_dir($s->getPreviewDir()) && !empty($git_rem)) {
     echo "Trying to clone ".$s->getGitRemote()." to directory ".$s->getPreviewDir()."\n";
-    system( GIT_CMD." clone ".escapeshellarg($s->getGitRemote())." ".$s->getPreviewDir()." 2>&1", $ret);    
+    system( GIT_CMD." clone ".escapeshellarg($s->getGitRemote())." ".escapeshellarg($s->getPreviewDir())." 2>&1", $ret);    
     if($ret!==0) {
-        echo "git clone failed somehow! I'm going to initialize a standard page. Delete it and reinitialize again, if you want to retry.\n";
+        echo "git clone failed somehow!";// I'm going to initialize a standard page. Delete it and reinitialize again, if you want to retry.\n";
         exit(1);
     }
 }
