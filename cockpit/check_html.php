@@ -19,11 +19,30 @@ along with Skyhog.  If not, see <http://www.gnu.org/licenses/>.
 */
 require_once('./base.inc.php');
 
-chdir(UPLOAD_DIR);	
-$filename = "__template.html";
+chdir($s->getPreviewDir());	
+
+$file = "";
+
+if(array_key_exists("file",$_GET)) {
+    $file = basename($_GET['file']);
+    if(!is_file($s->getPreviewDir().$file)) {
+        $msg = "File $file does not exist";
+        $file = "_index.html";
+    }
+} else {
+    $file = "_index.html";
+}
+$ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+if(!in_array($ext,array("html","css","js")) || strstr($file,"..")) {
+    $file = "__template.html";
+}
+
+if(!is_file($s->getPreviewDir().$file)) {
+    $msg = "File $file does not exist!";
+}   
 
 $arg1 = escapeshellarg(dirname(__FILE__)."/../check.py");
-$arg2 = escapeshellarg(UPLOAD_DIR.$filename);
+$arg2 = escapeshellarg($s->getPreviewDir().$file);
 $retvar = 0;
 $ret = system(PYTHON_CMD." $arg1 $arg2 2>&1",$retvar);
 if($ret === FALSE || $retvar!=0) {

@@ -100,7 +100,7 @@ require_once("./base.inc.php");
 //check the tables now
 require_once("./setup/01_check_tables.inc.php");
 
-echo "The Skyhog installation looks good";
+echo "The Skyhog installation looks good\n";
 if($s->getSiteID()==-1) {
     echo "... but there is no site installed/choosen. Click \"start\".\n";
 } else {
