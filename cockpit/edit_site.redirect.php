@@ -40,7 +40,8 @@ if($_REQUEST['action']=="Create") {
         $d->insertSite($site);
     }    
 } else if($_REQUEST['action']=="Update") {
-    $d->updateSite($_REQUEST);   
+    $d->updateSite($_REQUEST);
+    $s->init($d,$s->getSiteID());
 } else if($_REQUEST['action']=="Delete") {
     $d->deleteSite($_REQUEST['site_id']); 
 }
