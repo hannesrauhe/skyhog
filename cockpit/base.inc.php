@@ -156,7 +156,7 @@ class skyhog_db extends SQLite3 {
     }
     
     public function getSites() {
-        $sitess=array();
+        $sites=array();
         $stmt = $this->prepare("SELECT * FROM `sites`;");
         if($stmt) {
             $r = $stmt->execute();
@@ -547,8 +547,8 @@ try {
     }
 
     if($a->isInactiveUser()) {
-        if(isset($_REQUEST['redirect']) && $_REQUEST['redirect']=="setup.php") {
-            Header("Location: setup.php"));
+        if(isset($_REQUEST['redirect']) && $_REQUEST['redirect']=="/setup.php") {
+            Header("Location: setup.php");
             exit(0);
         }            
         $msg = "your account needs to be activated by the administrator";
