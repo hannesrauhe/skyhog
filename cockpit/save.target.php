@@ -25,19 +25,19 @@ if(!array_key_exists("file",$_POST)) {
 }
 
 $file = basename($_POST['file']);
-if(!is_file(UPLOAD_DIR.$file) && !array_key_exists("new",$_POST)) {
+if(!is_file($s->getPreviewDir().$file) && !array_key_exists("new",$_POST)) {
 	echo "ERROR: file does not exist";
 	exit(); 	
 }
 
 if(array_key_exists('elm1',$_POST) && !empty($_POST['elm1'])) {
-	file_put_contents (UPLOAD_DIR.$file,trim($_POST['elm1']));
+	file_put_contents ($s->getPreviewDir().$file,trim($_POST['elm1']));
 } else {
 	echo "ERROR: no content for $file submitted!";
 	exit();
 }
 
-chdir(UPLOAD_DIR);
+chdir($s->getPreviewDir());
 git::add($file);
 git::commit($a->getAuthUserName()." <".$a->getAuthUserMail().">", "Commit from webinterface");
 echo "\n";

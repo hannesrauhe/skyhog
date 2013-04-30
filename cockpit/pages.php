@@ -180,7 +180,7 @@ include_once("nav.inc.phtml");
 			<div>	
 				<!-- Gets replaced with TinyMCE, remember HTML in a textarea should be encoded -->
 				<div>
-					<textarea id="elm1" name="elm1" rows="40" cols="180" style="width: 80%" enctype="multipart/form-data"><?php echo file_get_contents ($s->getPreviewDir().$file); ?></textarea>
+					<textarea id="elm1" name="elm1" rows="40" cols="180" style="width: 80%" enctype="multipart/form-data"><?php echo htmlentities(file_get_contents ($s->getPreviewDir().$file)); ?></textarea>
 				</div>	
 				
 				<span id="sh_plain_options">
