@@ -40,11 +40,57 @@ include_once("nav.inc.phtml");
 	</p>
 	<section id="main_container" style="padding:10px">
 		<h2>
-		Change Site
+		Available Sites
 		</h2>
-		<?php
-		var_dump($d->getSites());
-		?>
+		
+        <table>
+            <?php
+            $active_site = array();
+            $users = $d->getSites();
+            if(!empty($users)) {
+                echo "<tr>";
+                foreach (array_keys($users[0]) as $key) {
+                    echo "<th>$key</th>";
+                }
+                echo "<th>Functions</th></tr>";
+                foreach ($users as $user) {
+                    if($user['id']==$s->getSiteID()) {
+                        $active_site = $user;
+                    }
+                    echo "<tr>";
+                    foreach ($user as $key => $value) {
+                        echo "<td>$value</td>";
+                    }
+                    echo "<td>
+                    <a href=\"edit_site.redirect.php?action=Change&site_id=".$user['id']."\">Change</a>
+                    <a href=\"edit_site.redirect.php?action=Delete&site_id=".$user['id']."\">Delete</a>
+                    <a href=\"setup.php?site_id=".$user['id']."\">Initialize</a>
+                    </td></tr>";
+                }
+            } else {
+                echo "<tr><td>There are no registered sites!</td></tr>";
+            }
+            ?>
+        </table>
+        <h2>Create new site</h2>
+        <form method="POST" action="edit_site.redirect.php">
+            Name: <input type="text" name="name"></input>
+            <input type="submit"  name='action' value='Create' />
+        </form>
+        <?php if($s->getSiteID()!=-1): ?>
+        <h2>Change Site Properties:</h2>
+        <form action="edit_site.redirect.php" method=\"POST\">    
+            <table>
+                <?php
+                foreach ($active_site as $key=>$value) {
+                        echo "<tr><td>$key</td>
+                        <td><input type=\"text\" name=\"$key\" value=\"$value\" /></td></tr>";
+                    }
+                ?>
+            </table>
+        <input type="submit" name='action' value='Update' />
+        </form>
+        <?php endif; ?>
 	</section>
 	<div  style="clear: both"></div>
 <?php

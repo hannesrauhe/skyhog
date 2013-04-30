@@ -185,6 +185,7 @@ include_once("nav.inc.phtml");
 				
 				<span id="sh_plain_options">
 					<a id="sh_show_tiny" href="javascript:;">[Show TinyMCE]</a>
+                    <a href="check_html.php?file=<?php echo $file; ?>" target="_blank" >[Check Code]</a>
 					<a href="javascript:;" onclick="document.getElementById('elm1').value = style_html(document.getElementById('elm1').value);return false;">[Beautify Code]</a>
 				</span>
 					

@@ -1,6 +1,6 @@
 <?php
 /*
-Copyright 2012 Hannes Rauhe
+Copyright 2012,2013 Hannes Rauhe
 
 This file is part of Skyhog.
 
@@ -20,7 +20,7 @@ along with Skyhog.  If not, see <http://www.gnu.org/licenses/>.
 require_once('./base.inc.php');
 $CMS_update = 1;
 if(!$a->isAdmin() || !array_key_exists("CMS_update", $_REQUEST) || !$_REQUEST['CMS_update']) {
-	chdir(UPLOAD_DIR);	
+	chdir($s->getPreviewDir());	
 	$CMS_update = 0;
 }
 

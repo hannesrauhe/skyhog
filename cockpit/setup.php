@@ -27,7 +27,7 @@ function check_dir($path,$descr,$warning='') {
         if(@touch($path."/testtouch") && @unlink($path."/testtouch")) {
             echo "and is writable\n";
         } else {
-            echo "but is not writable!\n";
+            echo "but is not writable: ".$path."!\n";
             if(empty($warning))
                 exit(1);
             else "WARNING: Scyhog does not necessarily need acccess rights to this directory, but the following will not work: ".$warning."\n";
@@ -36,14 +36,12 @@ function check_dir($path,$descr,$warning='') {
         if(mkdir($path)) {
             echo $descr." created\n";
         } else {
-            echo "couldn't create ".$descr."!\n";
+            echo "couldn't create ".$descr." at ".$path."!\n";
             exit(1);
         }
     }
 }
 ?>
-<a href="index.php">Start (wait for SUCCESS message)</a>
-<br />
 <a href="setup.php">Reload</a>
 <br />
 <textarea readonly="readonly" rows="20" cols="80">
@@ -102,94 +100,22 @@ require_once("./base.inc.php");
 //check the tables now
 require_once("./setup/01_check_tables.inc.php");
 
-
-//check sites
-
-//preview/upload directory
-/*
-if(is_dir(UPLOAD_DIR)) {
-    echo "Preview dir exists ";
-    if(touch(UPLOAD_DIR."/testtouch") && unlink(UPLOAD_DIR."/testtouch")) {
-        echo "and is writable\n";
-    } else {
-        echo "but is not writable!\n";
-        exit(1);
-    }
+echo "The Skyhog installation looks good\n";
+if($s->getSiteID()==-1) {
+    echo "... but there is no site installed/choosen. Click \"start\".\n";
 } else {
-    if(defined("USE_GIT_REPO")) {
-        $ret=1;
-        echo "The output of git clone:\n";
-        system( GIT_CMD." clone ".escapeshellarg(USE_GIT_REPO)." ".UPLOAD_DIR." 2>&1", $ret);       
-        if($ret!==0) {
-            echo "git clone failed somehow!\n";
-            exit(1);
-        }
-    } else {
-        if(mkdir(UPLOAD_DIR)) {
-            echo "Preview dir created\n";
-        } else {
-            echo "couldn't create the preview/upload dir!\n";
-            exit(1);
-        }
-    }
+    echo "I'm checking the site ".$s->getSiteName()." now.\n";
+    require_once("./setup/03_check_site.inc.php");
 }
-*/
-/*
-//git
-chdir(UPLOAD_DIR);
-$arr = array();
-$ret=0;
-
-echo "The output of git init:\n";
-system( GIT_CMD." init 2>&1",$ret); 
-if($ret!==0) {
-	echo "git init failed somehow!\n";
-	exit(1);
-}
-
-echo "Checking local git config:";
-system( GIT_CMD. ' config --get user.name',$ret);
-echo $ret."\n";
-if($ret!=0) {
-	echo "No local user is set, setting the defaults for you\n";
-	system( GIT_CMD. ' config user.name "SkyHog CMS"');
-	system( GIT_CMD. ' config user.email info@scitivity.net');
-}
-
-if(!is_file(".gitignore")) {
-	if(FALSE===file_put_contents(".gitignore", "*.html\n!_*.html")) {
-		echo ".gitignore could not be created\n";
-		exit(1);
-	}
-	echo ".gitignore created\n";
-} else {
-	echo ".gitignore is there\n";	
-}
-
-
-chdir(dirname(__FILE__));
-if(!is_file(UPLOAD_DIR."__template.html")) {
-	if(!copy("setup/__template.html", UPLOAD_DIR."__template.html")) {
-		echo "__template.html could not be created\n";
-		exit(1);
-	}
-	echo "__template.html created\n";
-} else {
-	echo "__template.html is there\n";	
-}
-
-
-if(!is_file(UPLOAD_DIR."_index.html")) {
-	if(!copy("setup/_index.html", UPLOAD_DIR."_index.html")) {
-		echo "_index.html could not be created\n";
-		exit(1);
-	}
-	echo "_index.html created\n";
-} else {
-	echo "_index.html is there\n";	
-}
-*/
-echo "SUCCESS";
+echo "\nSUCCESS";
 ?>
 </textarea>
-
+<br />
+Your installation seems to be ok (you should see the SUCCESS message above): <a href="index.php">Start</a>
+<br /><br /><br /><br />
+config.inc.php looks like this:<br />
+<textarea readonly="readonly" rows="20" cols="80">
+<?php
+    echo file_get_contents("./config.inc.php");
+?>    
+</textarea>
