@@ -40,13 +40,17 @@ class skylog {
             $this->loguser = $username;
         }
     }
-    public function write($msg) {
-        if(defined("ENABLE_LOG")) {
+    public function info($msg) {
+        $this->write($msg,"INFO"); 
+    }
+    public function write($msg,$level="INFO") {
+        $level = strtoupper($level);
+        if(defined("ENABLE_LOG") && strtoupper(ENABLE_LOG)==$level) {
             if($this->logfile===FALSE) {
-                echo "FATAL: unable to open log file '".$file."'\n";
+                echo "FATAL: unable to open log file '".$this->logfile."'\n";
                 exit(1);
             } else
-                fwrite($this->logfile,date("Y-m-d H:i:s (").$this->loguser.")".$msg."\n");            
+                fwrite($this->logfile,date("Y-m-d H:i:s (").$this->loguser.",$level): $msg\n");            
         }
     }
 }
