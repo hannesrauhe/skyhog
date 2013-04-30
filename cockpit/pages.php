@@ -116,7 +116,7 @@ include_once("nav.inc.phtml");
 				<?php
 			    foreach($ordered_pages as $f) {
 		        	echo "<li class='ui-state-default'>
-			        	<span class='ui-icon ui-icon-arrowthick-2-n-s' style='float:left'></span><a href='".$_SERVER['PHP_SELF']."?file=_".$f['link']."'>".$f['id']."</a>
+			        	<span class='ui-icon ui-icon-arrowthick-2-n-s' style='float:left'></span><a href='".$_SERVER['PHP_SELF']."?file=_".$f['file']."'>".$f['id']."</a>
 			        	<span class='ui-icon ui-icon-wrench sh_page_settings' style='float:right'>".json_encode($f)."</span>
 			        	</li>";
 				}

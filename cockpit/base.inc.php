@@ -474,6 +474,9 @@ class site_db extends SQLite3 {
         if($stmt) {
             $r = $stmt->execute();
             while($res = $r->fetchArray(SQLITE3_ASSOC)) {
+                if(empty($res['file'])) {
+                    $res['file'] = $res['link'];
+                }
                 $nav[]=$res;
             }
             $stmt->close();
