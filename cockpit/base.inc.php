@@ -513,6 +513,10 @@ try {
     }
 
     if($a->isInactiveUser()) {
+        if(isset($_REQUEST['redirect']) && $_REQUEST['redirect']=="setup.php") {
+            Header("Location: setup.php"));
+            exit(0);
+        }            
         $msg = "your account needs to be activated by the administrator";
         Header("Location: index.php?msg=".urlencode($msg)."&redirect=".urlencode($_SERVER['SCRIPT_NAME']));
         exit(0);

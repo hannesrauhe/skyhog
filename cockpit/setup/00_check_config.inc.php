@@ -31,9 +31,6 @@ Welcome to Skyhog!
 Fill out form below and click submit to create the file config.inc.php. 
 (Alternatively you can copy and edit config.inc.php.template)
 
-Please fill in at least your DOMAIN. Everything else should work without changes.
-If you want to clone a git repository with your page in it, fill in the URL in USE_GIT_REPO. Leave this field empty, if you just want to create a new/empty page.
-
 Have fun!
 </textarea>
 <form action="setup.php" method="POST">
