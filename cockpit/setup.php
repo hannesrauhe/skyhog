@@ -22,6 +22,10 @@ if (!ini_get('display_errors')) {
 }
 
 function check_dir($path,$descr,$warning='') {
+    if(substr($path,-1)!="/") {
+        echo $path." has no directory separator in the end! Please add one in the config file!";
+        exit(1);
+    }
     if(is_dir($path)) {
         echo $descr." exists ";
         if(@touch($path."/testtouch") && @unlink($path."/testtouch")) {
@@ -116,6 +120,6 @@ Your installation seems to be ok (you should see the SUCCESS message above): <a 
 config.inc.php looks like this:<br />
 <textarea readonly="readonly" rows="20" cols="80">
 <?php
-    echo file_get_contents("./config.inc.php");
+    echo file_get_contents(dirname(__FILE__)."/config.inc.php");
 ?>    
 </textarea>
