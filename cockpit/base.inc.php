@@ -23,6 +23,8 @@ if (!ini_get('display_errors')) {
 }
 //}
 
+header('Content-type: text/html; charset=utf-8');
+
 require_once("./config.inc.php");
 require_once("./openid.inc.php");
 

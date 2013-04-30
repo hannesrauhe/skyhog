@@ -27,4 +27,4 @@ args = parser.parse_args()
 
 p_dom = BeautifulSoup(open(args.file,"r").read().strip()) 
 
-print p_dom.prettify()
+print p_dom.prettify().encode("UTF-8")
