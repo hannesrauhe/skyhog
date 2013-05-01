@@ -32,7 +32,16 @@ var generate_callback=
 	        
 $(document).ready(function() { 
     $('#content_form').ajaxForm({ 
-        target: '#msg' 
+        target: '#msg'
+    }); 
+    $('#sh_page_settings_form').ajaxForm({ 
+        target: '#msg',
+        success: function() { 
+            $( "#sh_page_settings_dialog" ).dialog('close'); 
+        } ,
+        error: function() { 
+            alert("something went wrong"); 
+        }
     }); 
     $('#b_generate_prev').click(function() {
     	$.post('generate.target.php', 
@@ -84,7 +93,8 @@ $(document).ready(function() {
 		var obj = jQuery.parseJSON($(this).text());
 		$("#sh_page_id_old").attr("value",obj.id);
 		$("#sh_page_id").attr("value",obj.id);		
-		$("#sh_page_name").attr("value",obj.name);
+        $("#sh_page_name").attr("value",obj.name);
+        $("#sh_page_file").attr("value",obj.file);
 		$("#sh_page_link").attr("value",obj.link);
 		return false;
     });

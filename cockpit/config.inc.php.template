@@ -22,4 +22,4 @@ define("PYTHON_CMD","python");
 //define("PHPSQLITEADMIN_PASSWD","scihogdb");
 
 //uncomment if you want to enable logging
-//define("ENABLE_LOG","1");
+define("ENABLE_LOG","error");

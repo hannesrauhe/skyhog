@@ -198,11 +198,12 @@ include_once("nav.inc.phtml");
 		</form>
 	</section>
 	<div id="sh_page_settings_dialog" title="Change Page Settings">
-		<form method="post" action="page_setting.target.php" id="sh_page_settings_form">
+		<form method="post" action="page_settings.target.php" id="sh_page_settings_form">
 			<input type="hidden" name="sh_page_id_old" id="sh_page_id_old" value="" />
 			<table>
 				<tr><td>Link: </td>			<td><input type="text" id="sh_page_link" name="sh_page_link" value="" readonly="readonly" /></td></tr>
-				<tr><td>ID (HTML): </td>	<td><input type="text" id="sh_page_id" name="sh_page_id" value="" /></td></tr>
+                <tr><td>File name: </td>    <td><input type="text" id="sh_page_file" name="sh_page_file" value="" /></td></tr>
+                <tr><td>ID (HTML): </td>    <td><input type="text" id="sh_page_id" name="sh_page_id" value="" /></td></tr>
 				<tr><td>Name/Title: </td>	<td><input type="text" id="sh_page_name" name="sh_page_name" value="" /></td></tr>
 			</table>
 			<input type="submit" name="save"/>

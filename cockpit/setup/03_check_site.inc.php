@@ -87,14 +87,14 @@ if(!is_file($s->getPreviewDir()."_index.html")) {
 
 $ds = new site_db($s->getPreviewDir()."scihog.db");
 /* nav table*/
-$nav_schema = "CREATE TABLE nav (link TEXT, id TEXT PRIMARY KEY, name TEXT, menu_order INTEGER)";
+$nav_schema = "CREATE TABLE nav (link TEXT, id TEXT PRIMARY KEY, name TEXT, menu_order INTEGER, file TEXT)";
 
 $query_result = $ds->querySingle('SELECT * FROM nav', true);
 if($query_result===FALSE) {
     $r = $d->exec($nav_schema.";");
     if(!$r) {
         echo "Nav table cannot be created, because: \n";
-        echo $d->lastErrorMsg();
+        echo $ds->lastErrorMsg();
         exit(1);
     }
     echo "Created nav table.\n";
@@ -104,8 +104,18 @@ if($query_result===FALSE) {
     $res = $r->fetchArray(SQLITE3_ASSOC);
     if($nav_schema!=$res['sql']) {
         echo "but its schema is\n".$res['sql']." and should be\n".$nav_schema."\n";
-        echo "Please use PHPsqlite to export the table, delete it afterwards and rerun the maintenance script! Try to import the data to get it back!\n";
-        echo "This script continues now, because this error might not be critical! \n\n";
+        $query_result = FALSE;
+        if($res['sql'] == "CREATE TABLE nav (link TEXT, id TEXT PRIMARY KEY, name TEXT, menu_order INTEGER)") {
+            $query_result = $ds->exec('ALTER TABLE nav ADD COLUMN file TEXT');
+            echo "I'm trying to add the missing column: ".$ds->lastErrorMsg();
+            echo "\n";
+        }
+        if($query_result===FALSE) {
+            echo "Please use PHPsqlite to export the table, delete it afterwards and rerun the maintenance script! Try to import the data to get it back!\n";
+            echo "This script continues now, because this error might not be critical! \n\n";
+        } else {
+            echo "I added the missing column\n";
+        }
     } else {
         echo "and looks fine\n";
     }
