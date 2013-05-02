@@ -1,0 +1,9 @@
+[Core]
+Name = sitemap
+Module = sci_sitemap
+   
+[Documentation]
+Description = Creates a sitemap (one xml for Search Engines, one readable HTML)
+Author = Hannes Rauhe
+Version = 0.1
+Website = scitivity.net

@@ -26,7 +26,7 @@ class sci_blog(iface_generate_plugin):
     p_dom = None
     rss = None
     
-    def createRSS(self):
+    def _createRSS(self):
         self.rss = RSS2(
             title = self.t_dom.title.get_text(), 
             link = "notapaper.de",
@@ -42,7 +42,7 @@ class sci_blog(iface_generate_plugin):
         
         self.p_dom = BeautifulSoup("<div class=\"blog\"></div>")
         self.list_dom = BeautifulSoup("<ul class=\"blog_list\"></ol>").ul
-        self.createRSS()
+        self._createRSS()
         article_files = [f for f in os.listdir(articles_dir) if f.startswith(self.options["prefix"])]
         article_files.sort(reverse=True)
         for a in article_files:
