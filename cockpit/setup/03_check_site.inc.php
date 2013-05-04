@@ -65,7 +65,7 @@ if(!is_file(".gitignore")) {
 
 chdir(dirname(__FILE__));
 if(!is_file($s->getPreviewDir()."__template.html")) {
-    if(!copy("setup/__template.html", $s->getPreviewDir()."__template.html")) {
+    if(!copy("__template.html", $s->getPreviewDir()."__template.html")) {
         echo "__template.html could not be created\n";
         exit(1);
     }
@@ -76,7 +76,7 @@ if(!is_file($s->getPreviewDir()."__template.html")) {
 
 
 if(!is_file($s->getPreviewDir()."_index.html")) {
-    if(!copy("setup/_index.html", $s->getPreviewDir()."_index.html")) {
+    if(!copy("_index.html", $s->getPreviewDir()."_index.html")) {
         echo "_index.html could not be created\n";
         exit(1);
     }
