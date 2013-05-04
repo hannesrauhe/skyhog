@@ -91,7 +91,7 @@ $nav_schema = "CREATE TABLE nav (link TEXT, id TEXT PRIMARY KEY, name TEXT, menu
 
 $query_result = $ds->querySingle('SELECT * FROM nav', true);
 if($query_result===FALSE) {
-    $r = $d->exec($nav_schema.";");
+    $r = $ds->exec($nav_schema.";");
     if(!$r) {
         echo "Nav table cannot be created, because: \n";
         echo $ds->lastErrorMsg();
