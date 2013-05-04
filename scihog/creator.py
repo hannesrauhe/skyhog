@@ -118,7 +118,8 @@ class creator(object):
 #                print p_dom.prettify()
 #                print "____________________________!"
             new_file = open(self.output_dir+'/'+d+'/'+f[1:],'w')
-            new_file.write(p_dom.prettify().encode("UTF-8"))
+            #I hope, this outputs UTF-8 in every case...
+            new_file.write(str(p_dom))
             print "generated",d+'/'+f[1:]
             
     def move_to_page_dir(self,bak_dir):

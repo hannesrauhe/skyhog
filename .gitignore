@@ -10,3 +10,7 @@ testsites
 !/wrk/.htaccess
 /bak/*
 !/bak/.htaccess
+/preview/*
+!/preview/.htaccess
+/live/*
+!/live/.htaccess
