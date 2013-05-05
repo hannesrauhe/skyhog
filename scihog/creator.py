@@ -22,8 +22,25 @@ from PyRSS2Gen import *
 from iface_plugin import *
 from yapsy.PluginManager import PluginManagerSingleton
 
-class page_name_condition(object):
-    pass 
+class page_finder(object):
+    page_list = []      
+    
+    def __init__(self,dir):
+        self.find_files(dir)
+           
+    def template_name_condition(self,f):
+        return f.lower().endswith('.html') and not f.startswith('__') and f.startswith('_')
+
+    def find_files(self, dir):
+        file_list = [ os.path.join(dir,item) for item in os.listdir(dir) if self.template_name_condition(item)]
+        for file in [ item for item in os.listdir(dir) if os.path.isdir(os.path.join(dir, item))]:
+            file_list.extend(self.find_files(os.path.join(dir, file)))
+        for file in file_list:
+            h = file.rsplit('/',1) 
+            f = h[1] # filename
+            d = h[0].replace(dir[:-1],'',1) # remove the base directory output_dir from the path
+            self.page_list.append((d,f,f[1:]))     
+        return self.page_list
 
 class creator(object):
     '''
@@ -35,7 +52,8 @@ class creator(object):
     output_dir = ''
     input_dir = ''
     page_dir = ''
-    
+    _pages = ''
+        
     #TODO: find a way to determine this modules path
     plugin_dirs = [os.path.abspath(os.path.dirname(sys.argv[0]))+"/scihog/plugins"]
     _pm = None
@@ -52,9 +70,8 @@ class creator(object):
         self.templ_path = t
         template_file = open(t, 'r')
         self.templ = template_file.readlines()
-        #self.template_files = [item for item in os.listdir(self.output_dir) if self.template_name_condition(item)]
-        self.template_files = self.find_files(self.output_dir)
-#        print self.template_files
+           
+        self._pages = page_finder(self.input_dir)
         
         self._pm = PluginManagerSingleton.get()
         self._pm.setPluginPlaces(self.plugin_dirs)
@@ -63,27 +80,25 @@ class creator(object):
            "generate" : iface_generate_plugin
            })
         self._pm.collectPlugins()
-#        self.list_available_plugins()
-
-    def find_files(self, dir):
-        file_list = [ os.path.join(dir,item) for item in os.listdir(dir) if self.template_name_condition(item)]
-        for file in [ item for item in os.listdir(dir) if os.path.isdir(os.path.join(dir, item))]:
-            file_list.extend(self.find_files(os.path.join(dir, file)))
-        return file_list
-        
-    def template_name_condition(self,f):
-        return f.lower().endswith('.html') and not f.startswith('__') and f.startswith('_')
             
     def generate(self):
         logger = logging.getLogger('scihog.generate')
-        for f in self.template_files: 
+        
+        #the following is done once in every generation step
+        p_dom = BeautifulSoup(open(self.templ_path,"r").read().strip())    
+        plugin_name = "sitemap"
+        plugin_object = self._pm.activatePluginByName(plugin_name,"generate")
+        logger.debug("loading plugin with name %s: %s",plugin_name,str(plugin_object))
+        if plugin_object:
+            plugin_object.init(self.input_dir,"",self.output_dir,"",p_dom,self.db_dir)
+            plugin_object.generate_once([item[0]+item[2] for item in self._pages.page_list])
+        
+        #this is now done for every page found
+        for d,src_file,target_file in self._pages.page_list: 
             p_dom = BeautifulSoup(open(self.templ_path,"r").read().strip())    
-            #content_file_path = self.input_dir+f
+
             pluged_in = {}
- 
-            h = f.rsplit('/',1) 
-            f = h[1] # filename
-            d = h[0].replace(self.output_dir[:-1],'',1) # remove the base directory output_dir from the path
+            
             while True:
                 el = p_dom.find("div",{"class":re.compile("__skyhog")})
                 if None==el:
@@ -93,18 +108,11 @@ class creator(object):
                         plugin_name = el["class"][0][9:]
                         
                 if not pluged_in.has_key(plugin_name):
-#                    if "static_page"==plugin_name:
-#                        pluged_in[plugin_name] = sci_page(self.input_dir+'/'+d,f,self.output_dir+'/'+d,f[1:],p_dom,self.db_dir)
-#                    if "blog"==el["class"][0][9:]:
-#                        pluged_in[plugin_name] = sci_blog(self.input_dir+'/'+d,f,self.output_dir+'/'+d,f[1:],p_dom,self.db_dir)
-#                    elif "nav"==el["class"][0][9:]:
-#                        pluged_in[plugin_name] = sci_nav(self.input_dir+'/'+d,f,self.output_dir+'/'+d,f[1:],p_dom,self.db_dir)
-#                    else:
                     plugin_object = self._pm.activatePluginByName(plugin_name,"generate")
                     logger.debug("loading plugin with name %s: %s",plugin_name,str(plugin_object))
                     if plugin_object:
                         pluged_in[plugin_name] = plugin_object
-                        pluged_in[plugin_name].init(self.input_dir+'/'+d,f,self.output_dir+'/'+d,f[1:],p_dom,self.db_dir)
+                        pluged_in[plugin_name].init(self.input_dir+'/'+d,src_file,self.output_dir+'/'+d,target_file,p_dom,self.db_dir)
                     else:
                         logger.error("removed unknown element of class %s",el["class"])
                         el.extract()
@@ -119,10 +127,10 @@ class creator(object):
 #                print "___________________"
 #                print p_dom.prettify()
 #                print "____________________________!"
-            new_file = open(self.output_dir+'/'+d+'/'+f[1:],'w')
+            new_file = open(self.output_dir+'/'+d+'/'+target_file,'w')
             #I hope, this outputs UTF-8 in every case...
             new_file.write(str(p_dom))
-            print "generated",d+'/'+f[1:]
+            logger.info("generated "+d+'/'+target_file)
             
     def move_to_page_dir(self,bak_dir):
         if os.path.isdir(self.page_dir):

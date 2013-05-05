@@ -29,7 +29,7 @@ parser.add_argument('--backup_dir', type=str, default='bak',
                    help='the directory for the backup output - requires --final')
 parser.add_argument('--final', default=False,
                    help='provide to overwrite the files in the page_dir with the generated ones')
-parser.add_argument('--verbose',type=int, default=1,
+parser.add_argument('--verbose','-v',type=int, default=1,
                    help='verbosity 0 - 3')
 parser.add_argument('--list_plugins',type=bool, default=False,
                    help='list plugins and quit')
