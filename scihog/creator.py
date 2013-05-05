@@ -22,6 +22,8 @@ from PyRSS2Gen import *
 from iface_plugin import *
 from yapsy.PluginManager import PluginManagerSingleton
 
+class page_name_condition(object):
+    pass 
 
 class creator(object):
     '''

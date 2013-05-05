@@ -48,6 +48,8 @@ system( GIT_CMD. ' config --get user.name',$ret);
 echo $ret."\n";
 if($ret!=0) {
     echo "No local user is set, setting the defaults for you\n";
+    system( GIT_CMD. ' config --global user.name "SkyHog CMS"');
+    system( GIT_CMD. ' config --global user.email info@scitvity.net');
     system( GIT_CMD. ' config user.name "SkyHog CMS"');
     system( GIT_CMD. ' config user.email '+$a->getAuthUserMail());
 }
