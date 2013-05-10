@@ -29,7 +29,7 @@ class sci_blog(iface_generate_plugin):
     def _createRSS(self):
         self.rss = RSS2(
             title = self.t_dom.title.get_text(), 
-            link = "notapaper.de",
+            link = self._site.url,
             description = "",       
             lastBuildDate = datetime.datetime.now()
         )

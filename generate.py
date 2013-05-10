@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with Skyhog.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import argparse,logging
+import argparse,logging,urlparse
 from scihog.creator import *
 
 parser = argparse.ArgumentParser(description='Create HTML-Files from Template.')
@@ -25,8 +25,10 @@ parser.add_argument('--template', type=str, default='./__template.html',
                    help='the template file and in the preview directory')
 parser.add_argument('--page_dir', type=str, default='live',
                    help='the directory for the final output')
-parser.add_argument('--backup_dir', type=str, default='bak',
+parser.add_argument('--backup_dir', type=str, default='./bak',
                    help='the directory for the backup output - requires --final')
+parser.add_argument('--url', type=str, default='',
+                   help='the url for the page')
 parser.add_argument('--final', default=False,
                    help='provide to overwrite the files in the page_dir with the generated ones')
 parser.add_argument('--verbose','-v',type=int, default=1,
@@ -46,7 +48,7 @@ else:
     print "Debug logging"
     logging.basicConfig(level=logging.DEBUG)
 
-gen = creator(args.template,args.page_dir)
+gen = creator(args.template,args.page_dir,args.url)
 
 if args.list_plugins:
     gen.list_available_plugins()

@@ -37,6 +37,7 @@ $arg1 = escapeshellarg(dirname(__FILE__)."/../generate.py");
 $arg2 = "";
 $arg4 = "";
 $arg5 = "";
+$arg6 = "--url ".escapeshellarg($s->getPageUrl());
 if(array_key_exists("finalize", $_POST)) {
 	$arg2 = "--final True";
 	$arg4 = "--page_dir ".escapeshellarg($s->getPageDir());
@@ -44,7 +45,7 @@ if(array_key_exists("finalize", $_POST)) {
 }
 $arg3 = "--template ".escapeshellarg($s->getPreviewDir()."__template.html");
 $retvar = 0;
-$ret = system(PYTHON_CMD." $arg1 $arg2 $arg3 $arg4 $arg5",$retvar);
+$ret = system(PYTHON_CMD." $arg1 $arg2 $arg3 $arg4 $arg5 $arg6",$retvar);
 $l->info(PYTHON_CMD." $arg1 $arg2 $arg3 $arg4 $arg5");
 if($ret === FALSE || $retvar!=0) {
     echo "ERROR executing python\n";

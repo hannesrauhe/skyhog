@@ -16,25 +16,33 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Skyhog.  If not, see <http://www.gnu.org/licenses/>.
 '''
-import os,shutil,time,re,logging
+import os,shutil,time,re,logging,urlparse
 from bs4 import *
 from PyRSS2Gen import *
 from iface_plugin import *
 from yapsy.PluginManager import PluginManagerSingleton
 
-class page_finder(object):
+class site_info(object):
+    preview_dir = ''
+    url = ''
     page_list = []      
     
-    def __init__(self,dir):
-        self.find_files(dir)
+    def __init__(self,dir,url):
+        self.preview_dir = dir
+        u = urlparse.urlparse(url)
+        if not urlparse.urlparse(url).scheme:
+            url = "http://"+url
+            u = urlparse.urlparse(url)
+        self.url = u.geturl()+"/"
+        self._find_pages(dir)
            
     def template_name_condition(self,f):
         return f.lower().endswith('.html') and not f.startswith('__') and f.startswith('_')
 
-    def find_files(self, dir):
+    def _find_pages(self, dir):
         file_list = [ os.path.join(dir,item) for item in os.listdir(dir) if self.template_name_condition(item)]
         for file in [ item for item in os.listdir(dir) if os.path.isdir(os.path.join(dir, item))]:
-            file_list.extend(self.find_files(os.path.join(dir, file)))
+            file_list.extend(self._find_pages(os.path.join(dir, file)))
         for file in file_list:
             h = file.rsplit('/',1) 
             f = h[1] # filename
@@ -48,17 +56,16 @@ class creator(object):
     '''
     templ_path = ""        
     templ = []  
-    template_files = []
     output_dir = ''
     input_dir = ''
     page_dir = ''
-    _pages = ''
+    _site = ''
         
     #TODO: find a way to determine this modules path
     plugin_dirs = [os.path.abspath(os.path.dirname(sys.argv[0]))+"/scihog/plugins"]
     _pm = None
     
-    def __init__(self,t,page_directory):
+    def __init__(self,t,page_directory,site_url):
         '''
         Constructor
         '''
@@ -68,10 +75,8 @@ class creator(object):
         self.db_dir = self.input_dir
 
         self.templ_path = t
-        template_file = open(t, 'r')
-        self.templ = template_file.readlines()
            
-        self._pages = page_finder(self.input_dir)
+        self._site = site_info(self.input_dir,url=site_url)
         
         self._pm = PluginManagerSingleton.get()
         self._pm.setPluginPlaces(self.plugin_dirs)
@@ -90,11 +95,11 @@ class creator(object):
         plugin_object = self._pm.activatePluginByName(plugin_name,"generate")
         logger.debug("loading plugin with name %s: %s",plugin_name,str(plugin_object))
         if plugin_object:
-            plugin_object.init(self.input_dir,"",self.output_dir,"",p_dom,self.db_dir)
-            plugin_object.generate_once([item[0]+item[2] for item in self._pages.page_list])
+            plugin_object.init(self.input_dir,"",self.output_dir,"",p_dom,self._site)
+            plugin_object.generate_once([item[0]+item[2] for item in self._site.page_list])
         
         #this is now done for every page found
-        for d,src_file,target_file in self._pages.page_list: 
+        for d,src_file,target_file in self._site.page_list: 
             p_dom = BeautifulSoup(open(self.templ_path,"r").read().strip())    
 
             pluged_in = {}
@@ -112,7 +117,7 @@ class creator(object):
                     logger.debug("loading plugin with name %s: %s",plugin_name,str(plugin_object))
                     if plugin_object:
                         pluged_in[plugin_name] = plugin_object
-                        pluged_in[plugin_name].init(self.input_dir+'/'+d,src_file,self.output_dir+'/'+d,target_file,p_dom,self.db_dir)
+                        pluged_in[plugin_name].init(self.input_dir+'/'+d,src_file,self.output_dir+'/'+d,target_file,p_dom,self._site)
                     else:
                         logger.error("removed unknown element of class %s",el["class"])
                         el.extract()

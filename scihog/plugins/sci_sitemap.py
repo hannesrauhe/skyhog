@@ -16,13 +16,22 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Skyhog.  If not, see <http://www.gnu.org/licenses/>.
 '''
-import os,datetime,logging
+import os,datetime,logging,urlparse
 import sqlite3 
 from bs4 import *
 from scihog.iface_plugin import *
 
 class sci_sitemap(iface_generate_plugin):
     p_dom = None
+    
+    def _create_entry(self,page,priority=None):
+        #this is to get rid of double slashes in the url:
+        u = urlparse.urljoin(self._site.url, urlparse.urlparse(self._site.url+page).path.replace('//','/'))
+        if priority:
+            return "<url><loc>"+u+"</loc><priority>"+str(priority)+"</priority></url>"
+        else:
+            return "<url><loc>"+u+"</loc></url>"
+            
         
     def init2(self):
         pass
@@ -41,7 +50,7 @@ class sci_sitemap(iface_generate_plugin):
         priority=0.9
         priority_step = 0.5/len(nav_files) 
         for p in nav_files:
-            xml_text += "<url><loc>"+p+"</loc><priority>"+str(priority)+"</priority></url>"
+            xml_text += self._create_entry(p,priority)
             try:
                 pages_list.remove(p)
             except:
@@ -50,7 +59,7 @@ class sci_sitemap(iface_generate_plugin):
             
         #everything else which was generated has no priority
         for p in pages_list:  
-            xml_text += "<url><loc>"+p+"</loc></url>"
+            xml_text += self._create_entry(p)
         xml_text+="</urlset>"
         
         

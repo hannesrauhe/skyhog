@@ -34,6 +34,7 @@ class iface_unknown_plugin(iface_plugin):
 class iface_generate_plugin(iface_plugin):        
     options = None
     option_widgets = {}
+    _site = ''
     
     def activate(self):
         """
@@ -49,13 +50,15 @@ class iface_generate_plugin(iface_plugin):
         """
         iface_plugin.deactivate(self)
         
-    def init(self,idir,ifile_name,odir,ofile_name,t_dom,db_dir):
+    def init(self,idir,ifile_name,odir,ofile_name,t_dom,site):
+        self._site = site
+        #TODO(Hannes): safe/get every site-info in/from site-object
         self.idir = idir
         self.ifile_name = ifile_name
         self.odir = odir
         self.ofile_name = ofile_name
         self.t_dom = t_dom
-        self.db_dir = db_dir
+        self.db_dir = site.preview_dir
         self.init2()
         
     def init2(self):
