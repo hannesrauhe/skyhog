@@ -45,6 +45,11 @@ function check_dir($path,$descr,$warning='') {
         }
     }
 }
+
+//reinit Session
+session_start();
+$_SESSION = array();
+session_destroy();
 ?>
 <a href="setup.php">Reload</a>
 <br />
@@ -52,10 +57,6 @@ function check_dir($path,$descr,$warning='') {
 <?php
 require_once("setup/00_check_config.inc.php");
 
-//reinit Session
-session_start();
-$_SESSION = array();
-session_destroy();
 
 //create/check directories
 check_dir("./","skyhog directory","update via webinterface");

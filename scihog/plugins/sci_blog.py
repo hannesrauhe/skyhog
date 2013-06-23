@@ -34,6 +34,9 @@ class sci_blog(iface_generate_plugin):
             lastBuildDate = datetime.datetime.now()
         )
         
+    def _createOverviewItem(self):
+        pass
+        
     def init2(self):
         articles_dir = self.idir+"/"+self.options["dir"]+"/"
         if not os.path.isdir(articles_dir):
@@ -48,7 +51,7 @@ class sci_blog(iface_generate_plugin):
         for a in article_files:
             article_dom = BeautifulSoup(open(articles_dir+a,"r").read())
             a_title = article_dom.h2.get_text().strip()
-            a_short = article_dom.find("div",{"class":"short"}).get_text()
+            a_short = article_dom.find("div",{"class":"short"})
             a_date = article_dom.find("div",{"class":"date"}).get_text().strip()
             
             l_entry = article_dom.new_tag("li")
