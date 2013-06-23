@@ -37,7 +37,6 @@ if(isset($_REQUEST['redirect'])) {
 <?php
 if(is_file("config.inc.php")):
 	include_once("nav.inc.phtml");
-	$a = 0;
 ?>	
 		<section>
 			<h1>SkyHog</h1>

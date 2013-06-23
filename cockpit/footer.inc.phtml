@@ -20,12 +20,12 @@ along with Skyhog.  If not, see <http://www.gnu.org/licenses/>.
 ?>
 <footer>
 	<p><?php 
-	if($a && $a->isAuth()) {
+	if(isset($a) && $a->isAuth()) {
 		echo "Logged in as ".$a->getAuthUserName(); 
 	} else {
 		echo "You're not logged in.";		
 	}
-	if($s->getSiteID()!=-1) {
+	if(isset($s) && $s->getSiteID()!=-1) {
 	    echo " Currently working on ".$s->getSiteName();
         echo " (<a href=\"sites.php\">Change</a>)";
 	}

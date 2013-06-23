@@ -29,11 +29,7 @@ if (!isset($_SESSION)) { session_start(); }
 if (session_status() !== PHP_SESSION_ACTIVE) {session_start();}
  */
 
- if(headers_sent($f,$l)) {
-     echo "Headers already senti in: $f:$l\n";
- } else {
-    header('Content-type: text/html; charset=utf-8');
- }
+header('Content-type: text/html; charset=utf-8');
 
 require_once("./config.inc.php");
 require_once("./openid.inc.php");

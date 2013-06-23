@@ -50,6 +50,8 @@ function check_dir($path,$descr,$warning='') {
 session_start();
 $_SESSION = array();
 session_destroy();
+
+ob_start();
 ?>
 <a href="setup.php">Reload</a>
 <br />
@@ -101,6 +103,8 @@ $db->close();
 
 // basic tests are done - now do the authentication
 require_once("./base.inc.php");
+
+ob_end_flush();
 
 //check the tables now
 require_once("./setup/01_check_tables.inc.php");
