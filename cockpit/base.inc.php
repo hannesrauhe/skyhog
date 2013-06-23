@@ -589,6 +589,9 @@ if($site_id!=-1 && $site_id!=$s->getSiteID()) {
 }
 
 if($s->getSiteID()==-1 && FALSE===array_search(basename($_SERVER['SCRIPT_NAME']),array("sites.php","setup.php","edit_site.redirect.php"))) {
+    if(!isset($msg) || empty($msg)) {
+        $msg = "because of an unknown error the site could not be changed";
+    }    
     Header("Location: sites.php?msg=".urlencode($msg)."&redirect=".urlencode($_SERVER['SCRIPT_NAME']));
     exit(0);
 }
