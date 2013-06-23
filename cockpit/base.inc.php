@@ -21,6 +21,7 @@ along with Skyhog.  If not, see <http://www.gnu.org/licenses/>.
 if (!ini_get('display_errors')) {
     ini_set('display_errors', '1');
 }
+ini_set('request_order','CGP');
 //}
 
 /* check if base.inc.php has been included after session has been started (e.g. in setup.php)*/

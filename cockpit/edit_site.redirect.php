@@ -24,10 +24,11 @@ require_once('./base.inc.php');
 // require_once('libs/utf8/utils/validation.php');
 // require_once('libs/utf8_to_ascii/utf8_to_ascii.php');
 
+$msg = "";
 
 if($_REQUEST['action']=="Create") {
     if(!array_key_exists("name",$_REQUEST)) {
-        $msg = "Give the site a name.";
+        $msg .= "Give the site a name.";
     } else  {
         $site_name = $_REQUEST['name'];
         $default_site = array();
@@ -46,5 +47,8 @@ if($_REQUEST['action']=="Create") {
     $d->deleteSite($_REQUEST['site_id']); 
 }
 
+if($s->getSiteID()==-1) {
+    $msg .= "Was not able to change site";
+}
 Header("Location:sites.php?msg=".urlencode($msg));
 exit(0);
