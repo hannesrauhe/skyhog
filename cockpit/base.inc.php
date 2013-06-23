@@ -23,7 +23,17 @@ if (!ini_get('display_errors')) {
 }
 //}
 
-header('Content-type: text/html; charset=utf-8');
+/* check if base.inc.php has been included after session has been started (e.g. in setup.php)*/
+if (!isset($_SESSION)) { session_start(); }
+/*PHP 5.4:
+if (session_status() !== PHP_SESSION_ACTIVE) {session_start();}
+ */
+
+ if(headers_sent($f,$l)) {
+     echo "Headers already senti in: $f:$l\n";
+ } else {
+    header('Content-type: text/html; charset=utf-8');
+ }
 
 require_once("./config.inc.php");
 require_once("./openid.inc.php");
@@ -534,7 +544,6 @@ class site_db extends SQLite3 {
     }
 }
 
-session_start();
 
 $d = new skyhog_db();
 $a = new auth();
