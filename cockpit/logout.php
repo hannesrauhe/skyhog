@@ -17,8 +17,12 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Skyhog.  If not, see <http://www.gnu.org/licenses/>.
 */
-session_start();
-$_SESSION = array();
-session_destroy();
-
-header("Location: index.php");
+require_once("base.inc.php");
+$a->logout();
+?>
+<html>
+    <body>
+        <h2>You have been logged out!</h2>
+        <a href="index.php">Login again!</a>
+    </body>
+</html>
