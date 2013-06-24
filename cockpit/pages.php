@@ -24,7 +24,10 @@ function bfglob($path, $pattern = '*', $flags = 0, $depth = 0) {
     $folders = array(rtrim($path, DIRECTORY_SEPARATOR));
     
     while($folder = array_shift($folders)) {
-        $matches = array_merge($matches, glob($folder.DIRECTORY_SEPARATOR.$pattern, $flags));
+        $new_match = glob($folder.DIRECTORY_SEPARATOR.$pattern, $flags);
+        if($new_match) {
+            $matches = array_merge($matches, $new_match);
+        }
         if($depth != 0) {
             $moreFolders = glob($folder.DIRECTORY_SEPARATOR.'*', GLOB_ONLYDIR);
             $depth   = ($depth < -1) ? -1: $depth + count($moreFolders) - 2;
