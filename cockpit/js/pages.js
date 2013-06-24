@@ -44,7 +44,7 @@ $(document).ready(function() {
         }
     }); 
     $('#b_generate_prev').click(function() {
-    	$.post('generate.target.php', 
+    	$.post('generate.target.phpx', 
     		{"navigation_changed": navigation_changed ? navigation_order : navigation_changed } ,//$('input[name="navigation_changed"]').attr('value')} , 
     		generate_callback
     	).error(function() { 		   
@@ -52,7 +52,7 @@ $(document).ready(function() {
 		});
     });
     $('#b_generate').click(function() {
-    	$.post('generate.target.php', 
+    	$.post('generate.target.phpx', 
         	{"finalize":"1",
         		"navigation_changed": navigation_changed ? navigation_order : navigation_changed } ,//$('input[name="navigation_changed"]').attr('value')} ,
     		generate_callback

@@ -207,7 +207,7 @@ class skyhog_db extends SQLite3 {
         }
         $query_txt = substr($query_txt, 0, -1);
         $query_txt .= " WHERE id=:id";
-        echo $query_txt;
+        //echo $query_txt;
         $stmt = $this->prepare($query_txt);
         if($stmt) {
             foreach($cols as $col) {
@@ -348,6 +348,9 @@ class auth {
 
 class git {
 	static public function add($file) {
+	    if(GIT_CMD=="disable") {
+	        return;
+	    }
 		$arr = array();
 		$gitarg1 = escapeshellarg($file);
 		$retvar = 0;
@@ -360,7 +363,10 @@ class git {
 		return $arr;
 	}
 	
-	static public function commit($author,$msg) {		
+	static public function commit($author,$msg) {	
+        if(GIT_CMD=="disable") {
+            return;
+        }	
 		$gitarg1 = escapeshellarg($author);
 		$gitarg2 = escapeshellarg($msg.", IP:".$_SERVER["REMOTE_ADDR"]);
 		$retvar = 0;
@@ -374,6 +380,9 @@ class git {
 	}
 	
 	static public function diff() {		
+        if(GIT_CMD=="disable") {
+            return;
+        }
 		$retvar = 0;
 		$ret = exec(GIT_CMD." diff 2>&1",$arr,$retvar);
 		if($ret === FALSE || $retvar!=0) {
