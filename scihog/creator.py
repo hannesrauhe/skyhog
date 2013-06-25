@@ -41,8 +41,9 @@ class site_info(object):
 
     def _find_pages(self, dir):
         file_list = [ os.path.join(dir,item) for item in os.listdir(dir) if self.template_name_condition(item)]
-        for file in [ item for item in os.listdir(dir) if os.path.isdir(os.path.join(dir, item))]:
-            file_list.extend(self._find_pages(os.path.join(dir, file)))
+        for item in os.listdir(dir):
+            if not item.startswith(".") and os.path.isdir(os.path.join(dir, item)):
+                file_list.extend(self._find_pages(os.path.join(dir, item)))
         for file in file_list:
             h = file.rsplit('/',1) 
             f = h[1] # filename
