@@ -51,8 +51,9 @@ class sci_blog(iface_generate_plugin):
         for a in article_files:
             article_dom = BeautifulSoup(open(articles_dir+a,"r").read())
             a_title = article_dom.h2.get_text().strip()
-            a_short = article_dom.find("div",{"class":"short"})
+            a_short = article_dom.find("div",{"class":"short"}).get_text()
             a_date = article_dom.find("div",{"class":"date"}).get_text().strip()
+            a_author = "Hannes Rauhe"# article_dom.find("div",{"class":"author"}).get_text()
             
             l_entry = article_dom.new_tag("li")
             l_link = article_dom.new_tag("a",href=a[1:])
@@ -62,6 +63,7 @@ class sci_blog(iface_generate_plugin):
             self.list_dom.append(l_entry)
             self.rss.items.append(
                 RSSItem(
+                 author = a_author,
                  title = a_title,
                  link = a[1:],
                  description = a_short,

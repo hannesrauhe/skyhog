@@ -90,15 +90,6 @@ class creator(object):
     def generate(self):
         logger = logging.getLogger('scihog.generate')
         
-        #the following is done once in every generation step
-        p_dom = BeautifulSoup(open(self.templ_path,"r").read().strip())    
-        plugin_name = "sitemap"
-        plugin_object = self._pm.activatePluginByName(plugin_name,"generate")
-        logger.debug("loading plugin with name %s: %s",plugin_name,str(plugin_object))
-        if plugin_object:
-            plugin_object.init(self.input_dir,"",self.output_dir,"",p_dom,self._site)
-            plugin_object.generate_once([item[0]+item[2] for item in self._site.page_list])
-        
         #this is now done for every page found
         for d,src_file,target_file in self._site.page_list: 
             p_dom = BeautifulSoup(open(self.templ_path,"r").read().strip())    
@@ -137,6 +128,16 @@ class creator(object):
             #I hope, this outputs UTF-8 in every case...
             new_file.write(str(p_dom))
             logger.info("generated "+d+'/'+target_file)
+            
+        
+        #the following is done once in every generation step
+        p_dom = BeautifulSoup(open(self.templ_path,"r").read().strip())    
+        plugin_name = "sitemap"
+        plugin_object = self._pm.activatePluginByName(plugin_name,"generate")
+        logger.debug("loading plugin with name %s: %s",plugin_name,str(plugin_object))
+        if plugin_object:
+            plugin_object.init(self.input_dir,"",self.output_dir,"",p_dom,self._site)
+            plugin_object.generate_once([item[0]+item[2] for item in self._site.page_list])
             
     def move_to_page_dir(self,bak_dir):
         if os.path.isdir(self.page_dir):
