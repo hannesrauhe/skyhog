@@ -22,4 +22,8 @@ from scihog.iface_plugin import *
 class sci_page(iface_generate_plugin):
     def generate(self,attr):
         self.p_dom = BeautifulSoup(open(self.idir+"/"+self.ifile_name,"r").read())
+        p_title = self.p_dom.find("h2")
+        print p_title
+        if p_title:
+            self.t_dom.title.contents[0].replaceWith(p_title.get_text())
         return self.p_dom.contents[0]
