@@ -31,7 +31,7 @@ function bfglob($path, $pattern = '*', $flags = 0, $depth = 0) {
         if($depth != 0) {
             $moreFolders = glob($folder.DIRECTORY_SEPARATOR.'*', GLOB_ONLYDIR);
             $depth   = ($depth < -1) ? -1: $depth + count($moreFolders) - 2;
-            if($more_folders) {
+            if($moreFolders) {
                 $folders = array_merge($folders, $moreFolders);
             }
         }
