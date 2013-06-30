@@ -17,23 +17,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Skyhog.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-
-
-/***
- * TODO: authorization not possible in phpx:-()
- *replacing base.php stuff****/
- //require_once('./base.inc.php');
-require_once('./config.inc.php');
-require_once('./classes.inc.php');
-
-$msg = '';
-
-$site_id = -1;
-$d = new skyhog_db();
-$s = new site($d,$site_id);
-
-/***end replacing base.php stuff****/
+require_once('./base.inc.php');
 
 chdir($s->getPreviewDir());	
 
@@ -62,7 +46,7 @@ if(array_key_exists("finalize", $_POST)) {
 $arg3 = "--template ".escapeshellarg($s->getPreviewDir()."__template.html");
 $retvar = 0;
 $ret = system(PYTHON_CMD." $arg1 $arg2 $arg3 $arg4 $arg5 $arg6",$retvar);
-//$l->info(PYTHON_CMD." $arg1 $arg2 $arg3 $arg4 $arg5");
+$l->info(PYTHON_CMD." $arg1 $arg2 $arg3 $arg4 $arg5");
 if($ret === FALSE || $retvar!=0) {
     echo "ERROR executing python\n";
 	echo $ret;

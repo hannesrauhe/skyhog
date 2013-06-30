@@ -1,3 +1,1 @@
-php_flag engine off
-
-#TODO: deny access to .git
+deny from all
