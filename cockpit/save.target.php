@@ -19,27 +19,32 @@ along with Skyhog.  If not, see <http://www.gnu.org/licenses/>.
 */
 require_once('./base.inc.php');
 
-if(!array_key_exists("file",$_POST)) {
-	echo "ERROR: wrong data submitted (file missing)";
-	exit(); 
+ob_start();
+$json_return = array("status"=>"success","retval"=>0,"rettext"=>"");
+try {
+    if(!array_key_exists("file",$_POST)) {
+    	throw new MyException("wrong data submitted (filename missing)");
+    }
+    
+    $file = basename($_POST['file']);
+    if(!is_file($s->getPreviewDir().$file) && !array_key_exists("new",$_POST)) {
+        throw new MyException("ERROR: file does not exist");
+    }
+    
+    if(array_key_exists('elm1',$_POST) && !empty($_POST['elm1'])) {
+    	file_put_contents ($s->getPreviewDir().$file,trim($_POST['elm1']));
+    } else {
+        throw new MyException("no content for $file submitted!");
+    }
+    
+    chdir($s->getPreviewDir());
+    git::add($file);
+    git::commit($a->getAuthUserName()." <".$a->getAuthUserMail().">", "Commit from webinterface");
+} catch(MyException $e) {
+    $json_return = array("status"=>"error","retval"=>-1,"rettext"=>$e->getMessage());
 }
 
-$file = basename($_POST['file']);
-if(!is_file($s->getPreviewDir().$file) && !array_key_exists("new",$_POST)) {
-	echo "ERROR: file does not exist";
-	exit(); 	
-}
+$json_return["rettext"].="\n".ob_get_clean();
 
-if(array_key_exists('elm1',$_POST) && !empty($_POST['elm1'])) {
-	file_put_contents ($s->getPreviewDir().$file,trim($_POST['elm1']));
-} else {
-	echo "ERROR: no content for $file submitted!";
-	exit();
-}
-
-chdir($s->getPreviewDir());
-git::add($file);
-git::commit($a->getAuthUserName()." <".$a->getAuthUserMail().">", "Commit from webinterface");
-echo "\n";
-echo "SUCCESS";
+echo json_encode($json_return);
 ?>

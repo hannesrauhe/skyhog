@@ -21,18 +21,28 @@ var navigation_order = new Array();
 var navigation_changed = 0;
 
 var generate_callback=
-	function(data) {
-    		$("#msg").html(data);
-    		$('#sorted_menu li').removeClass("ui-state-highlight");
-    		$('#sorted_menu li').addClass("ui-state-default");
-    		$('#unsorted_menu li').addClass("ui-state-highlight");
-    		$('#unsorted_menu li').removeClass("ui-state-default");
-			$('#generate_buttons').css("border",'');
+	function(data) {           
+	    if(data["retval"]!=0) {
+    		$("#msg").html(data["rettext"]);
+    	}
+		$('#sorted_menu li').removeClass("ui-state-highlight");
+		$('#sorted_menu li').addClass("ui-state-default");
+		$('#unsorted_menu li').addClass("ui-state-highlight");
+		$('#unsorted_menu li').removeClass("ui-state-default");
+		$('#generate_buttons').css("border",'');
     };
-	        
+     
 $(document).ready(function() { 
     $('#content_form').ajaxForm({ 
-        target: '#msg'
+        dataType: 'json',
+        success: function(data) {
+            $('input[name="save"]').css("border","1px solid green");
+            $('#msg').html(data['rettext']);
+        },
+        error: function(data) {
+            $('input[name="save"]').css("border","1px solid red");
+            $('#msg').html(data);
+        }
     }); 
     $('#sh_page_settings_form').ajaxForm({ 
         target: '#msg',
@@ -44,21 +54,37 @@ $(document).ready(function() {
         }
     }); 
     $('#b_generate_prev').click(function() {
-    	$.post('generate.target.phpx', 
-    		{"navigation_changed": navigation_changed ? navigation_order : navigation_changed } ,//$('input[name="navigation_changed"]').attr('value')} , 
-    		generate_callback
-    	).error(function() { 		   
+        $(this).attr("disabled", "disabled");
+    	var posting = $.post('generate.target.phpx', 
+    		{"navigation_changed": navigation_changed ? navigation_order : navigation_changed } , 
+    		generate_callback, 
+    		"json"
+    	)
+    	posting.always(function() {           
+            $(":button").removeAttr("disabled");
+            $('#b_generate_prev').css("border","1px solid green");
+        });
+    	posting.error(function() { 		   
     		$("#msg").html("Something went wrong. See, if the maintenance script can give you a hint.");
+            $('#b_generate_prev').css("border","1px solid red");
 		});
     });
     $('#b_generate').click(function() {
-    	$.post('generate.target.phpx', 
-        	{"finalize":"1",
-        		"navigation_changed": navigation_changed ? navigation_order : navigation_changed } ,//$('input[name="navigation_changed"]').attr('value')} ,
-    		generate_callback
-    	).error(function() { 		   
-    		$("#msg").html("Something went wrong. See, if the maintenance script can give you a hint.");
-		});
+        $(this).attr("disabled", "disabled");
+        var posting = $.post('generate.target.phpx', 
+            {"finalize":"1",
+                "navigation_changed": navigation_changed ? navigation_order : navigation_changed } , 
+            generate_callback, 
+            "json"
+        )
+        posting.always(function() {           
+            $(":button").removeAttr("disabled");
+            $('#b_generate').css("border","1px solid green");
+        });
+        posting.error(function() {         
+            $("#msg").html("Something went wrong. See, if the maintenance script can give you a hint.");
+            $('#b_generate').css("border","1px solid red");
+        });
     });
     $('#sorted_menu, #unsorted_menu').sortable({
 		connectWith: ".connectedSortable",

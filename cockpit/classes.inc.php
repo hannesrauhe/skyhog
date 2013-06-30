@@ -19,6 +19,8 @@ along with Skyhog.  If not, see <http://www.gnu.org/licenses/>.
 */
 require_once("./openid.inc.php");
 
+class MyException extends Exception { }
+
 class skylog {
     var $logfile = FALSE;
     var $loguser;
