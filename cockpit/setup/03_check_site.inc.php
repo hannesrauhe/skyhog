@@ -20,7 +20,9 @@ along with Skyhog.  If not, see <http://www.gnu.org/licenses/>.
 
 //preview/upload directory
 $git_rem = $s->getGitRemote();
-if(!is_dir($s->getPreviewDir()) && !empty($git_rem)) {
+
+$git_disabled = GIT_CMD=="DISABLE" || $git_rem=="DISABLE";
+if(!$git_disabled && !is_dir($s->getPreviewDir()) && !empty($git_rem)) {
     echo "Trying to clone ".$s->getGitRemote()." to directory ".$s->getPreviewDir()."\n";
     system( GIT_CMD." clone ".escapeshellarg($s->getGitRemote())." ".escapeshellarg($s->getPreviewDir())." 2>&1", $ret);    
     if($ret!==0) {
@@ -32,36 +34,38 @@ check_dir($s->getPreviewDir(), "the sites preview directory");
 check_dir($s->getPageDir(), "the sites page/live directory");
 
 //git
-chdir($s->getPreviewDir());
-$arr = array();
-$ret=0;
-
-echo "The output of git init:\n";
-system( GIT_CMD." init 2>&1",$ret); 
-if($ret!==0) {
-    echo "git init failed somehow!\n";
-    exit(1);
-}
-
-echo "Checking local git config:";
-system( GIT_CMD. ' config --get user.name',$ret);
-echo $ret."\n";
-if($ret!=0) {
-    echo "No local user is set, setting the defaults for you\n";
-    system( GIT_CMD. ' config --global user.name "SkyHog CMS"');
-    system( GIT_CMD. ' config --global user.email info@scitvity.net');
-    system( GIT_CMD. ' config user.name "SkyHog CMS"');
-    system( GIT_CMD. ' config user.email '+$a->getAuthUserMail());
-}
-
-if(!is_file(".gitignore")) {
-    if(FALSE===file_put_contents(".gitignore", "*.html\n!_*.html")) {
-        echo ".gitignore could not be created\n";
+if(!$git_disabled) {
+    chdir($s->getPreviewDir());
+    $arr = array();
+    $ret=0;
+    
+    echo "The output of git init:\n";
+    system( GIT_CMD." init 2>&1",$ret); 
+    if($ret!==0) {
+        echo "git init failed somehow!\n";
         exit(1);
     }
-    echo ".gitignore created\n";
-} else {
-    echo ".gitignore is there\n";   
+    
+    echo "Checking local git config:";
+    system( GIT_CMD. ' config --get user.name',$ret);
+    echo $ret."\n";
+    if($ret!=0) {
+        echo "No local user is set, setting the defaults for you\n";
+        system( GIT_CMD. ' config --global user.name "SkyHog CMS"');
+        system( GIT_CMD. ' config --global user.email info@scitvity.net');
+        system( GIT_CMD. ' config user.name "SkyHog CMS"');
+        system( GIT_CMD. ' config user.email '+$a->getAuthUserMail());
+    }
+    
+    if(!is_file(".gitignore")) {
+        if(FALSE===file_put_contents(".gitignore", "*.html\n!_*.html")) {
+            echo ".gitignore could not be created\n";
+            exit(1);
+        }
+        echo ".gitignore created\n";
+    } else {
+        echo ".gitignore is there\n";   
+    }
 }
 
 
