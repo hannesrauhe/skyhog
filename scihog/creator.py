@@ -115,7 +115,9 @@ class creator(object):
                         el.extract()
                         continue
                 try:
-                    artdom = pluged_in[plugin_name].generate(el["class"])
+                    attr = el["class"]
+                    attr.remove("__skyhog_"+plugin_name)
+                    artdom = pluged_in[plugin_name].generate(attr)
                     el.replace_with(artdom)
                 except :
                     logger.error("generating code for plugin %s with parameters %s not successful, removing class",plugin_name,el["class"])

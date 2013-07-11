@@ -43,7 +43,11 @@ $msg = "";
 $file = "";
 
 if(array_key_exists("file",$_GET)) {
-	$file = basename($_GET['file']);
+	$file = $_GET['file'];
+    if(strpos($file,"..")!==FALSE) {
+        $msg = "ERROR: Paths with .. not allowed: ".$file;  
+        $file = "_index.html";      
+    }
 	if(!is_file($s->getPreviewDir().$file)) {
 		$msg = "File $file does not exist";
 		$file = "_index.html";

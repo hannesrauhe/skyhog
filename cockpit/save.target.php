@@ -26,7 +26,10 @@ try {
     	throw new MyException("wrong data submitted (filename missing)");
     }
     
-    $file = basename($_POST['file']);
+    $file = $_POST['file'];
+    if(strpos($file,"..")!==FALSE) {
+        throw new MyException("ERROR: Paths with .. not allowed: ".$file);        
+    }
     if(!is_file($s->getPreviewDir().$file) && !array_key_exists("new",$_POST)) {
         throw new MyException("ERROR: file does not exist");
     }
