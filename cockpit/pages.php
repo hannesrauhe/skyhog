@@ -207,7 +207,7 @@ include_once("nav.inc.phtml");
 		</form>
 	</section>
 	<div id="sh_page_settings_dialog" title="Change Page Settings">
-		<form method="post" action="page_settings.target.php" id="sh_page_settings_form">
+		<form method="post" action="page_settings.target.phpx" id="sh_page_settings_form">
 			<input type="hidden" name="sh_page_id_old" id="sh_page_id_old" value="" />
 			<table>
 				<tr><td>Link: </td>			<td><input type="text" id="sh_page_link" name="sh_page_link" value="" readonly="readonly" /></td></tr>
