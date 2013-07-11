@@ -27,7 +27,7 @@ class sci_nav(iface_generate_plugin):
         cursor.execute("SELECT id,link,name FROM nav WHERE menu_order>=0 ORDER BY menu_order")
         code = []
         code.append('<nav>\n')
-        code.append('<ul>\n')
+        code.append('<ul class="'+" ".join(attr)+'">\n')
         for entry in cursor.fetchall():
             if self.ofile_name==entry[1]:
                 code.append('<li id="%s" class="m_active"><a href="%s">%s</a></li>\n' % entry[:3])

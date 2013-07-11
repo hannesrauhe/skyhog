@@ -24,6 +24,11 @@ var generate_callback=
 	function(data) {           
 	    if(data["retval"]!=0) {
     		$("#msg").html(data["rettext"]);
+            $('#b_generate_prev').css("border","1px solid red");
+            $('#b_generate').css("border","1px solid red");
+    	} else {
+            $('#b_generate_prev').css("border","1px solid green"); 
+            $('#b_generate').css("border","1px solid green");   	    
     	}
 		$('#sorted_menu li').removeClass("ui-state-highlight");
 		$('#sorted_menu li').addClass("ui-state-default");
@@ -62,7 +67,6 @@ $(document).ready(function() {
     	)
     	posting.always(function() {           
             $(":button").removeAttr("disabled");
-            $('#b_generate_prev').css("border","1px solid green");
         });
     	posting.error(function() { 		   
     		$("#msg").html("Something went wrong. See, if the maintenance script can give you a hint.");
@@ -79,7 +83,6 @@ $(document).ready(function() {
         )
         posting.always(function() {           
             $(":button").removeAttr("disabled");
-            $('#b_generate').css("border","1px solid green");
         });
         posting.error(function() {         
             $("#msg").html("Something went wrong. See, if the maintenance script can give you a hint.");
