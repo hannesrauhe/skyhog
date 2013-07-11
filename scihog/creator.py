@@ -43,11 +43,11 @@ class site_info(object):
         file_list = [ os.path.join(dir,item) for item in os.listdir(dir) if self.template_name_condition(item)]
         for item in os.listdir(dir):
             if not item.startswith(".") and os.path.isdir(os.path.join(dir, item)):
-                file_list.extend(self._find_pages(os.path.join(dir, item)))
+                self._find_pages(os.path.join(dir, item))
         for file in file_list:
             h = file.rsplit('/',1) 
             f = h[1] # filename
-            d = h[0].replace(dir[:-1],'',1) # remove the base directory output_dir from the path
+            d = h[0].replace(self.preview_dir[:-1],'',1) # remove the base directory output_dir from the path
             self.page_list.append((d,f,f[1:]))     
         return self.page_list
 
