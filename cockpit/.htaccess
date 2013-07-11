@@ -1,2 +1,3 @@
 php_flag engine on
 php_value request_order cgp
+php_flag magic_quotes_gpc Off
