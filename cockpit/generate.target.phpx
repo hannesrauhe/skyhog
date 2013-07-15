@@ -32,7 +32,7 @@ $msg = '';
 $site_id = -1;
 $d = new skyhog_db();
 $s = new site($d,$site_id);
-$l = new skylog("system.log","system");
+//$l = new skylog("system.log","system");
 
 /***end replacing base.php stuff****/
 
@@ -48,7 +48,7 @@ if(array_key_exists("navigation_changed", $_POST) && !empty($_POST["navigation_c
          $cmd .= " +l ".escapeshellarg($ent)." --pos $i";
          $retvar = 0;
          $ret = system($cmd,$retvar);
-         $l->info($cmd);
+         //$l->info($cmd);
          $i+=1;
        }
 		//$d->orderNavEntries($nav_order);
@@ -77,7 +77,7 @@ if($json_return["retval"]!=0) {
     $json_return["status"]="error";
 }
 echo json_encode($json_return);
-$l->info(PYTHON_CMD." $arg1 $arg2 $arg3 $arg4 $arg5");
+//$l->info(PYTHON_CMD." $arg1 $arg2 $arg3 $arg4 $arg5");
 /*
 $ret = system(PYTHON_CMD." $arg1 $arg2 $arg3 $arg4 $arg5 $arg6",$retvar);
 if($ret === FALSE || $retvar!=0) {

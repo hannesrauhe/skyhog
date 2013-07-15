@@ -335,7 +335,7 @@ class auth {
 
 class git {
     static public function add($file) {
-        if(GIT_CMD=="disable") {
+        if(strtolower(GIT_CMD)=="disable") {
             return;
         }
         $arr = array();
@@ -351,9 +351,9 @@ class git {
     }
     
     static public function commit($author,$msg) {   
-        if(GIT_CMD=="disable") {
+        if(strtolower(GIT_CMD)=="disable") {
             return;
-        }   
+        }
         $gitarg1 = escapeshellarg($author);
         $gitarg2 = escapeshellarg($msg.", IP:".$_SERVER["REMOTE_ADDR"]);
         $retvar = 0;
@@ -367,7 +367,7 @@ class git {
     }
     
     static public function diff() {     
-        if(GIT_CMD=="disable") {
+        if(strtolower(GIT_CMD)=="disable") {
             return;
         }
         $retvar = 0;
