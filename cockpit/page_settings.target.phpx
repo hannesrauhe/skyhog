@@ -29,7 +29,7 @@ $msg = '';
 $site_id = -1;
 $d = new skyhog_db();
 $s = new site($d,$site_id);
-
+$l = new skylog("system.log","system");
 /***end replacing base.php stuff****/
 
 chdir($s->getPreviewDir());	
@@ -38,7 +38,7 @@ $cmd = PYTHON_CMD." ".escapeshellarg(dirname(__FILE__)."/../nav.py");
 $cmd .= isset($_REQUEST['sh_page_link']) ? " +l ".escapeshellarg($_REQUEST['sh_page_link']) : "";
 $cmd .= isset($_REQUEST['sh_page_name']) ? " -n ".escapeshellarg($_REQUEST['sh_page_name']) : "";
 $cmd .= isset($_REQUEST['sh_page_file']) ? " -f ".escapeshellarg($_REQUEST['sh_page_file']) : "";
-$cmd .= isset($_REQUEST['sh_page_id']) ? " -f ".escapeshellarg($_REQUEST['sh_page_id']) : "";
+$cmd .= isset($_REQUEST['sh_page_id']) ? " -i ".escapeshellarg($_REQUEST['sh_page_id']) : "";
 $retvar = 0;
 $ret = system($cmd,$retvar);
 $l->info($cmd);
