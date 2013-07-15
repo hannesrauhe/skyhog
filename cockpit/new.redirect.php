@@ -22,36 +22,43 @@ require_once 'base.inc.php';
 $msg="";
 $format = "";
 
-if(array_key_exists("file",$_REQUEST)) {
-	$file = basename($_REQUEST['file']);
-} else {
-	exit(1);
+try {
+  if(array_key_exists("file",$_REQUEST)) {
+	  $file = $_REQUEST['file'];
+  } else {
+      throw new MyException("No Data submitted");   
+  }
+
+  if(strpos($file,"..")!==FALSE) {
+      throw new MyException("ERROR: Paths with .. not allowed: ".$file);        
+  }
+      
+  if(array_key_exists("format",$_REQUEST)) {
+	  $format = $_REQUEST['format'];
+  }
+
+  if($format=="html") {
+	  if(substr($file,0,1)!='_') {
+		  $file="_".$file;
+	  } 
+	
+	  if(substr($file,1,1)=='_') {
+		  $file="_a".substr($file,2);
+	  }	
+	
+	  if(substr($file,-5)!='.html') {
+		  $file=$file.".html";
+	  }
+	
+	  if(is_file($s->getPreviewDir().$file)) {	  
+      throw new MyException("No Data submitted");
+	  }
+	  fclose(fopen($s->getPreviewDir().$file, 'a'));
+  }
+} catch(MyException $e) {
+    $msg = $e->getMessage();
 }
 
-if(array_key_exists("format",$_REQUEST)) {
-	$format = $_REQUEST['format'];
-}
-
-if($format=="html") {
-	if(substr($file,0,1)!='_') {
-		$file="_".$file;
-	} 
-	
-	if(substr($file,1,1)=='_') {
-		$file="_a".substr($file,2);
-	}	
-	
-	if(substr($file,-5)!='.html') {
-		$file=$file.".html";
-	}
-	
-	if(is_file(UPLOAD_DIR.$file)) {
-		$msg = "File $file already exists";
-		exit(1);
-	}
-	fclose(fopen(UPLOAD_DIR.$file, 'a'));
-	Header("Location:pages.php?file=".urlencode($file));
-	exit(0);
-}
-	
+Header("Location:pages.php?msg=$msg&file=".urlencode($file));
+exit(0);
 
