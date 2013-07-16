@@ -479,6 +479,9 @@ class site_db extends SQLite3 {
                 if(empty($res['file'])) {
                     $res['file'] = $res['link'];
                 }
+                if(empty($res['name'])) {
+                    $res['name'] = $res['file'];
+                }
                 $nav[]=$res;
             }
             $stmt->close();

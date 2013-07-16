@@ -83,7 +83,7 @@ if ($handle = opendir($s->getPreviewDir())) {
     	if(substr($f,0,1)=='_' && substr($f,1,1)!='_') {
     		$f = substr($f,1);
     		foreach($ordered_pages as $o) {
-    			if($o['link']==$f) 
+    			if($o['file']==$f) 
 					continue(2);
     		}
         	$pages[] = $f;
@@ -125,7 +125,7 @@ include_once("nav.inc.phtml");
 				<?php
 			    foreach($ordered_pages as $f) {
 		        	echo "<li class='ui-state-default'>
-			        	<span class='ui-icon ui-icon-arrowthick-2-n-s' style='float:left'></span><a href='".$_SERVER['PHP_SELF']."?file=_".$f['file']."'>".$f['id']."</a>
+			        	<span class='ui-icon ui-icon-arrowthick-2-n-s' style='float:left'></span><a href='".$_SERVER['PHP_SELF']."?file=_".$f['file']."'>".$f['name']."</a>
 			        	<span class='ui-icon ui-icon-wrench sh_page_settings' style='float:right'>".json_encode($f)."</span>
 			        	</li>";
 				}
