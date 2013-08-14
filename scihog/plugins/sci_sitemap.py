@@ -48,8 +48,9 @@ class sci_sitemap(iface_generate_plugin):
         xml_text = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">"
         #pages from navigation get a priority depending on there positon
         priority=0.9
-        priority_step = 0.5/len(nav_files) 
-        for p in nav_files:
+        if len(nav_files):
+          priority_step = 0.5/len(nav_files) 
+          for p in nav_files:
             xml_text += self._create_entry(p,priority)
             try:
                 pages_list.remove(p)

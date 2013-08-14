@@ -31,7 +31,9 @@ if(!$git_disabled && !is_dir($s->getPreviewDir()) && !empty($git_rem)) {
     }
 }
 check_dir($s->getPreviewDir(), "the sites preview directory");
+chmod($s->getPreviewDir(), 0777);
 check_dir($s->getPageDir(), "the sites page/live directory");
+chmod($s->getPageDir(), 0777);
 
 //git
 if(!$git_disabled) {

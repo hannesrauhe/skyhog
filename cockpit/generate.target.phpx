@@ -47,7 +47,7 @@ if(array_key_exists("navigation_changed", $_POST) && !empty($_POST["navigation_c
          $cmd = PYTHON_CMD." ".escapeshellarg(dirname(__FILE__)."/../nav.py");
          $cmd .= " +l ".escapeshellarg($ent)." --pos $i";
          $retvar = 0;
-         $ret = system($cmd,$retvar);
+         $ret = system($cmd+"2>&1",$retvar);
          //$l->info($cmd);
          $i+=1;
        }
@@ -71,8 +71,8 @@ if(array_key_exists("finalize", $_POST)) {
 }
 $arg3 = "--template ".escapeshellarg($s->getPreviewDir()."__template.html");
 
-$json_return = array("status"=>"success","retval"=>0,"rettext"=>"");
-exec(PYTHON_CMD." $arg1 $arg2 $arg3 $arg4 $arg5 $arg6",$json_return["rettext"], $json_return["retval"]);
+$json_return = array("status"=>"success","retval"=>0,"rettext"=>"","cmd"=>PYTHON_CMD." $arg1 $arg2 $arg3 $arg4 $arg5 $arg6");
+exec(PYTHON_CMD." $arg1 $arg2 $arg3 $arg4 $arg5 $arg6 2>&1",$json_return["rettext"], $json_return["retval"]);
 if($json_return["retval"]!=0) {
     $json_return["status"]="error";
 }
