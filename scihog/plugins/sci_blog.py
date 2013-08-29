@@ -59,7 +59,9 @@ class sci_blog(iface_generate_plugin):
             l_link = article_dom.new_tag("a",href=a[1:])
             l_link.append(a_title)
             l_entry.insert(1,l_link)
-            self.p_dom.div.append(article_dom.contents[0])
+            overview_item = BeautifulSoup('<article><span class="date">%s</span><h3>%s</h3><div class="short">%s</div></article>'%(a_date,a_title,a_short))
+            self.p_dom.div.append(overview_item.article)
+            #self.p_dom.div.append(article_dom.contents[0])
             self.list_dom.append(l_entry)
             self.rss.items.append(
                 RSSItem(
