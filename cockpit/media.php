@@ -21,7 +21,7 @@ require_once("base.inc.php");
 
 $_SESSION['KCFINDER'] = array();
 $_SESSION['KCFINDER']['disabled'] = false;
-$_SESSION['KCFINDER']['uploadURL'] = DOMAIN;
+$_SESSION['KCFINDER']['uploadURL'] = $s->getPreviewDir();
 $_SESSION['KCFINDER']['uploadDir'] = $s->getPreviewDir();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
