@@ -40,15 +40,18 @@ class site_info(object):
         return f.lower().endswith('.html') and not f.startswith('__') and f.startswith('_')
 
     def _find_pages(self, dir):
-        file_list = [ os.path.join(dir,item) for item in os.listdir(dir) if self.template_name_condition(item)]
-        for item in os.listdir(dir):
-            if not item.startswith(".") and os.path.isdir(os.path.join(dir, item)):
-                self._find_pages(os.path.join(dir, item))
-        for file in file_list:
-            h = file.rsplit('/',1) 
-            f = h[1] # filename
-            d = h[0].replace(self.preview_dir[:-1],'',1) # remove the base directory output_dir from the path
-            self.page_list.append((d,f,f[1:]))     
+        try:
+            file_list = [ os.path.join(dir,item) for item in os.listdir(dir) if self.template_name_condition(item)]
+            for item in os.listdir(dir):
+                if not item.startswith(".") and os.path.isdir(os.path.join(dir, item)):
+                    self._find_pages(os.path.join(dir, item))
+            for file in file_list:
+                h = file.rsplit('/',1) 
+                f = h[1] # filename
+                d = h[0].replace(self.preview_dir[:-1],'',1) # remove the base directory output_dir from the path
+                self.page_list.append((d,f,f[1:]))
+        except:
+            logging.getLogger('scihog.generate').error("_find_pages throw an error on %s"%dir)
         return self.page_list
 
 class creator(object):
