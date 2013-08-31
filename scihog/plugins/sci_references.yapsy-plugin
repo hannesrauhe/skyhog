@@ -1,0 +1,9 @@
+[Core]
+Name = references
+Module = sci_references
+   
+[Documentation]
+Description = Creates a list of links used in the article
+Author = Hannes Rauhe
+Version = 0.1
+Website = scitivity.net

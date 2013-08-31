@@ -1,5 +1,5 @@
 '''
-Copyright 2012 Hannes Rauhe
+Copyright 2012,2013 Hannes Rauhe
 
 This file is part of Skyhog.
 
@@ -44,7 +44,7 @@ class sci_blog(iface_generate_plugin):
             return parseString("<article>ERROR: Dir with articles not found</article>")
         
         self.p_dom = BeautifulSoup("<div class=\"blog\"></div>")
-        self.list_dom = BeautifulSoup("<ul class=\"blog_list\"></ol>").ul
+        self.list_dom = BeautifulSoup("<ul class=\"blog_list\"></ul>").ul
         self._createRSS()
         article_files = [f for f in os.listdir(articles_dir) if f.startswith(self.options["prefix"])]
         article_files.sort(reverse=True)
