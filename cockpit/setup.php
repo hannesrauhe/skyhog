@@ -59,6 +59,12 @@ ob_start();
 <?php
 require_once("setup/00_check_config.inc.php");
 
+//workaround for kcfinder bug
+$bogus_kc_htaccess="./kcfinder-2.51/.htaccess";
+if(is_file($bogus_kc_htaccess)) {
+	unlink($bogus_kc_htaccess);
+	echo "Deleted bogus .htaccess from kcfinder dir\n";
+}
 
 //create/check directories
 check_dir("./","skyhog directory","update via webinterface");
