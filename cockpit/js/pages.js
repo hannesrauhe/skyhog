@@ -38,8 +38,24 @@ var generate_callback=
     };
      
 $(document).ready(function() { 
+    elem = document.getElementById('elm1');
+    var editor = CodeMirror.fromTextArea(elem, {
+      lineNumbers: true,
+      extraKeys: {
+        "F11": function(cm) {
+          cm.setOption("fullScreen", !cm.getOption("fullScreen"));
+        },
+        "Esc": function(cm) {
+          if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
+        }
+      }
+    });
+    
     $('#content_form').ajaxForm({ 
         dataType: 'json',
+        beforeSerialize: function(data) {
+            editor.save();
+        },
         success: function(data) {
             $('input[name="save"]').css("border","1px solid green");
             $('#msg').html(data['rettext']);

@@ -1,6 +1,6 @@
 <?php
 /*
-Copyright 2012 Hannes Rauhe
+Copyright 2012,2013 Hannes Rauhe
 
 This file is part of Skyhog.
 
@@ -101,6 +101,9 @@ if ($handle = opendir($s->getPreviewDir())) {
 <title>Edit Pages</title>
 <link rel="stylesheet" type="text/css" href="css/ui-lightness/jquery-ui-1.8.23.custom.css" media="all">
 <link rel="stylesheet" type="text/css" href="style.css" media="all">
+<link rel="stylesheet" href="codemirror-3.16/lib/codemirror.css">
+<link rel="stylesheet" href="codemirror-3.16/addon/display/fullscreen.css">
+
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta charset="UTF-8" />
 
@@ -109,6 +112,15 @@ if ($handle = opendir($s->getPreviewDir())) {
 <script src="js/jquery.form.js"></script>
 <script src="js-beautify/beautify-html.js"></script>
 <script src="js/pages.js"></script>
+<script src="codemirror-3.16/lib/codemirror.js"></script>
+<script src="codemirror-3.16/addon/display/fullscreen.js"></script>
+<?php if($ext=="js"): ?>
+<script src="codemirror-3.16/mode/javascript/javascript.js"></script>
+<?php elseif($ext=="css"): ?>
+<script src="codemirror-3.16/mode/css/css.js"></script>
+<?php else: ?>
+<script src="codemirror-3.16/mode/xml/xml.js"></script>
+<?php endif ?>
 </head>
 <body role="application" class="starting">
 <?php
@@ -193,7 +205,6 @@ include_once("nav.inc.phtml");
 				</div>	
 				
 				<span id="sh_plain_options">
-					<a id="sh_show_tiny" href="javascript:;">[Show TinyMCE]</a>
                     <a href="check_html.php?file=<?php echo $file; ?>" target="_blank" >[Check Code]</a>
 					<a href="javascript:;" onclick="document.getElementById('elm1').value = style_html(document.getElementById('elm1').value);return false;">[Beautify Code]</a>
 				</span>
