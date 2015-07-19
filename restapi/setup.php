@@ -17,8 +17,34 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Skyhog.  If not, see <http://www.gnu.org/licenses/>.
 */
+function check_dir($path,$descr,$warning='') {
+	if(substr($path,-1)!="/") {
+		echo $path." has no directory separator in the end! Please add one in the config file!";
+		exit(1);
+	}
+	if(is_dir($path)) {
+		echo $descr." exists ";
+		if(@touch($path."/testtouch") && @unlink($path."/testtouch")) {
+			echo "and is writable\n";
+		} else {
+			echo "but is not writable: ".$path."!\n";
+			if(empty($warning))
+				exit(1);
+			else "WARNING: Scyhog does not necessarily need acccess rights to this directory, but the following will not work: ".$warning."\n";
+		}
+	} else {
+		if(mkdir($path)) {
+			echo $descr." created\n";
+		} else {
+			echo "couldn't create ".$descr." at ".$path."!\n";
+			exit(1);
+		}
+	}
+}
+
+header("Content-Type: text/plain");
+
 if((@include_once("./config.inc.php")) === FALSE) {
-	echo "The config file does not exist...\n";
 	include_once("./config.inc.php.template");
 	$needed_const = get_defined_constants(true);
 	$needed_const = $needed_const['user'];
@@ -132,5 +158,13 @@ Have fun!
 		if((substr($key, -3)=="DIR" ||  substr($key, -4)=="PATH") && substr($use_value,-1)!="/") {
 			echo "WARNING: ".$key." should have a / in the end! Something could go terribly long if it has not.\n";
 		}
-	}
+	}	
+
+	//create/check directories
+	check_dir("./","skyhog directory","update via webinterface");
+	check_dir(LOG_DIR, "log directory");
+	check_dir(BAK_DIR, "backup directory");
+	check_dir(WRK_DIR, "working directory");
+	check_dir(DEFAULT_LIVE_DIR, "live pages directory","creating directories for new pages automatically");
+	check_dir(DEFAULT_PREVIEW_DIR, "preview pages directory","creating directories for new pages automatically");
 }
