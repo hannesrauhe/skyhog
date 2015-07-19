@@ -1,0 +1,27 @@
+<?php
+//fill in the domain where skyhog is installed - without subfolders 
+define("DOMAIN",$_SERVER['SERVER_NAME']);
+
+//the following directories should be writable by the server but not be accessible from the web 
+define("LOG_DIR", realpath(dirname(__FILE__) . "/../log")."/");
+define("WRK_DIR", realpath(dirname(__FILE__) . "/../wrk")."/");
+define("BAK_DIR", realpath(dirname(__FILE__) . "/../bak")."/");
+define("DEFAULT_LIVE_DIR", realpath(dirname(__FILE__) . "/../live")."/");
+define("DEFAULT_PREVIEW_DIR", realpath(dirname(__FILE__) . "/../preview")."/");
+
+//in case you want to store the db somewhere else...
+define("DB_NAME",WRK_DIR."skyhog.db");
+
+//path to git/python if they are not in your $PATH
+define("GIT_CMD","git");
+define("PYTHON_CMD","python");
+
+//in case you have to use PHPsqliteadmin - set a separate password for access
+//only do this if you know what you are doing!
+//if you do not define PHPSQLITEADMIN_PASSWD, phpsqladmin is deactivated (default)
+//define("PHPSQLITEADMIN_PASSWD","scihogdb");
+
+//uncomment if you want to enable logging
+define("ENABLE_DEBUG","error");
+define("ENABLE_LOG","error");
+define("PHP_EXECUTE_EXTENSION","php");

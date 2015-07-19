@@ -1,6 +1,6 @@
 <?php
 /*
-Copyright 2012,2013 Hannes Rauhe
+Copyright 2012-2015 Hannes Rauhe
 
 This file is part of Skyhog.
 
