@@ -25,12 +25,15 @@ function run_scihog($script, $args, &$output, &$return_value) {
 		return "";
 	}
 	$cmd = escapeshellcmd(PYTHON_CMD) . " ";
-	$cmd .= escapeshellarg($script);
+	$cmd .= realpath($script);
+	//do not return server-paths but only script and parameters
+	$ret_cmd .= basename($script);
 	foreach ($args as $arg) {
 		$cmd .= " ". escapeshellarg($arg);
+		$ret_cmd .= " ". escapeshellarg($arg);
 	}
 	exec($cmd . " 2>&1", $output, $return_value);
-	return $cmd;
+	return $ret_cmd;
 }
 
 require_once("./base.inc.php");

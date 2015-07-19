@@ -24,7 +24,7 @@ function check_dir($path,$descr,$warning='') {
 	}
 	if(is_dir($path)) {
 		echo $descr." exists ";
-		if(@touch($path."/testtouch") && @unlink($path."/testtouch")) {
+		if(@touch($path."testtouch") && @unlink($path."testtouch")) {
 			echo "and is writable\n";
 		} else {
 			echo "but is not writable: ".$path."!\n";
