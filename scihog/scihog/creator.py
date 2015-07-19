@@ -1,5 +1,5 @@
 '''
-Copyright 2012 Hannes Rauhe
+Copyright 2012-2015 Hannes Rauhe
 
 This file is part of Skyhog.
 
@@ -22,22 +22,22 @@ from PyRSS2Gen import *
 from iface_plugin import *
 from yapsy.PluginManager import PluginManagerSingleton
 
-class site_info(object):
-    preview_dir = ''
-    url = ''
-    page_list = []      
-    
+class site_info(object):    
     def __init__(self,dir,url):
         self.preview_dir = dir
         u = urlparse.urlparse(url)
         if not urlparse.urlparse(url).scheme:
             url = "http://"+url
             u = urlparse.urlparse(url)
+        self.page_list = []
         self.url = u.geturl()+"/"
         self._find_pages(dir)
            
     def template_name_condition(self,f):
         return f.lower().endswith('.html') and not f.startswith('__') and f.startswith('_')
+    
+    def get_page_list(self):
+        return self.page_list
 
     def _find_pages(self, dir):
         try:
@@ -143,6 +143,9 @@ class creator(object):
         if plugin_object:
             plugin_object.init(self.input_dir,"",self.output_dir,"",p_dom,self._site)
             plugin_object.generate_once([item[0]+item[2] for item in self._site.page_list])
+            
+    def get_pages(self):
+        return [os.path.join(x,y) for x,y,z in self._site.get_page_list()]
             
     def move_to_page_dir(self,bak_dir):
         if os.path.isdir(self.page_dir):

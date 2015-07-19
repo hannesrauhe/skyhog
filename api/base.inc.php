@@ -17,24 +17,23 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Skyhog.  If not, see <http://www.gnu.org/licenses/>.
 */
-//if(defined(ENABLE_DEBUG)) {
-if (!ini_get('display_errors')) {
-    ini_set('display_errors', '1');
-}
-//}
 
-/* check if base.inc.php has been included after session has been started (e.g. in setup.php)*/
-if (!isset($_SESSION)) { session_start(); }
-/*PHP 5.4:
-if (session_status() !== PHP_SESSION_ACTIVE) {session_start();}
- */
-
-header('Content-type: text/html; charset=utf-8');
 
 require_once("./config.inc.php");
+
+if(session_status() !== PHP_SESSION_ACTIVE) {session_start();}
+if(defined(ENABLE_DEBUG) && ENABLE_DEBUG=="true") {
+	header('Content-type: text/html; charset=utf-8');
+	ini_set('display_errors', '1');
+} else {
+	header('Content-type: application/json; charset=utf-8');
+}
+
 require_once("./classes.inc.php");
 
 
+
+/*
 $d = new skyhog_db();
 $a = new auth();
 $oid = '';
@@ -89,3 +88,4 @@ if($s->getSiteID()==-1 && FALSE===array_search(basename($_SERVER['SCRIPT_NAME'])
     Header("Location: sites.php?msg=".urlencode($msg)."&redirect=".urlencode($_SERVER['SCRIPT_NAME']));
     exit(0);
 }
+*/

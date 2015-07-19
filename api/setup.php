@@ -42,7 +42,6 @@ function check_dir($path,$descr,$warning='') {
 	}
 }
 
-header("Content-Type: text/plain");
 
 if((@include_once("./config.inc.php")) === FALSE) {
 	include_once("./config.inc.php.template");
@@ -51,7 +50,7 @@ if((@include_once("./config.inc.php")) === FALSE) {
 	if(!array_key_exists('DOMAIN', $_POST)) {
 ?>
 
-	
+<textarea readonly="readonly" rows="10" cols="80">
 Welcome to Skyhog!
 
 Fill out form below and click submit to create the file config.inc.php. 
@@ -59,6 +58,7 @@ Fill out form below and click submit to create the file config.inc.php.
 
 Have fun!
 </textarea>
+<br />
 <form action="setup.php" method="POST">
 	<table>
 	<?php foreach ($needed_const as $key => $value) {
@@ -97,6 +97,7 @@ Have fun!
 	    }
 	}
 } else {
+	echo '<textarea readonly="readonly" rows="10" cols="80">';
 	echo "The config file exists... ";
 
 	if(! (defined("DOMAIN") &&	defined("WRK_DIR") && defined("LOG_DIR") && defined("BAK_DIR"))) {
@@ -162,6 +163,7 @@ Have fun!
 
 	//create/check directories
 	check_dir("./","skyhog directory","update via webinterface");
+	check_dir(SCIHOG_DIR, "scihog directory");
 	check_dir(LOG_DIR, "log directory");
 	check_dir(BAK_DIR, "backup directory");
 	check_dir(WRK_DIR, "working directory");

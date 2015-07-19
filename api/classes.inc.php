@@ -17,7 +17,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Skyhog.  If not, see <http://www.gnu.org/licenses/>.
 */
-require_once("./openid.inc.php");
+//require_once("./openid.inc.php");
 
 class MyException extends Exception { }
 
@@ -50,6 +50,7 @@ class skylog {
     }
 }
 
+/*
 class skyhog_db extends SQLite3 {
     public function __construct() {
         $this->open(DB_NAME);
@@ -137,8 +138,6 @@ class skyhog_db extends SQLite3 {
         return 0;
     }
     
-    /*sites table*/
-    
     
     public function getSiteByID($id) {
         $site=array();
@@ -223,6 +222,7 @@ class skyhog_db extends SQLite3 {
     }
 }
 
+/*
 class auth {
     var $openid = NULL;
     public function __construct() {
@@ -381,6 +381,8 @@ class git {
     }
 }
 
+*/
+
 class site {
     var $site_id = -1;
     public function __construct(&$d,$s_id = -1) {
@@ -467,9 +469,8 @@ class site {
     }
 }
 
-class site_db extends SQLite3 {
-    /** nav table **/
-    
+/*
+class site_db extends SQLite3 {    
     public function getNavEntries() {       
         $nav=array();
         $stmt = $this->prepare("SELECT * FROM `nav` WHERE menu_order>=0 ORDER BY menu_order;");
@@ -538,3 +539,4 @@ class site_db extends SQLite3 {
         }
     }
 }
+*/

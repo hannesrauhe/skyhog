@@ -1,4 +1,7 @@
 <?php
+//path to scihog scripts
+define("SCIHOG_DIR", realpath(dirname(__FILE__) . "/../scihog")."/");
+
 //fill in the domain where skyhog is installed - without subfolders 
 define("DOMAIN",$_SERVER['SERVER_NAME']);
 
@@ -22,6 +25,6 @@ define("PYTHON_CMD","python");
 //define("PHPSQLITEADMIN_PASSWD","scihogdb");
 
 //uncomment if you want to enable logging
-define("ENABLE_DEBUG","error");
+define("ENABLE_DEBUG","true");
 define("ENABLE_LOG","error");
 define("PHP_EXECUTE_EXTENSION","php");
