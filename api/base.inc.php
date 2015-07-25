@@ -17,20 +17,26 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Skyhog.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-
 require_once("./config.inc.php");
 
 if(session_status() !== PHP_SESSION_ACTIVE) {session_start();}
 if(defined(ENABLE_DEBUG) && ENABLE_DEBUG=="true") {
 	header('Content-type: text/html; charset=utf-8');
 	ini_set('display_errors', '1');
+	error_reporting(E_ALL);
 } else {
 	header('Content-type: application/json; charset=utf-8');
 }
 
 require_once("./classes.inc.php");
+require_once("./oauth.inc.php")
 
+// Handle a request to a resource and authenticate the access token
+if (!$server->verifyResourceRequest(OAuth2\Request::createFromGlobals())) {
+	$server->getResponse()->send();
+	echo json_encode(array('status' => 'not authenticated', 'message' => 'You are not authenticated!'));
+	die;
+}
 
 
 /*
